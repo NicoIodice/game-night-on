@@ -1,0 +1,91 @@
+/* Base palette (festivity picker). Each theme overrides these tokens below. */
+:root {
+  --bg: #14121c;
+  --surface: #221f2e;
+  --border: #3a3550;
+  --text: #f1eef8;
+  --text-muted: #a9a3bd;
+  --accent: #c9b8ff;
+  --highlight: #ffd166;
+  --glow: rgb(201 184 255 / 0.35);
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --font-display: 'Nunito', system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+:root[data-theme='halloween'] {
+  --bg: #120a1c;
+  --surface: #23123a;
+  --border: #45256b;
+  --text: #f6eefe;
+  --text-muted: #b9a5d6;
+  --accent: #ff7a18;
+  --highlight: #8cff5a;
+  --glow: rgb(255 122 24 / 0.45);
+  --font-display: 'Creepster', 'Nunito', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background: radial-gradient(ellipse at top, var(--surface), var(--bg) 70%) fixed;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 3rem);
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.btn {
+  padding: 0.7rem 1.4rem;
+  min-height: 44px;
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 120ms, transform 120ms;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: var(--accent);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 1.15rem;
+  padding-inline: 2rem;
+}
+
+.btn--small {
+  padding: 0.35rem 0.9rem;
+  min-height: 36px;
+  font-size: 0.9rem;
+}

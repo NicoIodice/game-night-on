@@ -1,0 +1,158 @@
+.sotb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.sotb--panel {
+  text-align: center;
+  max-width: 560px;
+}
+
+.sotb__deck {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sotb__deck-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sotb__deck-card .icon {
+  font-size: 1.5rem;
+}
+
+.sotb__hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.sotb__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sotb__status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sotb__status .btn {
+  margin-left: auto;
+}
+
+.sotb__caption {
+  margin: 0;
+  min-height: 1.2em;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 10vw, 5rem);
+  color: var(--accent);
+  text-shadow: 0 0 24px var(--glow);
+  animation: sotb-pop 180ms ease-out;
+}
+
+.sotb__caption--sing {
+  color: var(--highlight);
+}
+
+.sotb__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(min(var(--cards), 4), minmax(0, 1fr));
+  gap: clamp(0.5rem, 3vw, 1.5rem);
+  /* Keep cards fitting short screens (laptops, TVs) while still filling phones. */
+  width: min(100%, calc(min(var(--cards), 4) * min(240px, (100dvh - 280px) * 0.75)));
+}
+
+.sotb__card {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  border: 3px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  transition: transform 120ms ease-out, opacity 200ms, border-color 120ms, box-shadow 120ms;
+}
+
+.sotb__card--hidden {
+  background: repeating-linear-gradient(45deg, var(--surface), var(--surface) 10px, var(--bg) 10px, var(--bg) 20px);
+  opacity: 0.5;
+}
+
+.sotb__card--shown {
+  animation: sotb-pop 200ms ease-out;
+}
+
+.sotb__card--active {
+  transform: scale(1.08);
+  border-color: var(--highlight);
+  color: var(--highlight);
+  box-shadow: 0 0 32px var(--glow);
+}
+
+.sotb__card--sung {
+  opacity: 0.45;
+}
+
+.sotb__card-icon {
+  font-size: clamp(3rem, 18vw, 8rem);
+}
+
+.sotb__card-label {
+  font-weight: 700;
+  font-size: clamp(0.9rem, 3.5vw, 1.4rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sotb__pulse {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: sotb-pulse 300ms ease-out forwards;
+}
+
+@keyframes sotb-pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes sotb-pulse {
+  from { transform: scale(1.8); opacity: 1; }
+  to { transform: scale(1); opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sotb__caption,
+  .sotb__card,
+  .sotb__pulse {
+    animation: none;
+    transition: none;
+  }
+}
