@@ -1,0 +1,165 @@
+/* A memory game's table. Each skin sets the colours (see `.memory--<skin>`):
+   --table (background), --card-back, --card-back-ink, --card-face, --card-face-ink. */
+.memory {
+  --table: var(--surface);
+  --card-back: var(--accent);
+  --card-back-ink: var(--bg);
+  --card-face: var(--text);
+  --card-face-ink: var(--bg);
+}
+
+.memory__preview {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.memory__mini {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  aspect-ratio: 3 / 4;
+  border-radius: 0.6rem;
+  background: var(--card-face);
+  color: var(--card-face-ink);
+  font-size: 2.2rem;
+}
+
+.memory__mini--back {
+  background: var(--card-back);
+  color: var(--card-back-ink);
+}
+
+.memory__table {
+  display: grid;
+  place-items: center;
+  padding: clamp(0.5rem, 2.5cqmin, 1.5rem);
+  background: var(--table);
+}
+
+.memory__grid {
+  --gap: clamp(0.35rem, 1.6cqmin, 1rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+  gap: var(--gap);
+  width: 100%;
+  height: 100%;
+}
+
+/* Tall screens (phones held upright) get fewer, bigger columns. */
+@container (aspect-ratio < 1) {
+  .memory__grid {
+    grid-template-columns: repeat(var(--tall-columns), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--tall-rows), minmax(0, 1fr));
+  }
+}
+
+/* Each cell holds a card-shaped (3:4) card, as big as the cell allows. */
+.memory__grid li {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+.memory__card {
+  position: relative;
+  width: min(100cqw, 75cqh);
+  height: min(100cqh, 133.33cqw);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  perspective: 800px;
+}
+
+.memory__card:disabled {
+  cursor: default;
+}
+
+.memory__card:focus-visible {
+  outline: 3px solid var(--player, var(--accent));
+  outline-offset: 3px;
+  border-radius: 0.8rem;
+}
+
+.memory__inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 320ms ease-out;
+}
+
+.memory__card--open .memory__inner,
+.memory__card--matched .memory__inner,
+.memory__card--wrong .memory__inner {
+  transform: rotateY(180deg);
+}
+
+.memory__side {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: clamp(0.4rem, 8cqmin, 0.9rem);
+  border: 3px solid transparent;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.memory__side .icon {
+  width: 62%;
+  height: 62%;
+}
+
+.memory__side--back {
+  background: var(--card-back);
+  color: var(--card-back-ink);
+  box-shadow: inset 0 0 0 4px rgb(255 255 255 / 0.12);
+}
+
+.memory__card:hover:not(:disabled) .memory__side--back {
+  border-color: var(--player, var(--accent));
+}
+
+.memory__side--front {
+  background: var(--card-face);
+  color: var(--card-face-ink);
+  transform: rotateY(180deg);
+}
+
+.memory__card--matched .memory__side--front {
+  border-color: var(--player);
+  box-shadow: 0 0 18px var(--player);
+}
+
+.memory__card--wrong .memory__side--front {
+  border-color: var(--bad);
+  box-shadow: 0 0 18px var(--bad-glow);
+  animation: memory-shake 300ms ease-in-out;
+}
+
+.memory__table--over .memory__card {
+  opacity: 0.6;
+}
+
+@keyframes memory-shake {
+  0%, 100% { translate: 0; }
+  25% { translate: -4px; }
+  75% { translate: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory__inner {
+    transition: none;
+  }
+
+  .memory__card--wrong .memory__side--front {
+    animation: none;
+  }
+}

@@ -1,10 +1,18 @@
 import type { GameDefinition, Theme } from '../core/types';
 import { batBlitz } from './bat-blitz';
+import { presentPairs } from './present-pairs';
+import { pumpkinPatchMemory } from './pumpkin-patch-memory';
 import { singOnTheBeat } from './sing-on-the-beat';
 import { snowballShowdown } from './snowball-showdown';
 
 /** Every game. Adding a game = one folder exporting a GameDefinition + one line here. */
-export const GAMES: GameDefinition[] = [singOnTheBeat, batBlitz, snowballShowdown];
+export const GAMES: GameDefinition[] = [
+  singOnTheBeat,
+  batBlitz,
+  snowballShowdown,
+  pumpkinPatchMemory,
+  presentPairs,
+];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */
 export function gamesFor(theme: Theme, games: readonly GameDefinition[] = GAMES): GameDefinition[] {

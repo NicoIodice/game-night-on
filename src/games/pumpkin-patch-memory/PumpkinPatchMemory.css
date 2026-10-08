@@ -1,0 +1,10 @@
+/* A moonlit pumpkin patch: orange pumpkins on dark earth, cards turn over to pale ghostly faces. */
+.memory--pumpkin-patch-memory {
+  --table:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgb(140 255 90 / 0.08), transparent 70%),
+    repeating-linear-gradient(170deg, #1a1208 0 18px, #20160b 18px 36px);
+  --card-back: radial-gradient(circle at 50% 35%, #ff9a3c, #d9570a 70%);
+  --card-back-ink: #4a1d00;
+  --card-face: #f6eefe;
+  --card-face-ink: #23123a;
+}

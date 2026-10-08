@@ -1,0 +1,12 @@
+/* Presents under the tree: red wrapping with a gold ribbon, unwrapped to snowy white cards. */
+.memory--present-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(255 204 77 / 0.14), transparent 70%),
+    linear-gradient(#0f2a22, #0b1a14);
+  --card-back:
+    linear-gradient(90deg, transparent 44%, #ffcc4d 44% 56%, transparent 56%),
+    linear-gradient(#d62839, #a4161a);
+  --card-back-ink: #ffe7a3;
+  --card-face: #f4fbf7;
+  --card-face-ink: #13302a;
+}

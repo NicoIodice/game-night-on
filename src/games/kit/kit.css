@@ -69,10 +69,17 @@
 /* Status bar */
 .turn__status {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   width: 100%;
   font-weight: 700;
+}
+
+.turn__score,
+.turn__badge,
+.turn__time {
+  white-space: nowrap;
 }
 
 .turn__status .btn {
@@ -167,5 +174,21 @@
   .turn__caption,
   .turn__badge {
     animation: none;
+  }
+}
+
+/* Phones: tighter status bar so it stays on one line. */
+@media (max-width: 480px) {
+  .turn__status {
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .turn__status .player-badge__name {
+    max-width: 7em;
+  }
+
+  .turn__score {
+    font-size: 1rem;
   }
 }

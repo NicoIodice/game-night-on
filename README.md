@@ -35,6 +35,10 @@ src/
                      the turn screen (Shooter.tsx), and the ShooterSkin each festivity's version fills in
     bat-blitz/       Halloween skin: zap bats in a cave
     snowball-showdown/  Christmas skin: pelt imps with snowballs on a snowy night
+    memory/          shared memory game: pairs, streaks and scoring (board.ts, pure, tested), the turn screen
+                     and memoryGame() which turns a MemorySkin into a game
+    pumpkin-patch-memory/  Halloween skin: spooky friends under pumpkins
+    present-pairs/   Christmas skin: festive surprises in presents
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 
