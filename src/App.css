@@ -106,6 +106,10 @@
   color: #ffb347;
 }
 
+.tile[data-theme-tile='valentine'] .tile__icon {
+  color: #ff4d8d;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

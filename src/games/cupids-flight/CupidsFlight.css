@@ -1,0 +1,33 @@
+/* Above the clouds at dusk: a rosy sky, puffy cloud banks, and a soft cloud path to run on. */
+.runner--cupids-flight {
+  --hero: #ffd1e3;
+  --obstacle: #7ee08a;
+  --treat: #ff4d8d;
+}
+
+.runner--cupids-flight .runner__obstacle--tall {
+  --obstacle: #a9a3c9;
+}
+
+.runner--cupids-flight .runner__stage {
+  --star: rgb(255 209 227 / 0.55) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, var(--star)) 0 0 / 90px 80px,
+    linear-gradient(#2e0c21, #8e2a5a) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.runner--cupids-flight .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #b45a86 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #cf7aa0 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--cupids-flight .runner__ground {
+  background:
+    radial-gradient(circle at 50% 100%, #fff0f6 0 60%, transparent 62%) 0 0 / 46px 12px repeat-x,
+    linear-gradient(#ffe3ee, #f7c6da);
+  background-position: calc(var(--distance, 0) * -100cqw) top, 0 0;
+}

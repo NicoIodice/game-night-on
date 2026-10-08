@@ -1,0 +1,12 @@
+/* Valentine cards on a velvet table: red backs with a lace border, turned over to soft pink cards. */
+.memory--sweetheart-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(255 77 141 / 0.18), transparent 70%),
+    linear-gradient(#3a1029, #1f0a17);
+  --card-back:
+    radial-gradient(circle at 50% 50%, transparent 58%, rgb(255 255 255 / 0.18) 59% 63%, transparent 64%),
+    linear-gradient(#e0234f, #9e1238);
+  --card-back-ink: #ffe3ee;
+  --card-face: #fff0f6;
+  --card-face-ink: #6b1f4a;
+}

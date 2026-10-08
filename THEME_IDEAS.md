@@ -81,16 +81,18 @@ Useful all year, not just one night.
 - **Cannonball!** (shout): CANNONBALL! / BOMBA!; the diver rides up the meter.
 - **Surf Dash** (runner): a surfer jumping rocks and big waves at sunset, grabbing ice creams.
 
-### 4. Valentine's Day
+### 4. Valentine's Day ✅ built (`valentine`)
 Fits the "couples" side of the app.
-- **Cards** (rhymes): heart, dart, cart, tart · rose, nose, toes · then chocolate, letter, cupid, ring…
-- **Shooter**: Cupid's arrows at floating hearts.
-- **Memory**: hearts and roses.
-- **Sequence**: love-song notes on hearts.
-- **Pop-up**: hearts pop out of windows. Don't tap the grumpy cat!
-- **Charades**: famous couples and romantic moments.
-- **Shout**: an "I LOVE YOU!" meter.
-- **Runner**: Cupid flying over clouds, collecting hearts.
+- **Cards**: heart, dart, cart, chart · rose, nose, toes, bows · then chocolate, letter, cupid, lips, diamond, flowers,
+  cookie. Portuguese: coração, botão, limão, sabão · rainha, varinha, linha, farinha · then rosa, beijo, carta, anel,
+  chocolate, cupido, flores. ("Bombom" was dropped: speech recognition sometimes hears "bumbum".)
+- **Cupid's Arrows** (shooter): shoot floating hearts; winged hearts are quick, the crowned heart is true love.
+- **Sweetheart Pairs** (memory): roses on the backs.
+- **Love Song** (sequence): heart, rose, love letter, ring, kiss and chocolate around a lyre.
+- **Heart Windows** (pop-up): hearts pop out of windows, Cupid is the boss. Don't tap the grumpy cat!
+- **Love Charades**: famous couples and romantic moments.
+- **I Love You!** (shout): I LOVE YOU! / AMO-TE!; a winged heart rides up the meter.
+- **Cupid's Flight** (runner): Cupid dashes across the clouds, jumping cactuses and rain clouds, collecting hearts.
 
 ### 5. New Year's Eve
 - **Cards** (rhymes): clock, sock, rock, lock · then fireworks, confetti, party popper, countdown…

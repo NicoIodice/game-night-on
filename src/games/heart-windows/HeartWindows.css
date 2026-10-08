@@ -1,0 +1,24 @@
+/* A row of houses at night: rosy brick walls and warm, heart-topped windows. */
+.peek--heart-windows {
+  --rascal: #ff4d8d;
+  --boss: #ffc857;
+  --friend: #c9b6d6;
+  --hole: radial-gradient(ellipse at 50% 60%, #ffe0a8, #e08a6a 75%, #9e3a4a);
+  --frame: #f7d6e3;
+}
+
+.peek--heart-windows .peek__stage {
+  background:
+    repeating-linear-gradient(#3a1029 0 22px, #2e0c21 22px 24px),
+    #2e0c21;
+}
+
+/* Windows with an arched top and a white frame. */
+.peek--heart-windows .peek__hole {
+  border-radius: 50% 50% 0.4rem 0.4rem / 30% 30% 0.4rem 0.4rem;
+  box-shadow: 0 0 0 4px var(--frame), 0 0 18px rgb(255 160 120 / 0.3);
+}
+
+.peek--heart-windows .turn__legend .peek__kind--friend {
+  color: #c9b6d6;
+}

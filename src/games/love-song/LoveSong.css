@@ -1,0 +1,14 @@
+/* A candlelit evening: deep rose backdrop with a warm golden glow around the lyre. */
+.sequence--love-song .sequence__stage {
+  --twinkle: rgb(255 209 227 / 0.5) 0 1.3px, transparent 2px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--twinkle)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, var(--twinkle)) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(255 200 87 / 0.22), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#3a1029, #1f0a17) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--love-song .sequence__center-icon {
+  color: #ffc857;
+}

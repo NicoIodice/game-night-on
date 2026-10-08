@@ -1,0 +1,60 @@
+/* A rosy evening sky: soft clouds, twinkling stars and a warm glow along the bottom. */
+.shooter--cupids-arrows .shooter__arena {
+  --twinkle: rgb(255 209 227 / 0.7) 0 1.4px, transparent 2.2px;
+  --cloud: rgb(255 255 255 / 0.1) 0 70%, transparent 72%;
+  background:
+    radial-gradient(circle at 15% 25%, var(--twinkle)) 0 0 / 140px 120px,
+    radial-gradient(circle at 65% 60%, var(--twinkle)) 0 0 / 110px 100px,
+    radial-gradient(ellipse 110px 34px at 30% 50%, var(--cloud)) 0 0 / 480px 300px,
+    radial-gradient(ellipse 80px 26px at 80% 80%, var(--cloud)) 0 0 / 480px 300px,
+    radial-gradient(ellipse 90% 40% at 50% 110%, rgb(255 77 141 / 0.35), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#1f0a17, #4a1236) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, repeat-x, repeat-x, no-repeat, no-repeat;
+  animation: cupids-arrows-drift 30s linear infinite;
+}
+
+/* Moves the clouds a whole number of tiles, so the loop is seamless. */
+@keyframes cupids-arrows-drift {
+  to {
+    background-position: 0 0, 0 0, 480px 0, 960px 0, 0 0, 0 0;
+  }
+}
+
+/* Hearts */
+.shooter--cupids-arrows .shooter__target--common {
+  --target: #ff4d8d;
+}
+
+.shooter--cupids-arrows .shooter__target--swift {
+  --target: #ffd1e3;
+}
+
+.shooter--cupids-arrows .shooter__target--golden {
+  --target: #ffc857;
+}
+
+.shooter--cupids-arrows .shooter__arena .icon {
+  animation: cupids-arrows-beat 600ms ease-in-out infinite;
+}
+
+.shooter--cupids-arrows .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 300ms;
+}
+
+/* A hit leaves a pink burst ringed in the player's colour. */
+.shooter--cupids-arrows .shooter__shot--hit::before {
+  background: radial-gradient(circle, #ffd1e3 0 22%, rgb(255 77 141 / 0.6) 34%, transparent 62%);
+}
+
+/* A heartbeat: two quick beats, then a rest. */
+@keyframes cupids-arrows-beat {
+  0%, 40%, 100% { transform: scale(1); }
+  15%, 55% { transform: scale(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--cupids-arrows .shooter__arena,
+  .shooter--cupids-arrows .shooter__arena .icon {
+    animation: none;
+  }
+}

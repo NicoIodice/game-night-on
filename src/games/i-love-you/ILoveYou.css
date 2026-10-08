@@ -1,0 +1,16 @@
+/* A starry rose night; the meter goes from blush pink to golden. */
+.shout--i-love-you {
+  --meter-low: #ff8fb8;
+  --meter-high: #ffc857;
+  --mascot: #ff4d8d;
+}
+
+.shout--i-love-you .shout__stage {
+  --star: rgb(255 209 227 / 0.55) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 70%, var(--star)) 0 0 / 90px 80px,
+    radial-gradient(ellipse 120% 30% at 50% 105%, rgb(255 77 141 / 0.3), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#1f0a17, #4a1236) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}

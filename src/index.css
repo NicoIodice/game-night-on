@@ -78,6 +78,18 @@
   --font-display: 'Lilita One', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='valentine'] {
+  --bg: #1f0a17;
+  --surface: #3a1029;
+  --border: #6b1f4a;
+  --text: #fff0f6;
+  --text-muted: #d6a6bf;
+  --accent: #ff4d8d;
+  --highlight: #ffc857;
+  --glow: rgb(255 77 141 / 0.4);
+  --font-display: 'Pacifico', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

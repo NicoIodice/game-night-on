@@ -90,6 +90,7 @@ src/
     balloon-pop/     Birthday skin: pop the party balloons before they float away
     egg-catch/       Easter skin: catch the painted eggs over a spring meadow
     splash-attack/   Summer skin: splash beach balls with a water pistol
+    cupids-arrows/   Valentine skin: shoot Cupid's arrows at floating hearts
     memory/          shared memory game: pairs, streaks and scoring (board.ts, pure, tested), the turn screen
                      and memoryGame() which turns a MemorySkin into a game
     pumpkin-patch-memory/  Halloween skin: spooky friends under pumpkins
@@ -97,6 +98,7 @@ src/
     party-pairs/     Birthday skin: party surprises in birthday presents
     painted-pairs/   Easter skin: spring surprises under painted eggs
     shell-pairs/     Summer skin: beach surprises under seashells
+    sweetheart-pairs/  Valentine skin: sweethearts under roses
     sequence/        shared repeat-the-sequence game: growing sequence, lives and scoring (sequence.ts, pure, tested),
                      the turn screen (pads in a ring) and sequenceGame() which turns a SequenceSkin into a game
     witchs-cauldron/ Halloween skin: add the ingredients to the brew in order
@@ -104,6 +106,7 @@ src/
     party-band/      Birthday skin: play the party band's instruments back in order
     spring-chorus/   Easter skin: sing back the spring animals in order
     beach-beats/     Summer skin: play the steel-drum beach things back in order
+    love-song/       Valentine skin: sing the sweet things back in order
     peekaboo/        shared pop-up game: characters peek out of holes, catch the rascals but not the friend
                      (peek.ts, pure, tested), the turn screen and peekGame() which turns a PeekSkin into a game
     haunted-house/   Halloween skin: ghosts in the windows, don't bonk the black cat
@@ -111,6 +114,7 @@ src/
     surprise-boxes/  Birthday skin: balloons out of gift boxes, don't bonk the birthday cake
     bunny-burrows/   Easter skin: bunnies out of meadow burrows, don't bonk the hen
     sandy-crabs/     Summer skin: crabs out of sand holes, don't bonk the seagull
+    heart-windows/   Valentine skin: hearts in the windows, don't bonk the grumpy cat
     charades/        shared charades game: a no-repeat word bag per night and scoring (words.ts, pure, tested),
                      the turn screen and charadesGame() which turns a CharadesSkin (title + word list) into a game
     monster-charades/   Halloween skin: spooky words to act out
@@ -118,6 +122,7 @@ src/
     party-charades/     Birthday skin: party games and birthday moments to act out
     spring-charades/    Easter skin: spring things to act out
     summer-charades/    Summer skin: summer things to act out
+    love-charades/      Valentine skin: famous couples and romantic moments to act out
     shout/           shared shouting game: room noise, loudness and scoring (loudness.ts, pure, tested), the
                      microphone meter screen and shoutGame() which turns a ShoutSkin into a game
     scream-meter/    Halloween skin: scream to make the ghost fly
@@ -125,6 +130,7 @@ src/
     birthday-cheer/  Birthday skin: HAPPY BIRTHDAY to make the candle flames flare up
     cheep-cheep/     Easter skin: CHEEP CHEEP to make the bird fly
     cannonball/      Summer skin: CANNONBALL! to make the biggest splash
+    i-love-you/      Valentine skin: I LOVE YOU! to make the winged heart fly
     runner/          shared running game: jumping, obstacles, treats and lives (dash.ts, pure, tested; a test checks a
                      whole run stays jumpable), the scrolling screen and runnerGame() which turns a RunnerSkin into a game
     trick-or-treat-dash/  Halloween skin: jump pumpkins and graves, grab sweets
@@ -132,6 +138,7 @@ src/
     party-dash/           Birthday skin: race through the party, jumping presents and chairs, grabbing cupcakes
     bunny-hop/            Easter skin: the bunny hops flowerpots and fences, grabs eggs
     surf-dash/            Summer skin: surf the shore, jumping rocks and big waves, grabbing ice creams
+    cupids-flight/        Valentine skin: Cupid dashes across the clouds, jumping cactuses and rain clouds
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

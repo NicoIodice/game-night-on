@@ -9,11 +9,17 @@ import { bunnyBurrows } from './bunny-burrows';
 import { bunnyHop } from './bunny-hop';
 import { cannonball } from './cannonball';
 import { cheepCheep } from './cheep-cheep';
+import { cupidsArrows } from './cupids-arrows';
+import { cupidsFlight } from './cupids-flight';
 import { eggCatch } from './egg-catch';
 import { festiveCharades } from './festive-charades';
 import { gingerbreadDash } from './gingerbread-dash';
 import { hauntedHouse } from './haunted-house';
+import { heartWindows } from './heart-windows';
 import { hoHoHoller } from './ho-ho-holler';
+import { iLoveYou } from './i-love-you';
+import { loveCharades } from './love-charades';
+import { loveSong } from './love-song';
 import { monsterCharades } from './monster-charades';
 import { paintedPairs } from './painted-pairs';
 import { partyBand } from './party-band';
@@ -33,6 +39,7 @@ import { springChorus } from './spring-chorus';
 import { summerCharades } from './summer-charades';
 import { surfDash } from './surf-dash';
 import { surpriseBoxes } from './surprise-boxes';
+import { sweetheartPairs } from './sweetheart-pairs';
 import { trickOrTreatDash } from './trick-or-treat-dash';
 import { witchsCauldron } from './witchs-cauldron';
 
@@ -44,36 +51,43 @@ export const GAMES: GameDefinition[] = [
   balloonPop,
   eggCatch,
   splashAttack,
+  cupidsArrows,
   pumpkinPatchMemory,
   presentPairs,
   partyPairs,
   paintedPairs,
   shellPairs,
+  sweetheartPairs,
   witchsCauldron,
   bellChoir,
   partyBand,
   springChorus,
   beachBeats,
+  loveSong,
   hauntedHouse,
   adventAmbush,
   surpriseBoxes,
   bunnyBurrows,
   sandyCrabs,
+  heartWindows,
   monsterCharades,
   festiveCharades,
   partyCharades,
   springCharades,
   summerCharades,
+  loveCharades,
   screamMeter,
   hoHoHoller,
   birthdayCheer,
   cheepCheep,
   cannonball,
+  iLoveYou,
   trickOrTreatDash,
   gingerbreadDash,
   partyDash,
   bunnyHop,
   surfDash,
+  cupidsFlight,
 ];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */

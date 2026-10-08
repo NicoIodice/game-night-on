@@ -233,6 +233,46 @@ const ICONS = {
     wave: 'big-wave',
     'ice-cream': 'ice-cream-cone',
   },
+  'src/themes/valentine/assets': {
+    heart: 'hearts',
+    dart: 'dart',
+    cart: 'shopping-cart',
+    chart: 'pie-chart',
+    rose: 'rose',
+    nose: 'nose-front',
+    toes: 'footprint',
+    bows: 'bow-tie-ribbon',
+    chocolate: 'chocolate-bar',
+    letter: 'love-letter',
+    cupid: 'angel-wings',
+    lips: 'lips',
+    ring: 'diamond-ring',
+    flowers: 'flowers',
+    cookie: 'cookie',
+    'winged-heart': 'heart-wings',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    button: 'shirt-button',
+    lemon: 'lemon',
+    soap: 'soap',
+    queen: 'queen-crown',
+    wand: 'fairy-wand',
+    thread: 'sewing-string',
+    flour: 'flour',
+    favicon: { name: 'hearts', fill: '#ff4d8d' },
+  },
+  'src/games/cupids-arrows/assets': {
+    'golden-heart': 'crowned-heart',
+  },
+  'src/games/love-song/assets': {
+    lyre: 'lyre',
+  },
+  'src/games/heart-windows/assets': {
+    cat: 'cat',
+  },
+  'src/games/cupids-flight/assets': {
+    cactus: 'cactus',
+    cloud: 'raining',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

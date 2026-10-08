@@ -1,0 +1,20 @@
+/* A word card like a Valentine: soft pink with a red heart-ribbon edge, on a starry rose night. */
+.charades--love-charades {
+  --card: linear-gradient(#fffafc, #ffe3ee);
+  --card-ink: #6b1f4a;
+}
+
+.charades--love-charades .charades__card {
+  box-shadow: inset 0 0 0 8px #e0234f, 0 0 40px color-mix(in srgb, var(--player) 35%, transparent);
+}
+
+.charades--love-charades .charades__icon {
+  color: #e0234f;
+}
+
+.charades--love-charades .charades__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 209 227 / 0.5) 0 1.3px, transparent 2.3px) 0 0 / 110px 100px,
+    radial-gradient(circle at 70% 75%, rgb(255 200 87 / 0.35) 0 1px, transparent 2px) 0 0 / 80px 70px,
+    linear-gradient(#1f0a17, #3a1029);
+}
