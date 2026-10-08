@@ -8,6 +8,10 @@
   --accent: #c9b8ff;
   --highlight: #ffd166;
   --glow: rgb(201 184 255 / 0.35);
+  --good: #5dff7a;
+  --good-glow: rgb(93 255 122 / 0.45);
+  --bad: #ff3b4e;
+  --bad-glow: rgb(255 59 78 / 0.5);
   --font-body: 'Nunito', system-ui, sans-serif;
   --font-display: 'Nunito', system-ui, sans-serif;
 

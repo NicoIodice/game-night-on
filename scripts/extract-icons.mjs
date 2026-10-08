@@ -3,12 +3,25 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const ICONS = {
+  'src/core/ui/icons': {
+    'sound-on': 'speaker',
+    'sound-off': 'speaker-off',
+    microphone: 'microphone',
+    person: 'person',
+    team: 'three-friends',
+    trophy: 'trophy-cup',
+  },
   'src/themes/halloween/assets': {
     cat: 'cat',
     rat: 'rat',
     bat: 'bat',
     hat: 'pointy-hat',
     pumpkin: 'pumpkin-lantern',
+  },
+  'src/games/bat-blitz/assets': {
+    'swift-bat': 'swamp-bat',
+    'golden-bat': 'evil-bat',
+    stalactites: 'stalactites',
   },
   'src/themes/christmas/assets': {
     'santa-hat': 'santa-hat',

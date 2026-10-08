@@ -13,5 +13,5 @@ export interface Level {
 }
 
 export const LEVELS: Level[] = [
-  { number: 1, bpm: 95, rounds: 4, cardCount: 3, cardTypes: 4, maxRepeats: 2 },
+  { number: 1, bpm: 90, rounds: 4, cardCount: 3, cardTypes: 4, maxRepeats: 2 },
 ];

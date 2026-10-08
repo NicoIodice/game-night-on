@@ -60,6 +60,32 @@
   margin-left: auto;
 }
 
+.sotb__score {
+  color: var(--accent);
+}
+
+.sotb__mic {
+  font-size: 1.25rem;
+  color: var(--good);
+  animation: sotb-listening 1.2s ease-in-out infinite alternate;
+}
+
+.sotb__heard {
+  margin: 0;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.sotb__heard strong {
+  color: var(--text);
+}
+
+.sotb__turn {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 .sotb__caption {
   margin: 0;
   min-height: 1.2em;
@@ -71,7 +97,7 @@
 }
 
 .sotb__caption--sing {
-  color: var(--highlight);
+  color: var(--text);
 }
 
 .sotb__cards {
@@ -110,25 +136,32 @@
 
 .sotb__card--active {
   transform: scale(1.08);
-  border-color: var(--highlight);
-  color: var(--highlight);
+  border-color: var(--text);
   box-shadow: 0 0 32px var(--glow);
 }
 
 .sotb__card--sung {
-  opacity: 0.45;
+  opacity: 0.7;
+}
+
+/* Answer marks: green for the right word, red for a wrong or missing one. */
+.sotb__card--correct {
+  border-color: var(--good);
+  box-shadow: 0 0 24px var(--good-glow);
+  opacity: 1;
+}
+
+.sotb__card--wrong,
+.sotb__card--missed {
+  border-color: var(--bad);
+  box-shadow: 0 0 24px var(--bad-glow);
+  opacity: 1;
 }
 
 .sotb__card-icon {
   font-size: clamp(3rem, 18vw, 8rem);
 }
 
-.sotb__card-label {
-  font-weight: 700;
-  font-size: clamp(0.9rem, 3.5vw, 1.4rem);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
 
 .sotb__pulse {
   width: 1rem;
@@ -143,6 +176,11 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+@keyframes sotb-listening {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
 @keyframes sotb-pulse {
   from { transform: scale(1.8); opacity: 1; }
   to { transform: scale(1); opacity: 0.3; }
@@ -151,6 +189,7 @@
 @media (prefers-reduced-motion: reduce) {
   .sotb__caption,
   .sotb__card,
+  .sotb__mic,
   .sotb__pulse {
     animation: none;
     transition: none;

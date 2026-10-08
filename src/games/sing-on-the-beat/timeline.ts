@@ -1,35 +1,48 @@
+import type { Cue } from '../../core/audio/beeper';
 import type { Level } from './levels';
 
-export const INTRO_BEATS = 4;
-const BEATS_PER_BAR = 4;
+/** "Get ready", 3, 2, 1. */
+const COUNTDOWN = [null, 3, 2, 1] as const;
+/** Beats after singing: the first ones still listen for late words, the rest show the result. */
+const RESULT_BEATS = 6;
+const LISTENING_BEATS = 3;
 
 /** What the screen shows on a given beat. */
 export type Step =
-  | { phase: 'intro'; countdown: number }
-  | { phase: 'reveal'; round: number; revealed: number }
-  | { phase: 'sing'; round: number; active: number | null }
+  | { phase: 'countdown'; round: number; count: number | null }
+  | { phase: 'sing'; round: number; active: number }
+  | { phase: 'result'; round: number; final: boolean }
   | { phase: 'done' };
 
-/** Each phase fills whole bars so the music stays on the downbeat. */
-function phaseBeats(level: Level): number {
-  return Math.ceil(level.cardCount / BEATS_PER_BAR) * BEATS_PER_BAR;
+export function roundBeats(level: Level): number {
+  return COUNTDOWN.length + level.cardCount + RESULT_BEATS;
 }
 
 /**
- * Maps a beat number to a step. A game is: a one-bar count-in, then per round
- * the cards appear one per beat (reveal) and are then sung one per beat (sing).
+ * Maps a beat number to a step. Every round: countdown with blank cards, then all
+ * cards appear at once with one beat per card to say it, then a pause showing the
+ * result before the next round.
  */
 export function stepAt(beat: number, level: Level): Step {
-  if (beat < INTRO_BEATS) return { phase: 'intro', countdown: INTRO_BEATS - beat };
-
-  const perPhase = phaseBeats(level);
-  const sinceIntro = beat - INTRO_BEATS;
-  const round = Math.floor(sinceIntro / (perPhase * 2));
+  const round = Math.floor(beat / roundBeats(level));
   if (round >= level.rounds) return { phase: 'done' };
 
-  const inRound = sinceIntro % (perPhase * 2);
-  if (inRound < perPhase) return { phase: 'reveal', round, revealed: Math.min(inRound + 1, level.cardCount) };
+  let i = beat % roundBeats(level);
+  if (i < COUNTDOWN.length) return { phase: 'countdown', round, count: COUNTDOWN[i] };
+  i -= COUNTDOWN.length;
+  if (i < level.cardCount) return { phase: 'sing', round, active: i };
+  i -= level.cardCount;
+  return { phase: 'result', round, final: i >= LISTENING_BEATS };
+}
 
-  const index = inRound - perPhase;
-  return { phase: 'sing', round, active: index < level.cardCount ? index : null };
+/** The sound for a step: beeps on the counters, "go" on the first card, a soft tick on the rest. No music. */
+export function cueFor(step: Step): Cue | null {
+  switch (step.phase) {
+    case 'countdown':
+      return step.count === null ? null : 'count';
+    case 'sing':
+      return step.active === 0 ? 'go' : 'tick';
+    default:
+      return null;
+  }
 }

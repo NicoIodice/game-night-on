@@ -7,6 +7,11 @@
   padding: clamp(1rem, 4vw, 2.5rem) 16px;
 }
 
+.app--splash {
+  justify-content: center;
+  text-align: center;
+}
+
 .app__header {
   text-align: center;
 }
@@ -103,4 +108,64 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--highlight);
+}
+
+.app__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.app__tournament {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 560px;
+  text-align: center;
+}
+
+.app__tournament p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.tile--static {
+  cursor: default;
+}
+
+.tile__order {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.tile--static:hover {
+  transform: none;
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+/* Game screenshot across the top of the tile, edge to edge. */
+.tile__thumb {
+  display: block;
+  width: calc(100% + 2rem);
+  margin: -1.5rem -1rem 0.5rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: top;
+  border-bottom: 2px solid var(--border);
+  border-radius: calc(1rem - 2px) calc(1rem - 2px) 0 0;
+}
+
+.tile:hover:not(:disabled) .tile__thumb,
+.tile:focus-visible .tile__thumb {
+  border-bottom-color: var(--accent);
+}
+
+.tile--static:hover .tile__thumb {
+  border-bottom-color: var(--border);
 }

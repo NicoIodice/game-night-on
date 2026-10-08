@@ -1,28 +1,36 @@
 import { describe, expect, it } from 'vitest';
 import type { Level } from './levels';
-import { stepAt } from './timeline';
+import { cueFor, roundBeats, stepAt } from './timeline';
 
-const LEVEL: Level = { number: 1, bpm: 100, rounds: 2, cardCount: 3, cardTypes: 4, maxRepeats: 2 };
+const LEVEL: Level = { number: 1, bpm: 90, rounds: 2, cardCount: 3, cardTypes: 4, maxRepeats: 2 };
+const steps = (from: number, to: number) => Array.from({ length: to - from }, (_, i) => stepAt(from + i, LEVEL));
 
 describe('stepAt', () => {
-  it('counts down during the first bar', () => {
-    expect([0, 1, 2, 3].map((beat) => stepAt(beat, LEVEL))).toEqual([4, 3, 2, 1].map((countdown) => ({ phase: 'intro', countdown })));
+  it('starts every round with "get ready" then 3, 2, 1', () => {
+    expect(steps(0, 4).map((s) => s.phase === 'countdown' && s.count)).toEqual([null, 3, 2, 1]);
   });
 
-  it('reveals one card per beat, then rests until the bar ends', () => {
-    expect(stepAt(4, LEVEL)).toEqual({ phase: 'reveal', round: 0, revealed: 1 });
-    expect(stepAt(6, LEVEL)).toEqual({ phase: 'reveal', round: 0, revealed: 3 });
-    expect(stepAt(7, LEVEL)).toEqual({ phase: 'reveal', round: 0, revealed: 3 });
+  it('goes straight from the countdown to one beat per card to sing', () => {
+    expect(steps(4, 7)).toEqual([0, 1, 2].map((active) => ({ phase: 'sing', round: 0, active })));
   });
 
-  it('highlights one card per beat while singing', () => {
-    expect(stepAt(8, LEVEL)).toEqual({ phase: 'sing', round: 0, active: 0 });
-    expect(stepAt(10, LEVEL)).toEqual({ phase: 'sing', round: 0, active: 2 });
-    expect(stepAt(11, LEVEL)).toEqual({ phase: 'sing', round: 0, active: null });
+  it('pauses on the result, still listening first, before the next round', () => {
+    expect(steps(7, 13).map((s) => s.phase === 'result' && s.final)).toEqual([false, false, false, true, true, true]);
+    expect(roundBeats(LEVEL)).toBe(13);
+    expect(stepAt(13, LEVEL)).toEqual({ phase: 'countdown', round: 1, count: null });
   });
 
-  it('moves to the next round and finishes after the last one', () => {
-    expect(stepAt(12, LEVEL)).toEqual({ phase: 'reveal', round: 1, revealed: 1 });
-    expect(stepAt(20, LEVEL)).toEqual({ phase: 'done' });
+  it('finishes after the last round', () => {
+    expect(stepAt(26, LEVEL)).toEqual({ phase: 'done' });
+  });
+});
+
+describe('cueFor', () => {
+  it('beeps on the counters, "go" on the first card, and stays quiet on "get ready" and results', () => {
+    expect(steps(0, 13).map(cueFor)).toEqual([
+      null, 'count', 'count', 'count',
+      'go', 'tick', 'tick',
+      null, null, null, null, null, null,
+    ]);
   });
 });

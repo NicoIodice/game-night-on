@@ -1,12 +1,12 @@
 import * as Tone from 'tone';
-import type { BeatTrack } from '../../core/audio/BeatClock';
+import type { BeatTrack, Music } from '../../core/audio/BeatClock';
 
 /** Spooky minor bass line, one note per beat, looping every two bars. */
 const BASS_LINE = ['A1', 'A1', 'C2', 'E2', 'A1', 'A1', 'G1', 'E1'];
 /** Eerie bell that marks the start of every bar. */
 const BELL_NOTES = ['E5', 'C5'];
 
-export function createHalloweenBeatTrack(): BeatTrack {
+function createTrack(): BeatTrack {
   const kick = new Tone.MembraneSynth({ volume: -4 }).toDestination();
   const snare = new Tone.NoiseSynth({
     volume: -16,
@@ -42,3 +42,6 @@ export function createHalloweenBeatTrack(): BeatTrack {
     },
   };
 }
+
+/** Spooky menu loop: thumping beat, minor bass and an eerie bell. */
+export const halloweenMusic: Music = { bpm: 100, createTrack };

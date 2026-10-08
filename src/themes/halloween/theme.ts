@@ -4,7 +4,7 @@ import cat from './assets/cat.svg';
 import hat from './assets/hat.svg';
 import pumpkin from './assets/pumpkin.svg';
 import rat from './assets/rat.svg';
-import { createHalloweenBeatTrack } from './beatTrack';
+import { halloweenMusic } from './music';
 
 export const halloween: Theme = {
   id: 'halloween',
@@ -13,10 +13,10 @@ export const halloween: Theme = {
   icon: pumpkin,
   enabled: true,
   cards: [
-    { id: 'cat', label: 'Cat', image: cat },
+    { id: 'cat', label: 'Cat', image: cat, sayAs: ['kat'] },
     { id: 'rat', label: 'Rat', image: rat },
     { id: 'bat', label: 'Bat', image: bat },
     { id: 'hat', label: 'Hat', image: hat },
   ],
-  createBeatTrack: createHalloweenBeatTrack,
+  music: halloweenMusic,
 };
