@@ -1,14 +1,62 @@
 # game-night-on
 Fun little games for couples, families, and friends — made for memorable game nights. 🎮❤️
 
+## Setting up a new machine
+
+A checklist to follow top to bottom; it also works as instructions for an AI assistant ("set up this project
+following the README"). Check each tool first and only install what's missing or too old; installing system-wide
+software needs the developer's OK.
+
+| Tool | Needed for | Check | Install if missing |
+|---|---|---|---|
+| Git | cloning, committing | `git --version` | Windows: `winget install Git.Git` · macOS: `xcode-select --install` · Linux: `sudo apt install git` |
+| Node.js 22+ (with npm) | everything (CI uses 22) | `node --version` | Windows: `winget install OpenJS.NodeJS.LTS` · macOS: `brew install node@22` · Linux: [nodejs.org](https://nodejs.org) or nvm |
+| Google Chrome 135+ | playing the voice games (Chrome or Edge), `check:voices` | open `chrome://version` | [google.com/chrome](https://www.google.com/chrome/) · Windows: `winget install Google.Chrome` |
+| Python 3.9+ | `check:voices` only | `python --version` (or `python3`) | Windows: `winget install Python.Python.3.13` · macOS: `brew install python` · Linux: `sudo apt install python3 python3-pip` |
+| edge-tts | `check:voices` only | `python -m edge_tts --help` | `python -m pip install --user edge-tts` |
+
+Then, in the project folder:
+
+1. `npm install`: the project's packages (React, Vite, Vitest, Tone.js, playwright-core…). No global npm
+   packages are needed. playwright-core uses the installed Chrome, so don't run `playwright install`.
+2. Verify, in this order:
+   - `npm test`: all unit tests pass.
+   - `npm run build`: type-checks and builds without errors.
+   - `npm run dev`: open http://localhost:5173/game-night-on/ in Chrome. The splash screen shows, and the language
+     button (EN/PT) and sound button sit bottom right.
+   - Optional, needs the internet: `npm run check:voices` passes (about 4 minutes).
+3. Only if something isn't found: set `CHROME_PATH` to the Chrome binary, or `PYTHON` to the Python command, for
+   `check:voices`.
+
+Nothing else is needed: no database, no environment file, no accounts. Settings, voice checks and rosters are
+saved in the browser. Pushing to `main` deploys to GitHub Pages (`.github/workflows/deploy.yml`).
+
 ## Running
 
 ```bash
 npm install
-npm run dev     # http://localhost:5173
+npm run dev     # http://localhost:5173/game-night-on/
 npm test        # unit tests (Vitest)
 npm run build
+npm run check:voices   # can the browser hear every Sing on the Beat card? (see below)
 ```
+
+### Voice check for the cards
+
+`npm run check:voices` makes sure Chrome's speech recognition (the one Sing on the Beat uses) can hear every card,
+in every theme and language, before a game night finds out. Two neural voices per language (a female and a male
+one) say each card alone and each deck in one go like a round. Chrome listens in the language's default accent,
+over quiet room noise like a real microphone. The game's own word matching then judges what it heard. It fails when a card is
+taken for another card of its deck, or is never heard right, alone or in a round. The report (also saved to
+`node_modules/.cache/voice-check/report.md`) shows what each voice was heard as, so a new deck's words can be
+checked, or a `sayAs` variant added.
+
+- Needs Google Chrome 135+ (set `CHROME_PATH` if it's not found), Python with `pip install edge-tts` (set `PYTHON`
+  if it's not `python`), and the internet. Only the card words go to the speech services; voice clips are cached.
+- `VOICE_CHECK_LOCALES=pt-PT` or `VOICE_CHECK_THEMES=christmas` checks just those. Takes about 4 minutes for all.
+- Synthetic voices are a good early warning, not a guarantee for every accent or room; results vary a little between
+  runs. A lone short word ("bee", "cão") often gets no transcript at all. The game is fine with that, since words
+  come in a stream, but the in-game voice check will say it heard nothing.
 
 ## Project layout
 
@@ -92,6 +140,17 @@ scripts/extract-icons.mjs   copies the icons we use from game-icons.net
   `.<engine>--<skin id>`), each registered as its own game. To bring a game to a new festivity, add a skin folder.
 - **Shooting game for a new festivity:** add a game folder with a `ShooterSkin` (title, target names and icons,
   sounds) and CSS under `.shooter--<skin id>` for the scenery; the mechanics are shared.
+- **Languages:** English (US) and Portuguese (Portugal). The app starts in the browser's language when it speaks it
+  (`pt-PT` or plain `pt`; `pt-BR` and anything else fall back to English), and the picker next to the sound button
+  switches it (saved in `localStorage` under `game-night-on:locale`). Every text a player sees is a
+  `Localized<…>` value (`core/i18n/locales.ts`) with one entry per language: data such as game names, skins' intros,
+  charades words and theme card decks carries its own translations, and each component's texts live in a
+  `messages.ts(x)` next to it, read with `useMessages(MESSAGES)`. **New language:** add it to `LOCALES` and run
+  `npm run build`: the type checker lists every text still to translate. Sing on the Beat's decks are chosen per
+  language, not translated: early decks need words that *rhyme in that language* (`gato, rato, pato, sapato`), so
+  pick words with pictures, and add an accent list for it in `ACCENTS` (`core/voice/calibration.ts`). The voice check
+  tests each theme's words again in each language, since the cards are other words; card ids must stay unique across
+  languages, as learned words are saved by card id (a test checks this).
 - **New festivity:** add `src/themes/<theme>/theme.ts` and register it in `themes/registry.ts`; colours live under `:root[data-theme='<id>']` in `index.css`.
 - **New icons:** add them to `scripts/extract-icons.mjs` and run `node scripts/extract-icons.mjs`.
 
