@@ -1,6 +1,8 @@
 import type { GameDefinition, Theme } from '../core/types';
+import { adventAmbush } from './advent-ambush';
 import { batBlitz } from './bat-blitz';
 import { bellChoir } from './bell-choir';
+import { hauntedHouse } from './haunted-house';
 import { presentPairs } from './present-pairs';
 import { pumpkinPatchMemory } from './pumpkin-patch-memory';
 import { singOnTheBeat } from './sing-on-the-beat';
@@ -16,6 +18,8 @@ export const GAMES: GameDefinition[] = [
   presentPairs,
   witchsCauldron,
   bellChoir,
+  hauntedHouse,
+  adventAmbush,
 ];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */

@@ -43,6 +43,10 @@ src/
                      the turn screen (pads in a ring) and sequenceGame() which turns a SequenceSkin into a game
     witchs-cauldron/ Halloween skin: add the ingredients to the brew in order
     bell-choir/      Christmas skin: chime the ornaments back in order
+    peekaboo/        shared pop-up game: characters peek out of holes, catch the rascals but not the friend
+                     (peek.ts, pure, tested), the turn screen and peekGame() which turns a PeekSkin into a game
+    haunted-house/   Halloween skin: ghosts in the windows, don't bonk the black cat
+    advent-ambush/   Christmas skin: imps behind advent calendar doors, don't bonk the reindeer
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

@@ -1,0 +1,161 @@
+/* A pop-up game's stage: a grid of holes characters peek out of. Each skin paints the scenery
+   and the holes under `.peek--<skin>`, and colours the characters:
+   --rascal, --boss, --friend, plus --hole (inside of a hole) and --frame (its border). */
+.peek {
+  --rascal: var(--text);
+  --boss: var(--highlight);
+  --friend: var(--good);
+  --hole: #000;
+  --frame: var(--border);
+}
+
+.peek__kind--rascal { --who: var(--rascal); }
+.peek__kind--boss { --who: var(--boss); }
+.peek__kind--friend { --who: var(--friend); }
+
+.peek .turn__legend li {
+  color: var(--who);
+}
+
+.peek__stage {
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 4cqmin, 2.5rem);
+}
+
+.peek__holes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 3cqmin, 1.75rem);
+  width: 100%;
+  height: 100%;
+}
+
+@container (aspect-ratio < 1) {
+  .peek__holes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.peek__holes li {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+.peek__hole {
+  position: relative;
+  /* As big as the cell allows, a bit taller than wide. */
+  width: min(100cqw, 85cqh);
+  height: min(100cqh, 117cqw);
+  padding: 0;
+  border: 4px solid var(--frame);
+  border-radius: 0.8rem;
+  background: var(--hole);
+  overflow: hidden;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.peek__hole:focus-visible {
+  outline: 3px solid var(--player, var(--accent));
+  outline-offset: 3px;
+}
+
+.peek__label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 30cqmin;
+  pointer-events: none;
+}
+
+/* The character slides up from the bottom of the hole. */
+.peek__who {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+  height: 86%;
+  display: grid;
+  place-items: end center;
+  color: var(--who);
+  pointer-events: none;
+  animation: peek-up 140ms ease-out;
+}
+
+.peek__who .icon {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--who) 60%, transparent));
+}
+
+.peek__hole--tapped .peek__who {
+  animation: peek-bonk 350ms ease-in forwards;
+}
+
+.peek__hole--tapped.peek__kind--friend {
+  border-color: var(--bad);
+  box-shadow: 0 0 24px var(--bad-glow);
+}
+
+.peek__hole--tapped:not(.peek__kind--friend) {
+  border-color: var(--player);
+  box-shadow: 0 0 24px var(--player);
+}
+
+.peek__points {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  translate: -50% -50%;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 22cqmin, 2.2rem);
+  color: var(--player);
+  text-shadow: 0 2px 6px #000;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: peek-float 500ms ease-out forwards;
+}
+
+.peek__points--bad {
+  color: var(--bad);
+}
+
+.peek__stage--over .peek__hole {
+  opacity: 0.5;
+}
+
+@keyframes peek-up {
+  from { translate: 0 100%; }
+  to { translate: 0 0; }
+}
+
+@keyframes peek-bonk {
+  0% { scale: 1.15 0.8; }
+  100% { scale: 0.6; translate: 0 70%; opacity: 0; }
+}
+
+@keyframes peek-float {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-30px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peek__who,
+  .peek__hole--tapped .peek__who,
+  .peek__points {
+    animation: none;
+  }
+}

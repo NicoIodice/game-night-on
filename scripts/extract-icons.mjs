@@ -50,6 +50,13 @@ const ICONS = {
     pine: 'pine-tree',
     icicles: 'stalactites',
   },
+  'src/games/haunted-house/assets': {
+    vampire: 'vampire-dracula',
+  },
+  'src/games/advent-ambush/assets': {
+    imp: 'imp',
+    'imp-boss': 'imp-laugh',
+  },
   'src/themes/christmas/assets': {
     tree: 'pine-tree',
     ski: 'skis',

@@ -1,0 +1,35 @@
+/* A haunted house at night: dark clapboard walls, a full moon, and warm candle-lit windows. */
+.peek--haunted-house {
+  --rascal: #f6eefe;
+  --boss: #ff4d6d;
+  --friend: #12091b;
+  --hole: radial-gradient(ellipse at 50% 60%, #ffcf6b, #c9661a 75%, #7a3405);
+  --frame: #4a3322;
+}
+
+.peek--haunted-house .turn__legend .peek__kind--friend {
+  color: #c9b3ec;
+}
+
+.peek--haunted-house .peek__stage {
+  background:
+    radial-gradient(circle at 88% 10%, #fff7d6 0 5%, rgb(255 247 214 / 0.18) 5.5%, transparent 16%),
+    repeating-linear-gradient(#1b0f26 0 22px, #150b1e 22px 24px),
+    #150b1e;
+}
+
+/* Window panes: a wooden cross behind whoever is peeking out. */
+.peek--haunted-house .peek__hole::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 3px), var(--frame) calc(50% - 3px) calc(50% + 3px), transparent calc(50% + 3px)),
+    linear-gradient(transparent calc(45% - 3px), var(--frame) calc(45% - 3px) calc(45% + 3px), transparent calc(45% + 3px));
+  pointer-events: none;
+}
+
+.peek--haunted-house .peek__hole {
+  border-radius: 45% 45% 0.4rem 0.4rem / 25% 25% 0.4rem 0.4rem;
+  box-shadow: 0 0 18px rgb(255 160 60 / 0.25);
+}
