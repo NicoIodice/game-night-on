@@ -427,3 +427,26 @@
     animation: none;
   }
 }
+
+.difficulty-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.difficulty-picker__select {
+  min-height: 40px;
+  padding: 0 0.6rem;
+  border: 2px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.difficulty-picker__select:hover,
+.difficulty-picker__select:focus-visible {
+  border-color: var(--accent);
+}

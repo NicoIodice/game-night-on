@@ -21,6 +21,8 @@ export function charadesGame(skin: CharadesSkin, details: SkinDetails): GameDefi
         max: 120,
         step: 15,
         default: DEFAULT_SECONDS,
+        easy: 90,
+        hard: 45,
       },
     ],
     Component: (props: GameProps) => <Charades {...props} skin={skin} />,

@@ -1,4 +1,4 @@
-import type { GameDefinition, GameOption, GameOptionValues, ThemeId } from '../types';
+import type { Difficulty, GameDefinition, GameOption, GameOptionValues, ThemeId } from '../types';
 
 /**
  * How a night is scored: every game on its own, or a tournament where
@@ -15,26 +15,39 @@ export interface LineupEntry {
 export interface Lineup {
   mode: LineupMode;
   entries: LineupEntry[];
-  /** Option values players changed, by game id then option id. Unset options use their default. */
+  /** Sets every option that players haven't changed. */
+  difficulty: Difficulty;
+  /**
+   * Option values players changed away from the difficulty's, by game id then option id.
+   * Unset options use the difficulty's value; any value set here makes the difficulty custom.
+   */
   options: Record<string, GameOptionValues>;
 }
+
+export const DIFFICULTIES: Difficulty[] = ['easy', 'normal', 'hard'];
 
 const LINEUP_KEY = 'game-night-on:lineup:';
 
 /** Every game, in the theme menu's order, scored on its own. */
 export function defaultLineup(games: readonly GameDefinition[]): Lineup {
-  return { mode: 'single', entries: games.map((game) => ({ gameId: game.id, enabled: true })), options: {} };
+  return {
+    mode: 'single',
+    entries: games.map((game) => ({ gameId: game.id, enabled: true })),
+    difficulty: 'normal',
+    options: {},
+  };
 }
 
 /**
  * Makes a saved lineup fit the games that exist now: unknown or repeated games are dropped,
  * new games are added at the end, and at least one game stays enabled. Option values for
- * options that no longer exist are dropped, and the rest are kept in range.
+ * options that no longer exist, or that match the difficulty's, are dropped, and the rest are kept in range.
  */
 export function normalizeLineup(saved: unknown, games: readonly GameDefinition[]): Lineup {
   const fallback = defaultLineup(games);
   if (typeof saved !== 'object' || saved === null) return fallback;
-  const { mode, entries, options } = saved as Partial<Lineup>;
+  const { mode, entries, difficulty: savedDifficulty, options } = saved as Partial<Lineup>;
+  const difficulty = DIFFICULTIES.includes(savedDifficulty as Difficulty) ? (savedDifficulty as Difficulty) : 'normal';
 
   const known = new Set(games.map((game) => game.id));
   const kept: LineupEntry[] = [];
@@ -53,31 +66,57 @@ export function normalizeLineup(saved: unknown, games: readonly GameDefinition[]
     const values = typeof options === 'object' && options !== null ? options[game.id] : undefined;
     for (const option of game.options ?? []) {
       const value: unknown = values?.[option.id];
-      if (typeof value === 'number' && Number.isFinite(value)) {
+      if (typeof value === 'number' && Number.isFinite(value) && clamp(option, value) !== presetValue(option, difficulty)) {
         keptOptions[game.id] = { ...keptOptions[game.id], [option.id]: clamp(option, value) };
       }
     }
   }
 
-  return { mode: mode === 'tournament' ? 'tournament' : 'single', entries: all, options: keptOptions };
+  return { mode: mode === 'tournament' ? 'tournament' : 'single', entries: all, difficulty, options: keptOptions };
 }
 
 function clamp(option: GameOption, value: number): number {
   return Math.min(option.max, Math.max(option.min, Math.round(value)));
 }
 
-/** Every option of a game, with the value players set or its default. */
-export function gameOptions(lineup: Lineup, game: GameDefinition): GameOptionValues {
-  const values = lineup.options[game.id] ?? {};
-  return Object.fromEntries((game.options ?? []).map((option) => [option.id, values[option.id] ?? option.default]));
+/** An option's value on a difficulty, kept within the option's range. */
+export function presetValue(option: GameOption, difficulty: Difficulty): number {
+  const value = difficulty === 'easy' ? option.easy : difficulty === 'hard' ? option.hard : undefined;
+  return clamp(option, value ?? option.default);
 }
 
-/** Sets one of a game's options, kept within the option's range. */
+/** Every option of a game, with the value players set or the difficulty's. */
+export function gameOptions(lineup: Lineup, game: GameDefinition): GameOptionValues {
+  const values = lineup.options[game.id] ?? {};
+  return Object.fromEntries(
+    (game.options ?? []).map((option) => [option.id, values[option.id] ?? presetValue(option, lineup.difficulty)]),
+  );
+}
+
+/**
+ * Sets one of a game's options, kept within the option's range. Setting it back to the
+ * difficulty's value forgets the change, so the difficulty stops being custom once nothing differs.
+ */
 export function setGameOption(lineup: Lineup, game: GameDefinition, option: GameOption, value: number): Lineup {
-  return {
-    ...lineup,
-    options: { ...lineup.options, [game.id]: { ...lineup.options[game.id], [option.id]: clamp(option, value) } },
-  };
+  const to = clamp(option, value);
+  const values = { ...lineup.options[game.id] };
+  if (to === presetValue(option, lineup.difficulty)) delete values[option.id];
+  else values[option.id] = to;
+
+  const options = { ...lineup.options };
+  if (Object.keys(values).length > 0) options[game.id] = values;
+  else delete options[game.id];
+  return { ...lineup, options };
+}
+
+/** Picks a difficulty, setting every game's options to its values. */
+export function setDifficulty(lineup: Lineup, difficulty: Difficulty): Lineup {
+  return { ...lineup, difficulty, options: {} };
+}
+
+/** Whether players changed any option away from the difficulty's values. */
+export function isCustom(lineup: Lineup): boolean {
+  return Object.keys(lineup.options).length > 0;
 }
 
 export function setLineupMode(lineup: Lineup, mode: LineupMode): Lineup {

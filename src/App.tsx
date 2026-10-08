@@ -4,6 +4,7 @@ import { loadMuted, setMuted, unlockAudio } from './core/audio/sound';
 import { useLocale, useMessages } from './core/i18n/I18n';
 import { useMusic } from './core/audio/useMusic';
 import { gameOptions, loadLineup, playlist, saveLineup, type Lineup } from './core/match/lineup';
+import { DifficultyPicker } from './core/match/DifficultyPicker';
 import { LineupSettings } from './core/match/LineupSettings';
 import { Match } from './core/match/Match';
 import type { Theme } from './core/types';
@@ -149,6 +150,7 @@ export default function App() {
             })}
           </ol>
           <div className="app__actions">
+            {lineup && <DifficultyPicker lineup={lineup} onChange={changeLineup} />}
             <button className="btn" onClick={() => setSettingsOpen(true)}>{t.settings}</button>
             <button className="btn" onClick={() => chooseTheme(null)}>{t.changeFestivity}</button>
           </div>

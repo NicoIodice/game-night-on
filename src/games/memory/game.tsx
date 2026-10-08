@@ -24,6 +24,8 @@ export function memoryGame(skin: MemorySkin, details: SkinDetails): GameDefiniti
         max: 180,
         step: 15,
         default: DEFAULT_SECONDS,
+        easy: 90,
+        hard: 45,
       },
     ],
     Component: (props: GameProps) => <Memory {...props} skin={skin} />,

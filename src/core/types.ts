@@ -59,6 +59,9 @@ export interface TurnResult {
   detail?: string;
 }
 
+/** How hard the night is. Each one sets every game's options to its values; changing one by hand makes it custom. */
+export type Difficulty = 'easy' | 'normal' | 'hard';
+
 /** A setting a game offers in the game night settings, e.g. "Rounds per level". Whole numbers only. */
 export interface GameOption {
   id: string;
@@ -67,7 +70,12 @@ export interface GameOption {
   max: number;
   /** How much the − and + buttons change the value. Defaults to 1. */
   step?: number;
+  /** The value on normal difficulty. */
   default: number;
+  /** The value on easy difficulty. Defaults to `default`, for options that don't make a game easier or harder. */
+  easy?: number;
+  /** The value on hard difficulty. Defaults to `default`. */
+  hard?: number;
 }
 
 /** Values for a game's options, by option id. Every option has a value. */

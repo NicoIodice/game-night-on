@@ -43,6 +43,8 @@ export const singOnTheBeat: GameDefinition = {
       max: 110,
       step: 5,
       default: DEFAULT_TEMPO,
+      easy: 70,
+      hard: 95,
     },
   ],
   Settings: VoiceSettings,

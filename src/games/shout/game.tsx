@@ -20,6 +20,8 @@ export function shoutGame(skin: ShoutSkin, details: SkinDetails): GameDefinition
         min: 2,
         max: 8,
         default: DEFAULT_SECONDS,
+        easy: 3,
+        hard: 6,
       },
     ],
     Component: (props: GameProps) => <Shout {...props} skin={skin} />,

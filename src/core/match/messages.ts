@@ -1,5 +1,5 @@
 import { plural, type Localized } from '../i18n/locales';
-import type { RosterKind } from '../types';
+import type { Difficulty, RosterKind } from '../types';
 
 const enUS = {
   // Player setup
@@ -62,6 +62,11 @@ const enUS = {
   moveUp: (name: string) => `Move ${name} up`,
   moveDown: (name: string) => `Move ${name} down`,
   untickedHint: 'Unticked games are hidden from the menu and skipped by the tournament.',
+  difficulty: 'Difficulty',
+  difficultyName: (difficulty: Difficulty | 'custom') =>
+    ({ easy: 'Easy', normal: 'Normal', hard: 'Hard', custom: 'Custom' })[difficulty],
+  difficultyHint: 'Sets the times and numbers below. Change any of them to make your own difficulty.',
+  customHint: (base: string) => `Custom: changed from ${base}. Pick a difficulty to start over from its values.`,
   less: (option: string) => `Fewer ${option.toLowerCase()}`,
   more: (option: string) => `More ${option.toLowerCase()}`,
   done: 'Done',
@@ -130,6 +135,11 @@ export const MESSAGES: Localized<typeof enUS> = {
     moveUp: (name) => `Subir ${name}`,
     moveDown: (name) => `Descer ${name}`,
     untickedHint: 'Os jogos desmarcados ficam escondidos do menu e o torneio salta-os.',
+    difficulty: 'Dificuldade',
+    difficultyName: (difficulty) =>
+      ({ easy: 'Fácil', normal: 'Normal', hard: 'Difícil', custom: 'Personalizada' })[difficulty],
+    difficultyHint: 'Define os tempos e números abaixo. Muda qualquer um deles para criares a tua própria dificuldade.',
+    customHint: (base) => `Personalizada: alterada a partir de ${base}. Escolhe uma dificuldade para voltar aos valores dela.`,
     less: (option) => `Diminuir: ${option}`,
     more: (option) => `Aumentar: ${option}`,
     done: 'Concluído',

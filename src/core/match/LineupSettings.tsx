@@ -2,9 +2,12 @@ import { useLocale, useMessages } from '../i18n/I18n';
 import type { GameDefinition, Theme } from '../types';
 import {
   defaultLineup,
+  DIFFICULTIES,
   enabledCount,
   gameOptions,
+  isCustom,
   moveGame,
+  setDifficulty,
   setGameOption,
   setLineupMode,
   toggleGame,
@@ -24,12 +27,16 @@ interface LineupSettingsProps {
 
 const MODES: LineupMode[] = ['single', 'tournament'];
 
-/** Sets up the night: how it's scored, which games are played and in what order, and each game's settings. */
+/**
+ * Sets up the night: how it's scored, which games are played and in what order, how hard it is,
+ * and each game's settings.
+ */
 export function LineupSettings({ theme, games, lineup, onChange, onDone }: LineupSettingsProps) {
   const locale = useLocale();
   const t = useMessages(MESSAGES);
   const lastOne = enabledCount(lineup) === 1;
   const configurable = games.filter((game) => game.options?.length || game.Settings);
+  const custom = isCustom(lineup);
 
   return (
     <section className="match match--panel">
@@ -90,6 +97,27 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
       </ol>
       <p className="match__hint">{t.untickedHint}</p>
 
+      {/* While custom, no difficulty is on: picking one sets its values again. */}
+      <div className="setup__kinds" role="radiogroup" aria-label={t.difficulty}>
+        {DIFFICULTIES.map((difficulty) => {
+          const on = !custom && lineup.difficulty === difficulty;
+          return (
+            <button
+              key={difficulty}
+              role="radio"
+              aria-checked={on}
+              className={`setup__kind ${on ? 'setup__kind--on' : ''}`}
+              onClick={() => onChange(setDifficulty(lineup, difficulty))}
+            >
+              {t.difficultyName(difficulty)}
+            </button>
+          );
+        })}
+      </div>
+      <p className="match__hint">
+        {custom ? t.customHint(t.difficultyName(lineup.difficulty)) : t.difficultyHint}
+      </p>
+
       {configurable.map((game) => {
         const values = gameOptions(lineup, game);
         return (
@@ -132,7 +160,7 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
 
       <div className="match__actions">
         <button className="btn btn--primary" onClick={onDone} autoFocus>{t.done}</button>
-        <button className="btn" onClick={() => onChange({ ...defaultLineup(games), mode: lineup.mode, options: lineup.options })}>
+        <button className="btn" onClick={() => onChange({ ...lineup, entries: defaultLineup(games).entries })}>
           {t.resetGames}
         </button>
       </div>

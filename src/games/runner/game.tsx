@@ -21,6 +21,8 @@ export function runnerGame(skin: RunnerSkin, details: SkinDetails): GameDefiniti
         max: 90,
         step: 5,
         default: DEFAULT_SECONDS,
+        easy: 30,
+        hard: 60,
       },
     ],
     Component: (props: GameProps) => <Runner {...props} skin={skin} />,

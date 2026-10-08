@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import type { GameDefinition } from '../types';
-import { defaultLineup, gameOptions, moveGame, normalizeLineup, playlist, setGameOption, toggleGame } from './lineup';
+import {
+  defaultLineup,
+  gameOptions,
+  isCustom,
+  moveGame,
+  normalizeLineup,
+  playlist,
+  setDifficulty,
+  setGameOption,
+  toggleGame,
+} from './lineup';
 
 const game = (id: string) => ({ id, name: { 'en-US': id, 'pt-PT': id } }) as GameDefinition;
 const games = ['a', 'b', 'c'].map(game);
 const rounds = { id: 'rounds', label: { 'en-US': 'Rounds', 'pt-PT': 'Rondas' }, min: 1, max: 10, default: 3 };
 const withOptions = { ...game('a'), options: [rounds] } as GameDefinition;
+const tempo = { id: 'tempo', label: { 'en-US': 'Tempo', 'pt-PT': 'Ritmo' }, min: 60, max: 110, default: 80, easy: 70, hard: 95 };
+const withTempo = { ...game('a'), options: [rounds, tempo] } as GameDefinition;
 const order = (lineup: { entries: { gameId: string }[] }) => lineup.entries.map((e) => e.gameId);
 
 describe('lineup', () => {
@@ -69,5 +81,33 @@ describe('lineup', () => {
     const saved = { entries: [], options: { a: { rounds: 0, gone: 4 }, gone: { rounds: 2 } } };
     expect(normalizeLineup(saved, [withOptions]).options).toEqual({ a: { rounds: 1 } });
     expect(normalizeLineup({ entries: [], options: { a: { rounds: 'x' } } }, [withOptions]).options).toEqual({});
+  });
+
+  it('starts on normal, and each difficulty sets its values, or the default where it has none', () => {
+    const lineup = defaultLineup([withTempo]);
+    expect(lineup.difficulty).toBe('normal');
+    expect(gameOptions(lineup, withTempo)).toEqual({ rounds: 3, tempo: 80 });
+    expect(gameOptions(setDifficulty(lineup, 'easy'), withTempo)).toEqual({ rounds: 3, tempo: 70 });
+    expect(gameOptions(setDifficulty(lineup, 'hard'), withTempo)).toEqual({ rounds: 3, tempo: 95 });
+  });
+
+  it("is custom once an option differs from the difficulty's, until it's set back or a difficulty is picked", () => {
+    const hard = setDifficulty(defaultLineup([withTempo]), 'hard');
+    const changed = setGameOption(hard, withTempo, tempo, 100);
+    expect(isCustom(hard)).toBe(false);
+    expect(isCustom(changed)).toBe(true);
+    expect(gameOptions(changed, withTempo)).toEqual({ rounds: 3, tempo: 100 });
+    expect(isCustom(setGameOption(changed, withTempo, tempo, 95))).toBe(false);
+    const easy = setDifficulty(changed, 'easy');
+    expect(isCustom(easy)).toBe(false);
+    expect(gameOptions(easy, withTempo)).toEqual({ rounds: 3, tempo: 70 });
+  });
+
+  it("keeps a saved difficulty, and drops saved values that match it", () => {
+    const saved = { entries: [], difficulty: 'hard', options: { a: { tempo: 95, rounds: 4 } } };
+    const lineup = normalizeLineup(saved, [withTempo]);
+    expect(lineup.difficulty).toBe('hard');
+    expect(lineup.options).toEqual({ a: { rounds: 4 } });
+    expect(normalizeLineup({ difficulty: 'impossible' }, [withTempo]).difficulty).toBe('normal');
   });
 });
