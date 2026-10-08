@@ -102,6 +102,10 @@
   color: #ffd84d;
 }
 
+.tile[data-theme-tile='summer'] .tile__icon {
+  color: #ffb347;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

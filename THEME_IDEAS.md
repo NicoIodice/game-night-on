@@ -69,15 +69,17 @@ Useful all year, not just one night.
 - **Cheep Cheep** (shout): CHEEP CHEEP! / PIU PIU!; a little bird learns to fly.
 - **Bunny Hop** (runner): the Easter bunny hops flowerpots and fences, grabbing eggs.
 
-### 3. Summer Beach / Pool Party
-- **Cards** (rhymes): sun, bun, run · shell, bell, well · then surfboard, sandcastle, crab, ice cream…
-- **Shooter**: splash beach balls with a water pistol.
-- **Memory**: seashells on the backs.
-- **Sequence**: steel-drum notes on beach things.
-- **Pop-up**: crabs pop out of sand holes. Don't tap the seagull!
-- **Charades**: summer activities (surfing, building a sandcastle, sunburn…).
-- **Shout**: a "Cannonball!" meter; the splash gets bigger.
-- **Runner**: a surfer jumping waves and rocks, grabbing ice creams.
+### 3. Summer Beach / Pool Party ✅ built (`summer`)
+- **Cards**: sail, pail, whale, snail · boat, goat, coat, note · then crab, seagull, starfish, surfboard, sunglasses,
+  umbrella, octopus. Portuguese: sol, farol, anzol, caracol · baleia, sereia, meia, teia · then caranguejo, gaivota,
+  prancha, polvo, óculos, barco, concha. (Christmas already has bell, and Birthday the ice cream.)
+- **Splash Attack** (shooter): splash beach balls with a water pistol; sneaky seagulls are quick, plus a golden starfish.
+- **Seashell Pairs** (memory): seashells on the backs.
+- **Beach Beats** (sequence): steel-drum notes on the sun, a shell, a palm tree, a crab, a starfish and a pineapple.
+- **Sandy Crabs** (pop-up): crabs pop out of sand holes, a sneaky octopus is the boss. Don't tap the seagull!
+- **Summer Charades**: summer activities (surfing, building a sandcastle, sunburn…).
+- **Cannonball!** (shout): CANNONBALL! / BOMBA!; the diver rides up the meter.
+- **Surf Dash** (runner): a surfer jumping rocks and big waves at sunset, grabbing ice creams.
 
 ### 4. Valentine's Day
 Fits the "couples" side of the app.

@@ -190,6 +190,49 @@ const ICONS = {
     'flower-pot': 'flower-pot',
     fence: 'wooden-fence',
   },
+  'src/themes/summer/assets': {
+    sail: 'sailboat',
+    pail: 'beach-bucket',
+    whale: 'sperm-whale',
+    snail: 'snail',
+    boat: 'speed-boat',
+    goat: 'goat',
+    coat: 'lab-coat',
+    note: 'musical-notes',
+    crab: 'crab',
+    seagull: 'seagull',
+    starfish: 'sea-star',
+    surfboard: 'surf-board',
+    sunglasses: 'sunglasses',
+    umbrella: 'umbrella',
+    octopus: 'octopus',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    sun: 'sun',
+    lighthouse: 'lighthouse',
+    hook: 'fishing-hook',
+    mermaid: 'mermaid',
+    socks: 'socks',
+    web: 'spider-web',
+    shell: 'spiral-shell',
+    favicon: { name: 'sun', fill: '#ffb347' },
+  },
+  'src/games/splash-attack/assets': {
+    'beach-ball': 'beach-ball',
+  },
+  'src/games/beach-beats/assets': {
+    drum: 'drum',
+    palm: 'palm-tree',
+    pineapple: 'pineapple',
+  },
+  'src/games/cannonball/assets': {
+    diver: 'pool-dive',
+  },
+  'src/games/surf-dash/assets': {
+    surfer: 'wave-surfer',
+    rock: 'rock',
+    wave: 'big-wave',
+    'ice-cream': 'ice-cream-cone',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

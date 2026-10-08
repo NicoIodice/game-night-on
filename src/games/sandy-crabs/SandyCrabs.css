@@ -1,0 +1,25 @@
+/* Golden sand speckled with tiny shells; the holes are damp, darker sand. */
+.peek--sandy-crabs {
+  --rascal: #ff6b6b;
+  --boss: #c48aff;
+  --friend: #f2fcff;
+  --hole: radial-gradient(ellipse at 50% 70%, #9a6b34, #5a3a18 80%);
+  --frame: #e2b366;
+}
+
+.peek--sandy-crabs .peek__stage {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 0.55) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    radial-gradient(circle at 60% 70%, rgb(154 107 52 / 0.6) 0 1.6px, transparent 2.2px) 0 0 / 70px 60px,
+    linear-gradient(#e9c27e, #d2a35c);
+}
+
+/* Holes dug in the sand, with a little rim of sand around them. */
+.peek--sandy-crabs .peek__hole {
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px #f2d59a, inset 0 8px 14px rgb(0 0 0 / 0.35);
+}
+
+.peek--sandy-crabs .turn__legend .peek__kind--friend {
+  color: #f2fcff;
+}

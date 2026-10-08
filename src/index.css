@@ -66,6 +66,18 @@
   --font-display: 'Sniglet', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='summer'] {
+  --bg: #06202e;
+  --surface: #0b3a4f;
+  --border: #13607a;
+  --text: #f2fcff;
+  --text-muted: #9fcbd9;
+  --accent: #ffb347;
+  --highlight: #3ee6d0;
+  --glow: rgb(255 179 71 / 0.4);
+  --font-display: 'Lilita One', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

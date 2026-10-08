@@ -1,0 +1,30 @@
+/* The shore at sunset: warm sky, far islands, and the surf rolling along the bottom. */
+.runner--surf-dash {
+  --hero: #f2fcff;
+  --obstacle: #d8c8b4;
+  --treat: #ff8fa3;
+}
+
+.runner--surf-dash .runner__obstacle--tall {
+  --obstacle: #3ee6d0;
+}
+
+.runner--surf-dash .runner__stage {
+  background:
+    radial-gradient(circle at 78% 62%, #ffd166 0 6%, rgb(255 209 102 / 0.25) 6.5%, transparent 18%),
+    linear-gradient(#24104a, #c2456a 62%, #ffb347);
+}
+
+.runner--surf-dash .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 40% at 50% 100%, #3a1d4f 70%, transparent 71%),
+    radial-gradient(ellipse 44% 26% at 50% 100%, #4a2660 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--surf-dash .runner__ground {
+  background:
+    radial-gradient(circle at 50% 0, #e9fbff 0 40%, transparent 42%) 0 0 / 30px 10px repeat-x,
+    linear-gradient(#0f6b99, #0b3a4f);
+  background-position: calc(var(--distance, 0) * -100cqw) top, 0 0;
+}

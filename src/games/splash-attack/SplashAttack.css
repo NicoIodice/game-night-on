@@ -1,0 +1,71 @@
+/* A sunny beach: sky, the sun, the sea with rolling waves, and golden sand at the front. */
+.shooter--splash-attack .shooter__arena {
+  --glint: rgb(255 255 255 / 0.5) 0 1.4px, transparent 2.2px;
+  background:
+    radial-gradient(circle at 30% 60%, var(--glint)) 0 0 / 130px 90px,
+    radial-gradient(circle at 75% 85%, var(--glint)) 0 0 / 170px 110px,
+    radial-gradient(circle at 18% 16%, #fff1b8 0 5%, rgb(255 241 184 / 0.25) 5.5%, transparent 18%) 0 0 / 100% 100%,
+    linear-gradient(transparent 82%, #f2c879 82%) 0 0 / 100% 100%,
+    linear-gradient(#2b8fc6 0 38%, #0f6b99 38% 82%) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat;
+  animation: splash-attack-sea 12s linear infinite;
+}
+
+/* Moves the glints on the water a whole number of tiles, so the loop is seamless. */
+@keyframes splash-attack-sea {
+  to {
+    background-position: 260px 0, -340px 0, 0 0, 0 0, 0 0;
+  }
+}
+
+/* Foamy wave crests where the sea meets the sand. */
+.shooter--splash-attack .shooter__arena::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16%;
+  height: 4%;
+  background: radial-gradient(circle at 50% 100%, #e9fbff 0 60%, transparent 62%) 0 0 / 40px 100%;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Beach balls, seagulls and the starfish */
+.shooter--splash-attack .shooter__target--common {
+  --target: #ff6b6b;
+}
+
+.shooter--splash-attack .shooter__target--swift {
+  --target: #f2fcff;
+}
+
+.shooter--splash-attack .shooter__target--golden {
+  --target: #ffd166;
+}
+
+.shooter--splash-attack .shooter__arena .icon {
+  animation: splash-attack-bounce 360ms ease-in-out infinite alternate;
+}
+
+.shooter--splash-attack .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 150ms;
+}
+
+/* A hit leaves a splash of water ringed in the player's colour. */
+.shooter--splash-attack .shooter__shot--hit::before {
+  background: radial-gradient(circle, #e9fbff 0 26%, rgb(158 230 255 / 0.6) 34%, transparent 62%);
+}
+
+@keyframes splash-attack-bounce {
+  from { transform: rotate(-10deg) translateY(-5%); }
+  to { transform: rotate(10deg) translateY(5%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--splash-attack .shooter__arena,
+  .shooter--splash-attack .shooter__arena .icon {
+    animation: none;
+  }
+}

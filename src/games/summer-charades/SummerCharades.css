@@ -1,0 +1,20 @@
+/* A word card like a postcard: sandy cream with a sunset-orange edge, on a sparkling sea. */
+.charades--summer-charades {
+  --card: linear-gradient(#fffaf0, #fff0d6);
+  --card-ink: #0b3a4f;
+}
+
+.charades--summer-charades .charades__card {
+  box-shadow: inset 0 0 0 8px #ffb347, 0 0 40px color-mix(in srgb, var(--player) 35%, transparent);
+}
+
+.charades--summer-charades .charades__icon {
+  color: #0f6b99;
+}
+
+.charades--summer-charades .charades__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 255 255 / 0.45) 0 1.3px, transparent 2.3px) 0 0 / 110px 100px,
+    radial-gradient(circle at 70% 75%, rgb(62 230 208 / 0.35) 0 1.4px, transparent 2.2px) 0 0 / 80px 70px,
+    linear-gradient(#0b3a4f, #06202e);
+}

@@ -1,0 +1,14 @@
+/* A warm summer evening by the sea, with a sunset glow around the steel drum. */
+.sequence--beach-beats .sequence__stage {
+  --sparkle: rgb(255 255 255 / 0.45) 0 1.3px, transparent 2px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--sparkle)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, var(--sparkle)) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(255 179 71 / 0.25), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#0b3a4f, #06202e) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--beach-beats .sequence__center-icon {
+  color: #ffb347;
+}

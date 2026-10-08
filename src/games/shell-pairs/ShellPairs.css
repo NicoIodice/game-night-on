@@ -1,0 +1,12 @@
+/* Seashells on wet sand: coral-pink backs with ripples, turned over to sandy cards. */
+.memory--shell-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(62 230 208 / 0.16), transparent 70%),
+    linear-gradient(#0b3a4f, #06202e);
+  --card-back:
+    repeating-radial-gradient(circle at 50% 120%, transparent 0 14px, rgb(255 255 255 / 0.16) 14px 17px),
+    linear-gradient(#ff8f7a, #e2577a);
+  --card-back-ink: #fff4e8;
+  --card-face: #fff4dc;
+  --card-face-ink: #0b3a4f;
+}

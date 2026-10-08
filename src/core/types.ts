@@ -3,7 +3,7 @@ import type { Music } from './audio/BeatClock';
 import type { ThemeSounds } from './audio/themeSounds';
 import type { Localized } from './i18n/locales';
 
-export type ThemeId = 'halloween' | 'christmas' | 'birthday' | 'easter';
+export type ThemeId = 'halloween' | 'christmas' | 'birthday' | 'easter' | 'summer';
 
 /** A picture card a game can show, e.g. "bat". Themes supply their own decks, one set per language. */
 export interface Card {
