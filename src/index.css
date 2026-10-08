@@ -42,6 +42,18 @@
   --font-display: 'Creepster', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='birthday'] {
+  --bg: #1a1033;
+  --surface: #2c1a52;
+  --border: #4d2f85;
+  --text: #fff5fb;
+  --text-muted: #c9b6e4;
+  --accent: #ff5fa2;
+  --highlight: #4de1ff;
+  --glow: rgb(255 95 162 / 0.4);
+  --font-display: 'Chewy', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

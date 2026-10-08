@@ -1,0 +1,32 @@
+/* A party in the garden at dusk: bunting colours in the sky, balloon-round hills, a checked party floor. */
+.runner--party-dash {
+  --hero: #4de1ff;
+  --obstacle: #ff5fa2;
+  --treat: #ffd166;
+}
+
+.runner--party-dash .runner__obstacle--tall {
+  --obstacle: #e0a46a;
+}
+
+.runner--party-dash .runner__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 209 102 / 0.55) 0 1.8px, transparent 2.4px) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, rgb(255 95 162 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    linear-gradient(#1a1033, #4d2f85) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.runner--party-dash .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #3a2366 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #452a78 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--party-dash .runner__ground {
+  background:
+    linear-gradient(#ff5fa2 0 5px, transparent 5px),
+    repeating-linear-gradient(90deg, #2c1a52 0 24px, #3a2366 24px 48px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

@@ -1,7 +1,7 @@
 # Theme ideas
 
 New festivities to add after Halloween and Christmas, with what each of the 8 games would look like in them.
-Nothing here is built yet.
+Themes marked ✅ are built; the notes under them describe what was made.
 
 **Recommended first: Birthday Party.** It gets played several times a year instead of once, and every game
 has an obvious version of it.
@@ -44,16 +44,18 @@ Every game also gets a `thumbnail.jpg` for its menu tile: a 960-pixel-wide scree
 
 ## The ideas
 
-### 1. Birthday Party ⭐ recommended
+### 1. Birthday Party ✅ built (`birthday`)
 Useful all year, not just one night.
-- **Cards** (rhymes): cake, rake, snake, lake · hat, cat, bat, mat · then balloon, candle, present, party hat…
-- **Shooter**: pop balloons floating up (golden = the birthday balloon).
-- **Memory**: wrapped presents on the backs.
-- **Sequence**: party horns and noisemakers.
-- **Pop-up**: balloons pop out of party boxes. Don't tap the cake!
-- **Charades**: party games and activities (blowing out candles, pin the tail, musical chairs…).
-- **Shout**: a "Happy Birthday" singing meter; the cake candles flare up.
-- **Runner**: dash through the party jumping presents and chairs, grabbing sweets.
+- **Cards**: box, fox, socks, rocks · bear, chair, pear, stairs · then balloon, cupcake, gift, candles, lollipop,
+  clown, trumpet. Portuguese: balão, camião, leão, avião · corneta, caneta, borboleta, maleta · then bolo, velas,
+  prenda, palhaço, chapéu, rebuçado, gelado. (Halloween already has cat, bat, hat, snake and cake.)
+- **Balloon Pop** (shooter): pop balloons floating up; balloon dogs are quick, the golden one is the birthday balloon.
+- **Party Pairs** (memory): wrapped presents on the backs.
+- **Party Band** (sequence): trumpet, drum, maracas, guitar, tambourine and whistle around a party popper.
+- **Surprise Boxes** (pop-up): balloons pop out of gift boxes, the piñata is the boss. Don't tap the cake!
+- **Party Charades**: party games and birthday moments (blowing out candles, pin the tail, musical chairs…).
+- **Birthday Cheer** (shout): HAPPY BIRTHDAY! / PARABÉNS!; the candles ride up the meter.
+- **Party Dash** (runner): race through the party jumping presents and chairs, grabbing cupcakes.
 
 ### 2. Easter / Spring
 - **Cards** (rhymes): egg, leg, peg, keg · hen, pen, ten, den · then bunny, basket, tulip, chick…

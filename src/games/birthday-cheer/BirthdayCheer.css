@@ -1,0 +1,15 @@
+/* A dark party room lit by the birthday candles; the meter goes from icing pink to candle-flame gold. */
+.shout--birthday-cheer {
+  --meter-low: #ff5fa2;
+  --meter-high: #ffd166;
+  --mascot: #fff0c9;
+}
+
+.shout--birthday-cheer .shout__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 95 162 / 0.5) 0 1.8px, transparent 2.4px) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 70%, rgb(77 225 255 / 0.45) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    radial-gradient(ellipse 120% 30% at 50% 105%, rgb(255 209 102 / 0.3), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#1a1033, #2c1a52) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}

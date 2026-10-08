@@ -1,0 +1,30 @@
+/* Gift boxes on the party floor, each wrapped in its own colour with a ribbon cross. */
+.peek--surprise-boxes {
+  --rascal: #ff5fa2;
+  --boss: #ffd166;
+  --friend: #fff5fb;
+  --hole: radial-gradient(ellipse at 50% 70%, #3a2366, #1a1033 80%);
+  --frame: #4de1ff;
+}
+
+.peek--surprise-boxes .peek__stage {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 95 162 / 0.45) 0 2px, transparent 2.6px) 0 0 / 90px 80px,
+    radial-gradient(circle at 60% 70%, rgb(77 225 255 / 0.4) 0 1.6px, transparent 2.2px) 0 0 / 70px 60px,
+    linear-gradient(#2c1a52, #1a1033);
+}
+
+/* Closed boxes: wrapping paper with a ribbon. They open when someone pops out. */
+.peek--surprise-boxes .peek__hole--empty {
+  background:
+    linear-gradient(90deg, transparent 44%, rgb(255 255 255 / 0.75) 44% 56%, transparent 56%),
+    linear-gradient(transparent 44%, rgb(255 255 255 / 0.75) 44% 56%, transparent 56%),
+    var(--wrap, #ff5fa2);
+}
+
+.peek--surprise-boxes li:nth-child(3n + 2) .peek__hole--empty { --wrap: #2bb7d6; }
+.peek--surprise-boxes li:nth-child(3n + 3) .peek__hole--empty { --wrap: #e0a92e; }
+
+.peek--surprise-boxes .peek__hole {
+  border-radius: 0.5rem;
+}

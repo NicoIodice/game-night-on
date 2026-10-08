@@ -1,0 +1,78 @@
+/* A party room: bunting along the top, confetti drifting down, a warm glow from the birthday table. */
+.shooter--balloon-pop .shooter__arena {
+  --confetti-a: #ff5fa2 0 2px, transparent 2.5px;
+  --confetti-b: #4de1ff 0 2px, transparent 2.5px;
+  --confetti-c: #ffd166 0 1.6px, transparent 2.2px;
+  background:
+    radial-gradient(circle at 14% 22%, var(--confetti-a)) 0 0 / 151px 139px,
+    radial-gradient(circle at 61% 48%, var(--confetti-b)) 0 0 / 151px 139px,
+    radial-gradient(circle at 37% 81%, var(--confetti-c)) 0 0 / 151px 139px,
+    radial-gradient(ellipse 80% 40% at 50% 110%, rgb(255 209 102 / 0.28), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#2c1a52, #1a1033) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+  animation: balloon-pop-confetti 14s linear infinite;
+}
+
+/* Moves the confetti a whole number of tiles, so the loop is seamless. */
+@keyframes balloon-pop-confetti {
+  to {
+    background-position: 151px 556px, 151px 556px, 151px 556px, 0 0, 0 0;
+  }
+}
+
+/* Bunting strung along the top. */
+.shooter--balloon-pop .shooter__arena::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12%;
+  background: linear-gradient(90deg, #ff5fa2, #ffd166, #4de1ff, #7ee08a, #ff5fa2);
+  mask: url('./assets/bunting.svg') repeat-x left top / auto 100%;
+  -webkit-mask: url('./assets/bunting.svg') repeat-x left top / auto 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Balloons */
+.shooter--balloon-pop .shooter__target--common {
+  --target: #ff5fa2;
+}
+
+.shooter--balloon-pop .shooter__target--swift {
+  --target: #4de1ff;
+}
+
+.shooter--balloon-pop .shooter__target--golden {
+  --target: #ffd166;
+}
+
+.shooter--balloon-pop .shooter__arena .icon {
+  animation: balloon-pop-bob 900ms ease-in-out infinite alternate;
+}
+
+.shooter--balloon-pop .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 260ms;
+}
+
+/* A pop leaves a burst of confetti ringed in the player's colour. */
+.shooter--balloon-pop .shooter__shot--hit::before {
+  background:
+    radial-gradient(circle at 30% 30%, #ffd166 0 3px, transparent 4px),
+    radial-gradient(circle at 70% 35%, #4de1ff 0 3px, transparent 4px),
+    radial-gradient(circle at 45% 72%, #ff5fa2 0 3px, transparent 4px),
+    radial-gradient(circle, var(--player), transparent 65%);
+}
+
+@keyframes balloon-pop-bob {
+  from { transform: rotate(-6deg) translateY(-4%); }
+  to { transform: rotate(6deg) translateY(4%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--balloon-pop .shooter__arena,
+  .shooter--balloon-pop .shooter__arena .icon {
+    animation: none;
+  }
+}

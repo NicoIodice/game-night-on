@@ -94,6 +94,10 @@
   color: #e63946;
 }
 
+.tile[data-theme-tile='birthday'] .tile__icon {
+  color: #ff5fa2;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

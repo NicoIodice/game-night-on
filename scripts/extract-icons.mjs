@@ -98,6 +98,55 @@ const ICONS = {
     castle: 'castle',
     favicon: { name: 'santa-hat', fill: '#e63946' },
   },
+  'src/themes/birthday/assets': {
+    box: 'cardboard-box-closed',
+    fox: 'fox',
+    socks: 'socks',
+    rocks: 'rock',
+    bear: 'bear-head',
+    chair: 'wooden-chair',
+    pear: 'pear',
+    stairs: 'stairs',
+    balloon: 'balloons',
+    cupcake: 'cupcake',
+    gift: 'present',
+    candles: 'candles',
+    lollipop: 'spiral-lollipop',
+    clown: 'clown',
+    trumpet: 'trumpet',
+    'party-hat': 'party-hat',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    truck: 'truck',
+    lion: 'lion',
+    airplane: 'airplane',
+    horn: 'hunting-horn',
+    pen: 'fountain-pen',
+    butterfly: 'butterfly',
+    briefcase: 'briefcase',
+    cake: 'stairs-cake',
+    sweet: 'wrapped-sweet',
+    'ice-cream': 'ice-cream-cone',
+    favicon: { name: 'party-hat', fill: '#ff5fa2' },
+  },
+  'src/games/balloon-pop/assets': {
+    'balloon-dog': 'balloon-dog',
+    // Scenery: party bunting along the top.
+    bunting: 'party-flags',
+  },
+  'src/games/party-band/assets': {
+    popper: 'party-popper',
+    drum: 'drum',
+    maracas: 'maracas',
+    tambourine: 'tambourine',
+    guitar: 'guitar',
+    whistle: 'whistle',
+  },
+  'src/games/surprise-boxes/assets': {
+    pinata: 'pinata',
+  },
+  'src/games/party-dash/assets': {
+    runner: 'run',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

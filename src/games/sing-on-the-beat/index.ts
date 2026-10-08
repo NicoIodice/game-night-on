@@ -1,4 +1,5 @@
 import type { GameDefinition } from '../../core/types';
+import birthdayThumbnail from './assets/thumbnail-birthday.jpg';
 import christmasThumbnail from './assets/thumbnail-christmas.jpg';
 import halloweenThumbnail from './assets/thumbnail-halloween.jpg';
 import { LOCALES } from '../../core/i18n/locales';
@@ -17,7 +18,7 @@ export const singOnTheBeat: GameDefinition = {
   },
   kind: 'voice',
   players: { min: 1, max: 8 },
-  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail },
+  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail, birthday: birthdayThumbnail },
   themes: 'all',
   // Every language needs a deck for every level.
   supports: (theme) =>

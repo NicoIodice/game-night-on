@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { GameDefinition } from '../core/types';
 import { christmas } from '../themes/christmas/theme';
 import { halloween } from '../themes/halloween/theme';
+import { THEMES } from '../themes/registry';
 import { GAMES, gamesFor } from './registry';
 
 const game = (id: string, overrides: Partial<GameDefinition> = {}): GameDefinition => ({
@@ -40,7 +41,7 @@ describe('GAMES', () => {
   });
 
   it("has what every game needs in each theme's decks, in every language", () => {
-    for (const theme of [halloween, christmas]) {
+    for (const theme of THEMES) {
       const meant = GAMES.filter((g) => g.enabled && (g.themes === 'all' || g.themes.includes(theme.id)));
       expect(gamesFor(theme).map((g) => g.id)).toEqual(meant.map((g) => g.id));
     }
@@ -49,7 +50,7 @@ describe('GAMES', () => {
 
 describe('theme decks', () => {
   it('give every card its own id across themes and languages, since learned words are saved by card id', () => {
-    const ids = [halloween, christmas].flatMap((theme) => Object.values(theme.decks).flat(2).map((card) => card.id));
+    const ids = THEMES.flatMap((theme) => Object.values(theme.decks).flat(2).map((card) => card.id));
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
