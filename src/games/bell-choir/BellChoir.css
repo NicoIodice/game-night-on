@@ -1,0 +1,14 @@
+/* Warm candlelight in a snowy chapel, with a glint of gold around the bell. */
+.sequence--bell-choir .sequence__stage {
+  --flake: rgb(255 255 255 / 0.5) 0 1.2px, transparent 2px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--flake)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, var(--flake)) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(255 204 77 / 0.25), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#0b1f19, #102a22) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--bell-choir .sequence__center-icon {
+  color: #ffcc4d;
+}

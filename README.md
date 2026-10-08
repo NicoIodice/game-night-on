@@ -39,6 +39,10 @@ src/
                      and memoryGame() which turns a MemorySkin into a game
     pumpkin-patch-memory/  Halloween skin: spooky friends under pumpkins
     present-pairs/   Christmas skin: festive surprises in presents
+    sequence/        shared repeat-the-sequence game: growing sequence, lives and scoring (sequence.ts, pure, tested),
+                     the turn screen (pads in a ring) and sequenceGame() which turns a SequenceSkin into a game
+    witchs-cauldron/ Halloween skin: add the ingredients to the brew in order
+    bell-choir/      Christmas skin: chime the ornaments back in order
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 
