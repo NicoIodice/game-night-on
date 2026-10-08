@@ -18,6 +18,18 @@
   color-scheme: dark;
 }
 
+:root[data-theme='christmas'] {
+  --bg: #0b1a14;
+  --surface: #13302a;
+  --border: #23584a;
+  --text: #f4fbf7;
+  --text-muted: #a8c9bc;
+  --accent: #ffcc4d;
+  --highlight: #ff6b6b;
+  --glow: rgb(255 204 77 / 0.4);
+  --font-display: 'Mountains of Christmas', 'Nunito', system-ui, sans-serif;
+}
+
 :root[data-theme='halloween'] {
   --bg: #120a1c;
   --surface: #23123a;

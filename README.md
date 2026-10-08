@@ -28,13 +28,16 @@ src/
       scoring.ts     judging what was said on each card's beat, points and perfect-round streak bonus (pure, tested)
       deal.ts        card dealing rules (pure, tested)
       timeline.ts    beat -> screen step mapping (pure, tested)
-    bat-blitz/       Halloween only: zap bats in a cave
-      hunt.ts        bats, shots, streaks and scoring (pure, tested)
+    shooter/         shared shooting game: targets, shots, streaks and scoring (hunt.ts, pure, tested),
+                     the turn screen (Shooter.tsx), and the ShooterSkin each festivity's version fills in
+    bat-blitz/       Halloween skin: zap bats in a cave
+    snowball-showdown/  Christmas skin: pelt imps with snowballs on a snowy night
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 
 - **New game:** add `src/games/<game>/index.ts` exporting a `GameDefinition`, then add it to `games/registry.ts`.
   Give it a `thumbnail` (a 16:9-ish screenshot of the game in play, e.g. `assets/thumbnail.jpg`) for its menu tile.
+  `thumbnail` can also be one screenshot per theme (`{ halloween, christmas }`) for games played in several festivities.
   The game component plays **one turn for one player** and calls `onTurnEnd({ score, detail })`; `core/match` handles
   choosing players or teams, passing the device between turns and showing the standings as soon as the last turn ends.
   A game with `levels: n` gets one turn per player per level: everyone plays level 1, then everyone plays level 2…
@@ -44,6 +47,8 @@ scripts/extract-icons.mjs   copies the icons we use from game-icons.net
   whether each game is scored on its own (retry it or go to the next game) or as a **tournament** where everyone plays
   every game in order and the scores add up to a final winner. Games with options (e.g. Sing on the Beat's rounds per
   level, default 3) can be tuned there too. Saved per theme in `localStorage`.
+- **Shooting game for a new festivity:** add a game folder with a `ShooterSkin` (title, target names and icons,
+  sounds) and CSS under `.shooter--<skin id>` for the scenery; the mechanics are shared.
 - **New festivity:** add `src/themes/<theme>/theme.ts` and register it in `themes/registry.ts`; colours live under `:root[data-theme='<id>']` in `index.css`.
 - **New icons:** add them to `scripts/extract-icons.mjs` and run `node scripts/extract-icons.mjs`.
 

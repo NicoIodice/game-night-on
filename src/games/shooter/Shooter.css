@@ -1,0 +1,245 @@
+.shooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.shooter--panel {
+  gap: 1.25rem;
+  max-width: 560px;
+  text-align: center;
+}
+
+.shooter--panel p {
+  margin: 0;
+}
+
+.shooter__turn {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.shooter__hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.shooter__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.shooter__legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.shooter__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 600;
+  color: var(--target, var(--accent));
+}
+
+.shooter__legend-item .icon {
+  font-size: 1.75rem;
+}
+
+.shooter__legend-item strong {
+  color: var(--text);
+}
+
+/* Status bar */
+.shooter__status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  font-weight: 700;
+}
+
+.shooter__status .btn {
+  margin-left: auto;
+}
+
+.shooter__score {
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+.shooter__combo {
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: var(--player);
+  color: #14121c;
+  animation: shooter-pop 200ms ease-out;
+}
+
+.shooter__time {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.shooter__time--low {
+  color: var(--bad);
+}
+
+.shooter__timer {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.shooter__timer-fill {
+  height: 100%;
+  background: var(--player);
+}
+
+/* The arena. Each skin paints its own scenery (see `.shooter--<skin>` in the game's CSS). */
+.shooter__arena {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  height: clamp(320px, calc(100dvh - 200px), 760px);
+  border: 2px solid var(--border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: var(--bg);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.shooter__arena--over .shooter__target {
+  opacity: 0.35;
+}
+
+/* Targets, coloured per kind by the skin through --target. */
+.shooter__target {
+  position: absolute;
+  width: calc(var(--size) * 100cqmin);
+  height: calc(var(--size) * 100cqmin);
+  translate: -50% -50%;
+  color: var(--target, var(--accent));
+  pointer-events: none;
+  transition: opacity 300ms;
+}
+
+.shooter__target .icon {
+  width: 100%;
+  height: 100%;
+}
+
+.shooter__target--golden {
+  filter: drop-shadow(0 0 10px var(--target));
+}
+
+/* Shots, drawn in the player's colour */
+.shooter__shot {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.shooter__shot::before {
+  content: '';
+  position: absolute;
+  inset: -28px;
+  border: 3px solid var(--player);
+  border-radius: 50%;
+  animation: shooter-ring 450ms ease-out forwards;
+}
+
+.shooter__shot--miss::before {
+  inset: -14px;
+  border-width: 2px;
+  opacity: 0.6;
+}
+
+.shooter__shot--hit::before {
+  background: radial-gradient(circle, var(--player), transparent 65%);
+}
+
+.shooter__points {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--player);
+  text-shadow: 0 2px 6px #000;
+  white-space: nowrap;
+  animation: shooter-float 600ms ease-out forwards;
+}
+
+.shooter__caption {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 14vw, 7rem);
+  color: var(--accent);
+  text-shadow: 0 0 24px var(--glow);
+  text-align: center;
+  pointer-events: none;
+  animation: shooter-pop 250ms ease-out;
+}
+
+.shooter__caption--over {
+  background: rgb(5 3 10 / 0.55);
+}
+
+.shooter__caption p {
+  margin: 0;
+}
+
+.shooter__final {
+  font-size: 0.5em;
+  color: var(--text);
+}
+
+@keyframes shooter-ring {
+  from { transform: scale(0.3); opacity: 1; }
+  to { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes shooter-float {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-40px); opacity: 0; }
+}
+
+@keyframes shooter-pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter__caption,
+  .shooter__combo {
+    animation: none;
+  }
+}

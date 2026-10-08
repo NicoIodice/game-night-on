@@ -1,5 +1,6 @@
 import type { GameDefinition } from '../../core/types';
-import thumbnail from './assets/thumbnail.jpg';
+import christmasThumbnail from './assets/thumbnail-christmas.jpg';
+import halloweenThumbnail from './assets/thumbnail-halloween.jpg';
 import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
 import { SingOnTheBeat } from './SingOnTheBeat';
 
@@ -9,7 +10,7 @@ export const singOnTheBeat: GameDefinition = {
   description: 'Say each card out loud right on the beat. Faster than it sounds!',
   kind: 'voice',
   players: '1–8 players or teams',
-  thumbnail,
+  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail },
   themes: 'all',
   supports: (theme) =>
     LEVELS.every((level) => {

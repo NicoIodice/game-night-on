@@ -8,7 +8,7 @@ import type { Theme } from './core/types';
 import { Icon } from './core/ui/Icon';
 import { SoundToggle } from './core/ui/SoundToggle';
 import { lobbyMusic } from './app/lobbyMusic';
-import { gamesFor } from './games/registry';
+import { gamesFor, thumbnailFor } from './games/registry';
 import { THEMES } from './themes/registry';
 import './App.css';
 
@@ -118,9 +118,10 @@ export default function App() {
           )}
           <ol className="tiles">
             {games.map((g, index) => {
+              const thumbnail = thumbnailFor(g, theme);
               const content = (
                 <>
-                  {g.thumbnail && <img className="tile__thumb" src={g.thumbnail} alt="" loading="lazy" />}
+                  {thumbnail && <img className="tile__thumb" src={thumbnail} alt="" loading="lazy" />}
                   {tournament && <span className="tile__order">Game {index + 1}</span>}
                   <span className="tile__name">{g.name}</span>
                   <span className="tile__text">{g.description}</span>

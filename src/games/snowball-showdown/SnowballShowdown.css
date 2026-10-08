@@ -1,0 +1,95 @@
+/* A snowy night over the North Pole: moon, falling snow, a snowy hill with pines, icicles along the top. */
+.shooter--snowball-showdown .shooter__arena {
+  --flake: #fff 0 1.6px, transparent 2.6px;
+  --far-flake: rgb(255 255 255 / 0.55) 0 1px, transparent 2px;
+  background:
+    radial-gradient(circle at 12% 18%, var(--flake)) 0 0 / 173px 151px,
+    radial-gradient(circle at 63% 47%, var(--flake)) 0 0 / 173px 151px,
+    radial-gradient(circle at 38% 86%, var(--flake)) 0 0 / 173px 151px,
+    radial-gradient(circle at 27% 62%, var(--far-flake)) 0 0 / 97px 89px,
+    radial-gradient(circle at 81% 21%, var(--far-flake)) 0 0 / 97px 89px,
+    radial-gradient(circle at 82% 18%, #fffbe8 0 4%, rgb(255 251 232 / 0.22) 4.5%, transparent 20%) 0 0 / 100% 100%,
+    radial-gradient(ellipse 130% 30% at 50% 108%, #eaf5ff 0 70%, transparent 71%) 0 0 / 100% 100%,
+    linear-gradient(#06112a, #102a52 65%, #1c4377) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat;
+  animation: snowball-showdown-snow 16s linear infinite;
+}
+
+/* Moves each snow layer a whole number of tiles, so the loop is seamless. Far flakes drift slower. */
+@keyframes snowball-showdown-snow {
+  to {
+    background-position:
+      -173px 604px, -173px 604px, -173px 604px,
+      97px 267px, 97px 267px,
+      0 0, 0 0, 0 0;
+  }
+}
+
+.shooter--snowball-showdown .shooter__arena::before,
+.shooter--snowball-showdown .shooter__arena::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.shooter--snowball-showdown .shooter__arena::before {
+  top: 0;
+  height: 9%;
+  background: #cfeaff;
+  opacity: 0.85;
+  mask: url('./assets/icicles.svg') repeat-x left top / auto 100%;
+  -webkit-mask: url('./assets/icicles.svg') repeat-x left top / auto 100%;
+}
+
+.shooter--snowball-showdown .shooter__arena::after {
+  bottom: 0;
+  height: 20%;
+  background: #0d3a2b;
+  mask: url('./assets/pine.svg') repeat-x left bottom / auto 100%;
+  -webkit-mask: url('./assets/pine.svg') repeat-x left bottom / auto 100%;
+}
+
+/* Imps and presents */
+.shooter--snowball-showdown .shooter__target--common {
+  --target: #7ee08a;
+}
+
+.shooter--snowball-showdown .shooter__target--swift {
+  --target: #ff5f6d;
+}
+
+.shooter--snowball-showdown .shooter__target--golden {
+  --target: #ffd166;
+}
+
+.shooter--snowball-showdown .shooter__arena .icon {
+  animation: snowball-showdown-wobble 220ms ease-in-out infinite alternate;
+}
+
+.shooter--snowball-showdown .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 120ms;
+}
+
+.shooter--snowball-showdown .shooter__arena .shooter__target--golden .icon {
+  animation-duration: 600ms;
+}
+
+/* A hit leaves a snowball splat ringed in the player's colour. */
+.shooter--snowball-showdown .shooter__shot--hit::before {
+  background: radial-gradient(circle, #fff 0 28%, rgb(255 255 255 / 0.6) 34%, transparent 62%);
+}
+
+@keyframes snowball-showdown-wobble {
+  from { transform: rotate(-9deg) translateY(-3%); }
+  to { transform: rotate(9deg) translateY(3%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--snowball-showdown .shooter__arena,
+  .shooter--snowball-showdown .shooter__arena .icon {
+    animation: none;
+  }
+}

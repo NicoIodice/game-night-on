@@ -87,8 +87,8 @@ export interface GameDefinition {
   description: string;
   kind: 'voice' | 'keyboard' | 'party';
   players: string;
-  /** A screenshot of the game being played, shown on its menu tile. */
-  thumbnail?: string;
+  /** A screenshot of the game being played, shown on its menu tile. Can differ per theme. */
+  thumbnail?: string | Partial<Record<ThemeId, string>>;
   /** 'all' for common games, or the themes a theme-specific game belongs to. */
   themes: ThemeId[] | 'all';
   /** Whether a theme has what the game needs (cards, music…). */

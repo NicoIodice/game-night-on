@@ -1,21 +1,15 @@
 import * as Tone from 'tone';
-import { createBeeper, type Cue } from '../../core/audio/beeper';
-import type { BatKind } from './hunt';
+import { createBeeper } from '../../core/audio/beeper';
+import type { TargetKind } from '../shooter/hunt';
+import { createStartTimes, type Sfx } from '../shooter/skin';
 
-const SQUEAKS: Record<BatKind, string[]> = {
-  bat: ['E6'],
+const SQUEAKS: Record<TargetKind, string[]> = {
+  common: ['E6'],
   swift: ['G6', 'B6'],
   golden: ['C6', 'E6', 'G6', 'C7'],
 };
 
-export interface Sfx {
-  hit(kind: BatKind): void;
-  miss(): void;
-  cue(cue: Cue): void;
-  timeUp(): void;
-  dispose(): void;
-}
-
+/** Bat Blitz: a thump and a squeak for every bat zapped. */
 export function createSfx(): Sfx {
   const thump = new Tone.MembraneSynth({
     volume: -6,
@@ -34,24 +28,21 @@ export function createSfx(): Sfx {
     envelope: { attack: 0.001, decay: 0.07, sustain: 0 },
   }).toDestination();
   const beeper = createBeeper();
-
-  // Taps can land in the same audio frame; Tone needs each start time to be later than the last.
-  let last = 0;
-  const now = () => (last = Math.max(Tone.now(), last + 0.01));
+  const times = createStartTimes();
 
   return {
     hit(kind) {
-      const time = now();
+      const time = times.next();
       thump.triggerAttackRelease('C2', '16n', time);
       SQUEAKS[kind].forEach((note, i) => squeak.triggerAttackRelease(note, '32n', time + 0.02 + i * 0.05));
-      last = time + SQUEAKS[kind].length * 0.05;
+      times.holdUntil(time + SQUEAKS[kind].length * 0.05);
     },
-    miss: () => whoosh.triggerAttackRelease('32n', now()),
-    cue: (cue) => beeper.play(cue, now()),
+    miss: () => whoosh.triggerAttackRelease('32n', times.next()),
+    cue: (cue) => beeper.play(cue, times.next()),
     timeUp() {
-      const time = now();
+      const time = times.next();
       ['E5', 'C5', 'A4'].forEach((note, i) => squeak.triggerAttackRelease(note, '8n', time + i * 0.15));
-      last = time + 0.3;
+      times.holdUntil(time + 0.3);
     },
     dispose() {
       [thump, squeak, whoosh, beeper].forEach((node) => node.dispose());

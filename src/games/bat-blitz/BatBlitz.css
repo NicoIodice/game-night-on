@@ -1,138 +1,13 @@
-.bb {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.bb--panel {
-  gap: 1.25rem;
-  max-width: 560px;
-  text-align: center;
-}
-
-.bb--panel p {
-  margin: 0;
-}
-
-.bb__turn {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.bb__hint {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.bb__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.bb__legend {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.bb__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  background: var(--surface);
-  font-weight: 600;
-  color: var(--bat);
-}
-
-.bb__legend-item .icon {
-  font-size: 1.75rem;
-}
-
-.bb__legend-item strong {
-  color: var(--text);
-}
-
-/* Status bar */
-.bb__status {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  font-weight: 700;
-}
-
-.bb__status .btn {
-  margin-left: auto;
-}
-
-.bb__score {
-  color: var(--accent);
-  font-size: 1.2rem;
-}
-
-.bb__combo {
-  padding: 0.1rem 0.6rem;
-  border-radius: 999px;
-  background: var(--player);
-  color: #14121c;
-  animation: bb-pop 200ms ease-out;
-}
-
-.bb__time {
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.bb__time--low {
-  color: var(--bad);
-}
-
-.bb__timer {
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.bb__timer-fill {
-  height: 100%;
-  background: var(--player);
-}
-
 /* The cave: moonlit mouth glowing at the back, rock teeth top and bottom. */
-.bb__cave {
-  position: relative;
-  container-type: size;
-  width: 100%;
-  height: clamp(320px, calc(100dvh - 200px), 760px);
-  border: 2px solid var(--border);
-  border-radius: 1.25rem;
-  overflow: hidden;
+.shooter--bat-blitz .shooter__arena {
   background:
     radial-gradient(ellipse 45% 55% at 50% 60%, rgb(255 122 24 / 0.22), transparent 70%),
     radial-gradient(ellipse 70% 80% at 50% 55%, #2c1748, transparent 75%),
     #0a0612;
-  cursor: crosshair;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-.bb__cave::before,
-.bb__cave::after {
+.shooter--bat-blitz .shooter__arena::before,
+.shooter--bat-blitz .shooter__arena::after {
   content: '';
   position: absolute;
   left: 0;
@@ -144,147 +19,46 @@
   z-index: 2;
 }
 
-.bb__cave::before {
+.shooter--bat-blitz .shooter__arena::before {
   top: 0;
   height: 18%;
 }
 
 /* Same rocks flipped upside down: stalagmites. */
-.bb__cave::after {
+.shooter--bat-blitz .shooter__arena::after {
   bottom: 0;
   height: 12%;
   transform: scaleY(-1);
 }
 
-.bb__cave--over .bb__bat {
-  opacity: 0.35;
-}
-
 /* Bats */
-.bb__bat {
-  --bat: #cdb6f2;
-  position: absolute;
-  width: calc(var(--size) * 100cqmin);
-  height: calc(var(--size) * 100cqmin);
-  translate: -50% -50%;
-  color: var(--bat);
-  pointer-events: none;
-  transition: opacity 300ms;
+.shooter--bat-blitz .shooter__target--common {
+  --target: #cdb6f2;
 }
 
-.bb__bat .icon {
-  width: 100%;
-  height: 100%;
-  animation: bb-flap 160ms ease-in-out infinite alternate;
+.shooter--bat-blitz .shooter__target--swift {
+  --target: #ff5f6d;
 }
 
-.bb__bat--swift {
-  --bat: #ff5f6d;
+.shooter--bat-blitz .shooter__target--golden {
+  --target: #ffd166;
 }
 
-.bb__bat--golden {
-  --bat: #ffd166;
-  filter: drop-shadow(0 0 10px rgb(255 209 102 / 0.8));
+.shooter--bat-blitz .shooter__arena .icon {
+  animation: bat-blitz-flap 160ms ease-in-out infinite alternate;
 }
 
-.bb__bat--swift .icon {
+.shooter--bat-blitz .shooter__arena .shooter__target--swift .icon {
   animation-duration: 90ms;
 }
 
-/* Shots, drawn in the player's colour */
-.bb__shot {
-  position: absolute;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.bb__shot::before {
-  content: '';
-  position: absolute;
-  inset: -28px;
-  border: 3px solid var(--player);
-  border-radius: 50%;
-  animation: bb-ring 450ms ease-out forwards;
-}
-
-.bb__shot--miss::before {
-  inset: -14px;
-  border-width: 2px;
-  opacity: 0.6;
-}
-
-.bb__shot--hit::before {
-  background: radial-gradient(circle, var(--player), transparent 65%);
-}
-
-.bb__points {
-  position: absolute;
-  left: 0;
-  top: 0;
-  translate: -50% -50%;
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: var(--player);
-  text-shadow: 0 2px 6px #000;
-  white-space: nowrap;
-  animation: bb-float 600ms ease-out forwards;
-}
-
-.bb__caption {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: grid;
-  place-content: center;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 14vw, 7rem);
-  color: var(--accent);
-  text-shadow: 0 0 24px var(--glow);
-  text-align: center;
-  pointer-events: none;
-  animation: bb-pop 250ms ease-out;
-}
-
-.bb__caption--over {
-  background: rgb(5 3 10 / 0.55);
-}
-
-.bb__caption p {
-  margin: 0;
-}
-
-.bb__final {
-  font-size: 0.5em;
-  color: var(--text);
-}
-
-@keyframes bb-flap {
+@keyframes bat-blitz-flap {
   from { transform: scaleY(1); }
   to { transform: scaleY(0.65); }
 }
 
-@keyframes bb-ring {
-  from { transform: scale(0.3); opacity: 1; }
-  to { transform: scale(1.4); opacity: 0; }
-}
-
-@keyframes bb-float {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-40px); opacity: 0; }
-}
-
-@keyframes bb-pop {
-  from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .bb__bat .icon,
-  .bb__caption,
-  .bb__combo {
+  .shooter--bat-blitz .shooter__arena .icon {
     animation: none;
   }
 }
