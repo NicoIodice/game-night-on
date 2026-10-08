@@ -54,6 +54,18 @@
   --font-display: 'Chewy', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='easter'] {
+  --bg: #0f1d2b;
+  --surface: #1a3247;
+  --border: #2f5672;
+  --text: #f6fbff;
+  --text-muted: #a9c4d6;
+  --accent: #ffd84d;
+  --highlight: #ff9ccf;
+  --glow: rgb(255 216 77 / 0.4);
+  --font-display: 'Sniglet', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

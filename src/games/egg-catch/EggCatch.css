@@ -1,0 +1,76 @@
+/* A spring meadow: blue sky with drifting clouds, the sun up top, daisies along the grass. */
+.shooter--egg-catch .shooter__arena {
+  --cloud: rgb(255 255 255 / 0.2) 0 70%, transparent 72%;
+  background:
+    radial-gradient(ellipse 90px 30px at 30% 40%, var(--cloud)) 0 0 / 420px 260px,
+    radial-gradient(ellipse 64px 22px at 75% 70%, var(--cloud)) 0 0 / 420px 260px,
+    radial-gradient(circle at 85% 14%, #fff3b0 0 4%, rgb(255 243 176 / 0.25) 4.5%, transparent 18%) 0 0 / 100% 100%,
+    radial-gradient(ellipse 130% 32% at 50% 110%, #3f9a5a 0 70%, transparent 71%) 0 0 / 100% 100%,
+    linear-gradient(#1a3a5c, #3b77a3 70%, #7fb6d6) 0 0 / 100% 100%;
+  background-repeat: repeat-x, repeat-x, no-repeat, no-repeat, no-repeat;
+  animation: egg-catch-clouds 40s linear infinite;
+}
+
+/* Moves the clouds a whole number of tiles, so the loop is seamless. */
+@keyframes egg-catch-clouds {
+  to {
+    background-position: 420px 0, 840px 0, 0 0, 0 0, 0 0;
+  }
+}
+
+/* Daisies along the bottom of the meadow. */
+.shooter--egg-catch .shooter__arena::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10%;
+  background: #fff8e8;
+  mask: url('./assets/daisy.svg') repeat-x left bottom / auto 100%;
+  -webkit-mask: url('./assets/daisy.svg') repeat-x left bottom / auto 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Eggs and bunnies */
+.shooter--egg-catch .shooter__target--common {
+  --target: #ff9ccf;
+}
+
+.shooter--egg-catch .shooter__target--swift {
+  --target: #c48a5a;
+}
+
+.shooter--egg-catch .shooter__target--golden {
+  --target: #ffd84d;
+}
+
+.shooter--egg-catch .shooter__arena .icon {
+  animation: egg-catch-wobble 420ms ease-in-out infinite alternate;
+}
+
+.shooter--egg-catch .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 160ms;
+}
+
+/* A catch leaves a burst of pastel petals ringed in the player's colour. */
+.shooter--egg-catch .shooter__shot--hit::before {
+  background:
+    radial-gradient(circle at 30% 30%, #ffd84d 0 3px, transparent 4px),
+    radial-gradient(circle at 70% 40%, #ff9ccf 0 3px, transparent 4px),
+    radial-gradient(circle at 45% 72%, #9ee6ff 0 3px, transparent 4px),
+    radial-gradient(circle, var(--player), transparent 65%);
+}
+
+@keyframes egg-catch-wobble {
+  from { transform: rotate(-12deg); }
+  to { transform: rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--egg-catch .shooter__arena,
+  .shooter--egg-catch .shooter__arena .icon {
+    animation: none;
+  }
+}

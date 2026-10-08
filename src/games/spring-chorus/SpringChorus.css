@@ -1,0 +1,14 @@
+/* A spring evening in the meadow, with warm sunlight around the nest. */
+.sequence--spring-chorus .sequence__stage {
+  --petal: rgb(255 156 207 / 0.45) 0 1.8px, transparent 2.4px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--petal)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, rgb(255 216 77 / 0.4) 0 1.4px, transparent 2px) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(255 216 77 / 0.22), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#1a3247, #17402c) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--spring-chorus .sequence__center-icon {
+  color: #e0b07a;
+}

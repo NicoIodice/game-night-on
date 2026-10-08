@@ -1,0 +1,22 @@
+/* A green meadow dotted with flowers; burrows are dark earthy holes ringed with grass. */
+.peek--bunny-burrows {
+  --rascal: #f6fbff;
+  --boss: #c48a5a;
+  --friend: #ffd84d;
+  --hole: radial-gradient(ellipse at 50% 70%, #4a3220, #22160c 80%);
+  --frame: #3f9a5a;
+}
+
+.peek--bunny-burrows .peek__stage {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 0.55) 0 2px, transparent 2.6px) 0 0 / 90px 80px,
+    radial-gradient(circle at 60% 70%, rgb(255 216 77 / 0.55) 0 1.8px, transparent 2.4px) 0 0 / 70px 60px,
+    radial-gradient(circle at 40% 45%, rgb(255 156 207 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 110px 95px,
+    linear-gradient(#2c6e44, #1d4d30);
+}
+
+/* Burrows are round holes with a grassy rim. */
+.peek--bunny-burrows .peek__hole {
+  border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+  box-shadow: 0 0 0 4px #3f9a5a, inset 0 8px 14px rgb(0 0 0 / 0.45);
+}

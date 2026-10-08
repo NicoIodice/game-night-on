@@ -1,0 +1,12 @@
+/* Painted eggs in the grass: pastel zigzag stripes on the backs, turned over to sunny white cards. */
+.memory--painted-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(126 224 138 / 0.18), transparent 70%),
+    linear-gradient(#1a3247, #0f1d2b);
+  --card-back:
+    linear-gradient(135deg, transparent 0 40%, rgb(255 255 255 / 0.35) 40% 46%, transparent 46% 54%, rgb(255 255 255 / 0.35) 54% 60%, transparent 60%),
+    linear-gradient(#ff9ccf, #9d7bff);
+  --card-back-ink: #fff8e8;
+  --card-face: #fffbea;
+  --card-face-ink: #1a3247;
+}

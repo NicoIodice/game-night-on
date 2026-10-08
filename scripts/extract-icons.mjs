@@ -147,6 +147,49 @@ const ICONS = {
   'src/games/party-dash/assets': {
     runner: 'run',
   },
+  'src/themes/easter/assets': {
+    frog: 'frog',
+    log: 'log',
+    dog: 'hound',
+    hog: 'pig',
+    rain: 'raining',
+    train: 'steam-locomotive',
+    chain: 'crossed-chains',
+    plane: 'airplane',
+    bunny: 'rabbit',
+    egg: 'easter-egg',
+    basket: 'basket',
+    carrot: 'carrot',
+    ladybug: 'ladybug',
+    butterfly: 'butterfly',
+    sheep: 'sheep',
+    chicken: 'chicken',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    nest: 'nest-eggs',
+    windmill: 'windmill',
+    bird: 'hummingbird',
+    ball: 'soccer-ball',
+    cage: 'bird-cage',
+    guitar: 'guitar',
+    pot: 'cooking-pot',
+    favicon: { name: 'easter-egg', fill: '#ffd84d' },
+  },
+  'src/games/egg-catch/assets': {
+    // Scenery: daisies along the meadow.
+    daisy: 'daisy',
+  },
+  'src/games/spring-chorus/assets': {
+    nest: 'nest-birds',
+    duck: 'duck',
+    bee: 'bee',
+  },
+  'src/games/bunny-burrows/assets': {
+    mole: 'mole',
+  },
+  'src/games/bunny-hop/assets': {
+    'flower-pot': 'flower-pot',
+    fence: 'wooden-fence',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

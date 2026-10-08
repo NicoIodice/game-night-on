@@ -1,0 +1,16 @@
+/* A spring sky over a green hill; the meter goes from leaf green to sunny yellow. */
+.shout--cheep-cheep {
+  --meter-low: #7ee08a;
+  --meter-high: #ffd84d;
+  --mascot: #9ee6ff;
+}
+
+.shout--cheep-cheep .shout__stage {
+  --cloud: rgb(255 255 255 / 0.18) 0 70%, transparent 72%;
+  background:
+    radial-gradient(ellipse 90px 30px at 30% 40%, var(--cloud)) 0 0 / 420px 260px,
+    radial-gradient(circle at 84% 16%, #fff3b0 0 5%, rgb(255 243 176 / 0.22) 5.5%, transparent 16%) 0 0 / 100% 100%,
+    radial-gradient(ellipse 130% 28% at 50% 106%, #3f9a5a 0 70%, transparent 71%) 0 0 / 100% 100%,
+    linear-gradient(#1a3a5c, #3b77a3) 0 0 / 100% 100%;
+  background-repeat: repeat-x, no-repeat, no-repeat, no-repeat;
+}

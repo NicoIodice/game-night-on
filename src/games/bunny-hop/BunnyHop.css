@@ -1,0 +1,30 @@
+/* A spring garden: blue sky, soft green hills, a grassy path. */
+.runner--bunny-hop {
+  --hero: #f6fbff;
+  --obstacle: #e0875a;
+  --treat: #ff9ccf;
+}
+
+.runner--bunny-hop .runner__obstacle--tall {
+  --obstacle: #c9a06a;
+}
+
+.runner--bunny-hop .runner__stage {
+  background:
+    radial-gradient(circle at 82% 18%, #fff3b0 0 5%, rgb(255 243 176 / 0.2) 5.5%, transparent 15%),
+    linear-gradient(#1a3a5c, #4f8db8 80%);
+}
+
+.runner--bunny-hop .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #2f7a48 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #3f9a5a 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--bunny-hop .runner__ground {
+  background:
+    linear-gradient(#7ee08a 0 5px, transparent 5px),
+    repeating-linear-gradient(90deg, #2c6e44 0 38px, #285f3c 38px 40px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

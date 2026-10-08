@@ -57,15 +57,17 @@ Useful all year, not just one night.
 - **Birthday Cheer** (shout): HAPPY BIRTHDAY! / PARABÉNS!; the candles ride up the meter.
 - **Party Dash** (runner): race through the party jumping presents and chairs, grabbing cupcakes.
 
-### 2. Easter / Spring
-- **Cards** (rhymes): egg, leg, peg, keg · hen, pen, ten, den · then bunny, basket, tulip, chick…
-- **Shooter**: catch or tap falling eggs (golden egg).
-- **Memory**: painted eggs on the backs.
-- **Sequence**: chicks chirping a tune.
-- **Pop-up**: bunnies pop out of meadow burrows. Don't tap the hen!
-- **Charades**: spring things (egg hunt, hopping bunny, planting flowers…).
-- **Shout**: a "chick cheep" meter.
-- **Runner**: a bunny hopping over flowerpots, grabbing eggs.
+### 2. Easter / Spring ✅ built (`easter`)
+- **Cards**: frog, log, dog, hog · rain, train, chain, plane · then bunny, egg, basket, carrot, ladybug, butterfly,
+  sheep. Portuguese: ninho, moinho, coelhinho, passarinho · bola, gaiola, viola, caçarola · then ovo, galinha,
+  cenoura, cesto, joaninha, ovelha, sapo. (game-icons has no chick or peg, hence different rhymes from the idea.)
+- **Egg Catch** (shooter): catch painted eggs over a spring meadow; chocolate bunnies are quick, plus a golden egg.
+- **Painted Pairs** (memory): painted eggs on the backs.
+- **Spring Chorus** (sequence): bird, hen, frog, sheep, duck and bee sing around a nest.
+- **Bunny Burrows** (pop-up): bunnies pop out of meadow burrows, a cheeky mole is the boss. Don't tap the hen!
+- **Spring Charades**: spring things (egg hunt, hopping bunny, planting flowers…).
+- **Cheep Cheep** (shout): CHEEP CHEEP! / PIU PIU!; a little bird learns to fly.
+- **Bunny Hop** (runner): the Easter bunny hops flowerpots and fences, grabbing eggs.
 
 ### 3. Summer Beach / Pool Party
 - **Cards** (rhymes): sun, bun, run · shell, bell, well · then surfboard, sandcastle, crab, ice cream…
