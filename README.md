@@ -91,6 +91,7 @@ src/
     egg-catch/       Easter skin: catch the painted eggs over a spring meadow
     splash-attack/   Summer skin: splash beach balls with a water pistol
     cupids-arrows/   Valentine skin: shoot Cupid's arrows at floating hearts
+    firework-frenzy/ New Year skin: burst the fireworks before they fade
     memory/          shared memory game: pairs, streaks and scoring (board.ts, pure, tested), the turn screen
                      and memoryGame() which turns a MemorySkin into a game
     pumpkin-patch-memory/  Halloween skin: spooky friends under pumpkins
@@ -99,6 +100,7 @@ src/
     painted-pairs/   Easter skin: spring surprises under painted eggs
     shell-pairs/     Summer skin: beach surprises under seashells
     sweetheart-pairs/  Valentine skin: sweethearts under roses
+    midnight-pairs/  New Year skin: New Year surprises under party poppers
     sequence/        shared repeat-the-sequence game: growing sequence, lives and scoring (sequence.ts, pure, tested),
                      the turn screen (pads in a ring) and sequenceGame() which turns a SequenceSkin into a game
     witchs-cauldron/ Halloween skin: add the ingredients to the brew in order
@@ -107,6 +109,7 @@ src/
     spring-chorus/   Easter skin: sing back the spring animals in order
     beach-beats/     Summer skin: play the steel-drum beach things back in order
     love-song/       Valentine skin: sing the sweet things back in order
+    midnight-chimes/ New Year skin: chime the party things back in order
     peekaboo/        shared pop-up game: characters peek out of holes, catch the rascals but not the friend
                      (peek.ts, pure, tested), the turn screen and peekGame() which turns a PeekSkin into a game
     haunted-house/   Halloween skin: ghosts in the windows, don't bonk the black cat
@@ -115,6 +118,7 @@ src/
     bunny-burrows/   Easter skin: bunnies out of meadow burrows, don't bonk the hen
     sandy-crabs/     Summer skin: crabs out of sand holes, don't bonk the seagull
     heart-windows/   Valentine skin: hearts in the windows, don't bonk the grumpy cat
+    confetti-cannons/  New Year skin: confetti cannons pop up, don't wake the sleepy guest
     charades/        shared charades game: a no-repeat word bag per night and scoring (words.ts, pure, tested),
                      the turn screen and charadesGame() which turns a CharadesSkin (title + word list) into a game
     monster-charades/   Halloween skin: spooky words to act out
@@ -123,6 +127,7 @@ src/
     spring-charades/    Easter skin: spring things to act out
     summer-charades/    Summer skin: summer things to act out
     love-charades/      Valentine skin: famous couples and romantic moments to act out
+    resolution-charades/  New Year skin: New Year's resolutions to act out
     shout/           shared shouting game: room noise, loudness and scoring (loudness.ts, pure, tested), the
                      microphone meter screen and shoutGame() which turns a ShoutSkin into a game
     scream-meter/    Halloween skin: scream to make the ghost fly
@@ -131,6 +136,7 @@ src/
     cheep-cheep/     Easter skin: CHEEP CHEEP to make the bird fly
     cannonball/      Summer skin: CANNONBALL! to make the biggest splash
     i-love-you/      Valentine skin: I LOVE YOU! to make the winged heart fly
+    happy-new-year/  New Year skin: HAPPY NEW YEAR! to send the firework sky-high
     runner/          shared running game: jumping, obstacles, treats and lives (dash.ts, pure, tested; a test checks a
                      whole run stays jumpable), the scrolling screen and runnerGame() which turns a RunnerSkin into a game
     trick-or-treat-dash/  Halloween skin: jump pumpkins and graves, grab sweets
@@ -139,6 +145,7 @@ src/
     bunny-hop/            Easter skin: the bunny hops flowerpots and fences, grabs eggs
     surf-dash/            Summer skin: surf the shore, jumping rocks and big waves, grabbing ice creams
     cupids-flight/        Valentine skin: Cupid dashes across the clouds, jumping cactuses and rain clouds
+    midnight-dash/        New Year skin: race to the party before midnight, jumping cones and bins
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

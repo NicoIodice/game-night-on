@@ -1,0 +1,75 @@
+/* Midnight over the city: a starry sky, a city skyline along the bottom with a few lit windows. */
+.shooter--firework-frenzy .shooter__arena {
+  --star: rgb(255 255 255 / 0.6) 0 1.2px, transparent 2px;
+  background:
+    radial-gradient(circle at 12% 18%, var(--star)) 0 0 / 137px 121px,
+    radial-gradient(circle at 63% 47%, var(--star)) 0 0 / 97px 89px,
+    radial-gradient(ellipse 90% 30% at 50% 100%, rgb(199 125 255 / 0.25), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#05051a, #1b1446 80%, #2e1d5c) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  animation: firework-frenzy-twinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes firework-frenzy-twinkle {
+  to { filter: brightness(1.12); }
+}
+
+/* The skyline: towers of different heights with lit windows. */
+.shooter--firework-frenzy .shooter__arena::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20%;
+  background:
+    radial-gradient(circle, rgb(245 197 66 / 0.6) 0 1.5px, transparent 2px) 0 100% / 14px 16px repeat,
+    linear-gradient(90deg, transparent 0 20%, #0b0b1e 20% 55%, transparent 55%) 0 100% / 110px 100% repeat-x,
+    linear-gradient(90deg, #0b0b1e 0 40%, transparent 40% 62%, #0b0b1e 62% 90%, transparent 90%) 0 100% / 150px 70% repeat-x,
+    linear-gradient(#0b0b1e, #0b0b1e) 0 100% / 100% 35% no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Fireworks, rockets and the shooting star */
+.shooter--firework-frenzy .shooter__target--common {
+  --target: #c77dff;
+}
+
+.shooter--firework-frenzy .shooter__target--swift {
+  --target: #4de1ff;
+}
+
+.shooter--firework-frenzy .shooter__target--golden {
+  --target: #f5c542;
+}
+
+.shooter--firework-frenzy .shooter__arena .icon {
+  animation: firework-frenzy-pulse 500ms ease-in-out infinite alternate;
+}
+
+.shooter--firework-frenzy .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 180ms;
+}
+
+/* A hit bursts into colourful sparks ringed in the player's colour. */
+.shooter--firework-frenzy .shooter__shot--hit::before {
+  background:
+    radial-gradient(circle at 25% 30%, #f5c542 0 3px, transparent 4px),
+    radial-gradient(circle at 75% 30%, #4de1ff 0 3px, transparent 4px),
+    radial-gradient(circle at 30% 75%, #ff5fa2 0 3px, transparent 4px),
+    radial-gradient(circle at 72% 72%, #c77dff 0 3px, transparent 4px),
+    radial-gradient(circle, var(--player), transparent 65%);
+}
+
+@keyframes firework-frenzy-pulse {
+  from { transform: scale(0.9) rotate(-8deg); }
+  to { transform: scale(1.08) rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--firework-frenzy .shooter__arena,
+  .shooter--firework-frenzy .shooter__arena .icon {
+    animation: none;
+  }
+}

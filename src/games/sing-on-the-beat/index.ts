@@ -3,6 +3,7 @@ import birthdayThumbnail from './assets/thumbnail-birthday.jpg';
 import easterThumbnail from './assets/thumbnail-easter.jpg';
 import summerThumbnail from './assets/thumbnail-summer.jpg';
 import valentineThumbnail from './assets/thumbnail-valentine.jpg';
+import newyearThumbnail from './assets/thumbnail-newyear.jpg';
 import christmasThumbnail from './assets/thumbnail-christmas.jpg';
 import halloweenThumbnail from './assets/thumbnail-halloween.jpg';
 import { LOCALES } from '../../core/i18n/locales';
@@ -21,7 +22,7 @@ export const singOnTheBeat: GameDefinition = {
   },
   kind: 'voice',
   players: { min: 1, max: 8 },
-  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail, birthday: birthdayThumbnail, easter: easterThumbnail, summer: summerThumbnail, valentine: valentineThumbnail },
+  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail, birthday: birthdayThumbnail, easter: easterThumbnail, summer: summerThumbnail, valentine: valentineThumbnail, newyear: newyearThumbnail },
   themes: 'all',
   // Every language needs a deck for every level.
   supports: (theme) =>

@@ -90,6 +90,18 @@
   --font-display: 'Pacifico', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='newyear'] {
+  --bg: #0b0b1e;
+  --surface: #17173d;
+  --border: #2f2f70;
+  --text: #f6f4ff;
+  --text-muted: #aaa7d8;
+  --accent: #f5c542;
+  --highlight: #c77dff;
+  --glow: rgb(245 197 66 / 0.4);
+  --font-display: 'Righteous', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

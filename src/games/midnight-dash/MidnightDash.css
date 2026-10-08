@@ -1,0 +1,36 @@
+/* City streets at midnight: starry sky, a skyline of towers, and a lamplit pavement. */
+.runner--midnight-dash {
+  --hero: #4de1ff;
+  --obstacle: #ff8c42;
+  --treat: #f5c542;
+}
+
+.runner--midnight-dash .runner__obstacle--tall {
+  --obstacle: #a9a6d6;
+}
+
+.runner--midnight-dash .runner__stage {
+  --star: rgb(255 255 255 / 0.55) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, var(--star)) 0 0 / 90px 80px,
+    radial-gradient(circle at 82% 18%, #f6f4ff 0 4%, rgb(246 244 255 / 0.16) 4.5%, transparent 14%) 0 0 / 100% 100%,
+    linear-gradient(#05051a, #2e1d5c) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+/* Far away, the city skyline instead of hills: towers of two heights, with lit windows. */
+.runner--midnight-dash .runner__far {
+  background-image:
+    radial-gradient(circle, rgb(245 197 66 / 0.55) 0 1.5px, transparent 2px),
+    linear-gradient(90deg, transparent 0 15%, #2a1f63 15% 55%, transparent 55%),
+    linear-gradient(90deg, #1f1750 0 35%, transparent 35% 60%, #1f1750 60% 85%, transparent 85%);
+  background-size: 2.2cqw 2.6cqh, 13cqw 90%, 19cqw 60%;
+}
+
+.runner--midnight-dash .runner__ground {
+  background:
+    linear-gradient(#c77dff 0 4px, transparent 4px),
+    repeating-linear-gradient(90deg, #17173d 0 58px, #12123a 58px 60px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

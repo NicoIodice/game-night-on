@@ -273,6 +273,48 @@ const ICONS = {
     cactus: 'cactus',
     cloud: 'raining',
   },
+  'src/themes/newyear/assets': {
+    clock: 'alarm-clock',
+    sock: 'socks',
+    rock: 'rock',
+    lock: 'padlock',
+    ear: 'human-ear',
+    deer: 'deer',
+    spear: 'spears',
+    pier: 'wooden-pier',
+    rocket: 'firework-rocket',
+    sparkler: 'sparkles',
+    grapes: 'grapes',
+    calendar: 'calendar',
+    hourglass: 'hourglass',
+    stopwatch: 'stopwatch',
+    ticket: 'ticket',
+    popper: 'party-popper',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    carpet: 'red-carpet',
+    soap: 'soap',
+    sword: 'pointy-sword',
+    ladder: 'ladder',
+    pillow: 'pillow',
+    fairy: 'fairy',
+    favicon: { name: 'firework-rocket', fill: '#c77dff' },
+  },
+  'src/games/firework-frenzy/assets': {
+    firework: 'circle-sparks',
+    'shooting-star': 'comet-spark',
+  },
+  'src/games/midnight-chimes/assets': {
+    'clock-tower': 'clock-tower',
+  },
+  'src/games/confetti-cannons/assets': {
+    cork: 'champagne-cork',
+    sleepy: 'sleepy',
+  },
+  'src/games/midnight-dash/assets': {
+    runner: 'run',
+    cone: 'traffic-cone',
+    bin: 'trash-can',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

@@ -1,0 +1,20 @@
+/* A word card like a New Year invitation: silver-white with a gold edge, on a starry midnight sky. */
+.charades--resolution-charades {
+  --card: linear-gradient(#ffffff, #eeeaff);
+  --card-ink: #17173d;
+}
+
+.charades--resolution-charades .charades__card {
+  box-shadow: inset 0 0 0 8px #f5c542, 0 0 40px color-mix(in srgb, var(--player) 35%, transparent);
+}
+
+.charades--resolution-charades .charades__icon {
+  color: #7a3fd1;
+}
+
+.charades--resolution-charades .charades__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 255 255 / 0.45) 0 1.3px, transparent 2.3px) 0 0 / 110px 100px,
+    radial-gradient(circle at 70% 75%, rgb(245 197 66 / 0.4) 0 1px, transparent 2px) 0 0 / 80px 70px,
+    linear-gradient(#0b0b1e, #17173d);
+}

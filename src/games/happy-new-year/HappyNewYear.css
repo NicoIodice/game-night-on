@@ -1,0 +1,16 @@
+/* The midnight sky over the city; the meter goes from violet to champagne gold. */
+.shout--happy-new-year {
+  --meter-low: #c77dff;
+  --meter-high: #f5c542;
+  --mascot: #ff5fa2;
+}
+
+.shout--happy-new-year .shout__stage {
+  --star: rgb(255 255 255 / 0.55) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 70%, var(--star)) 0 0 / 90px 80px,
+    radial-gradient(ellipse 120% 30% at 50% 105%, rgb(199 125 255 / 0.3), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#05051a, #1b1446) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}

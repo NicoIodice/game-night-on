@@ -110,6 +110,10 @@
   color: #ff4d8d;
 }
 
+.tile[data-theme-tile='newyear'] .tile__icon {
+  color: #c77dff;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

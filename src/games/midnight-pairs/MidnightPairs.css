@@ -1,0 +1,12 @@
+/* Party poppers on a glittery table: deep violet backs with gold sparkle, turned over to silver cards. */
+.memory--midnight-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(245 197 66 / 0.14), transparent 70%),
+    linear-gradient(#17173d, #0b0b1e);
+  --card-back:
+    radial-gradient(circle at 20% 25%, rgb(245 197 66 / 0.8) 0 1.5px, transparent 2.2px) 0 0 / 18px 18px,
+    linear-gradient(#5b2aa8, #2e1d5c);
+  --card-back-ink: #f5c542;
+  --card-face: #f6f4ff;
+  --card-face-ink: #17173d;
+}

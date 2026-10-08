@@ -1,0 +1,31 @@
+/* A glittering party floor: round spotlights on a violet floor, with the countdown numbers on each one. */
+.peek--confetti-cannons {
+  --rascal: #4de1ff;
+  --boss: #f5c542;
+  --friend: #c9b6e4;
+  --hole: radial-gradient(circle at 50% 45%, #3b2a7a, #17173d 80%);
+  --frame: #c77dff;
+}
+
+.peek--confetti-cannons .peek__stage {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(245 197 66 / 0.55) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    radial-gradient(circle at 60% 70%, rgb(199 125 255 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 70px 60px,
+    radial-gradient(circle at 40% 45%, rgb(77 225 255 / 0.45) 0 1.4px, transparent 2px) 0 0 / 110px 95px,
+    linear-gradient(#17173d, #0b0b1e);
+}
+
+.peek--confetti-cannons .peek__hole {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--frame), 0 0 16px rgb(199 125 255 / 0.35);
+}
+
+.peek--confetti-cannons .peek__label {
+  color: #f5c542;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.4);
+}
+
+/* The number hides while someone is in the spotlight. */
+.peek--confetti-cannons .peek__hole:not(.peek__hole--empty) .peek__label {
+  opacity: 0;
+}

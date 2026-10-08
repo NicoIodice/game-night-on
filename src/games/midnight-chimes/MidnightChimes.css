@@ -1,0 +1,14 @@
+/* A starry midnight sky with a golden glow around the clock tower. */
+.sequence--midnight-chimes .sequence__stage {
+  --star: rgb(255 255 255 / 0.5) 0 1.2px, transparent 2px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--star)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, var(--star)) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(245 197 66 / 0.22), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#17173d, #0b0b1e) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--midnight-chimes .sequence__center-icon {
+  color: #f5c542;
+}

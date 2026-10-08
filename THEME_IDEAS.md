@@ -94,15 +94,19 @@ Fits the "couples" side of the app.
 - **I Love You!** (shout): I LOVE YOU! / AMO-TE!; a winged heart rides up the meter.
 - **Cupid's Flight** (runner): Cupid dashes across the clouds, jumping cactuses and rain clouds, collecting hearts.
 
-### 5. New Year's Eve
-- **Cards** (rhymes): clock, sock, rock, lock · then fireworks, confetti, party popper, countdown…
-- **Shooter**: pop the fireworks before they fade.
-- **Memory**: party poppers on the backs.
-- **Sequence**: a countdown bell sequence.
-- **Pop-up**: confetti cannons pop up. Don't tap the sleeping guest!
-- **Charades**: New Year's resolutions.
-- **Shout**: a "HAPPY NEW YEAR!" meter.
-- **Runner**: racing to the party before midnight.
+### 5. New Year's Eve ✅ built (`newyear`)
+- **Cards**: clock, sock, rock, lock · ear, deer, spear, pier · then fireworks, sparkler, grapes, calendar, hourglass,
+  stopwatch, ticket. Portuguese: foguete, bilhete, tapete, sabonete · espada, escada, almofada, fada · then relógio,
+  passas, calendário, ampulheta, cronómetro, estrelinha, confetes. ("Gear" was dropped: it was heard as "here" and
+  "dear".)
+- **Firework Frenzy** (shooter): burst fireworks over the city skyline; rockets are quick, a shooting star brings luck.
+- **Midnight Pairs** (memory): party poppers on the backs.
+- **Midnight Chimes** (sequence): clock, firework, grapes, party popper, hourglass and sparkler around a clock tower.
+- **Confetti Cannons** (pop-up): confetti cannons pop up from numbered spotlights, a flying cork is the boss. Don't
+  wake the sleepy guest!
+- **Resolution Charades**: New Year's resolutions.
+- **Happy New Year!** (shout): HAPPY NEW YEAR! / FELIZ ANO NOVO!; the firework climbs the meter.
+- **Midnight Dash** (runner): racing through the city to the party before midnight, jumping cones and bins.
 
 ### 6. Carnival
 - **Cards** (rhymes): mask, flask, task · drum, gum, thumb · then confetti, juggler, parade, costume…
