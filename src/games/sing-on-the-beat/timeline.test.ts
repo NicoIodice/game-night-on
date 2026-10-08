@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { Level } from './levels';
-import { cueFor, roundBeats, stepAt } from './timeline';
+import { cueFor, roundBeats, stepAt, type Plan } from './timeline';
 
-const LEVEL: Level = { number: 1, bpm: 90, rounds: 2, cardCount: 3, cardTypes: 4, maxRepeats: 2 };
+const LEVEL: Plan = { rounds: 2, cardCount: 3 };
 const steps = (from: number, to: number) => Array.from({ length: to - from }, (_, i) => stepAt(from + i, LEVEL));
 
 describe('stepAt', () => {

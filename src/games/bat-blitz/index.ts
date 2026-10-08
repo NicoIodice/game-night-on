@@ -10,6 +10,6 @@ export const batBlitz: GameDefinition = {
   players: '1–8 players or teams',
   thumbnail,
   themes: ['halloween'],
-  supports: (theme) => theme.cards.some((card) => card.id === 'bat'),
+  supports: (theme) => theme.decks.some((deck) => deck.some((card) => card.id === 'bat')),
   Component: BatBlitz,
 };

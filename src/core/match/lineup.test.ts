@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { GameDefinition } from '../types';
-import { defaultLineup, moveGame, normalizeLineup, playlist, toggleGame } from './lineup';
+import { defaultLineup, gameOptions, moveGame, normalizeLineup, playlist, setGameOption, toggleGame } from './lineup';
 
 const game = (id: string) => ({ id, name: id }) as GameDefinition;
 const games = ['a', 'b', 'c'].map(game);
+const rounds = { id: 'rounds', label: 'Rounds', min: 1, max: 10, default: 3 };
+const withOptions = { ...game('a'), options: [rounds] } as GameDefinition;
 const order = (lineup: { entries: { gameId: string }[] }) => lineup.entries.map((e) => e.gameId);
 
 describe('lineup', () => {
@@ -52,5 +54,20 @@ describe('lineup', () => {
     const allOff = normalizeLineup({ entries: games.map((g) => ({ gameId: g.id, enabled: false })) }, games);
     expect(allOff.mode).toBe('single');
     expect(playlist(allOff, games).map((g) => g.id)).toEqual(['a']);
+  });
+
+  it('uses option defaults until players change them, kept in range', () => {
+    let lineup = defaultLineup([withOptions]);
+    expect(gameOptions(lineup, withOptions)).toEqual({ rounds: 3 });
+    lineup = setGameOption(lineup, withOptions, rounds, 5);
+    expect(gameOptions(lineup, withOptions)).toEqual({ rounds: 5 });
+    expect(gameOptions(setGameOption(lineup, withOptions, rounds, 99), withOptions)).toEqual({ rounds: 10 });
+    expect(gameOptions(defaultLineup(games), games[1])).toEqual({});
+  });
+
+  it('keeps saved option values that still fit, and drops the rest', () => {
+    const saved = { entries: [], options: { a: { rounds: 0, gone: 4 }, gone: { rounds: 2 } } };
+    expect(normalizeLineup(saved, [withOptions]).options).toEqual({ a: { rounds: 1 } });
+    expect(normalizeLineup({ entries: [], options: { a: { rounds: 'x' } } }, [withOptions]).options).toEqual({});
   });
 });

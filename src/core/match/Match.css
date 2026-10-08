@@ -389,6 +389,34 @@
   cursor: not-allowed;
 }
 
+.game-options {
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 1rem 0.75rem;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+}
+
+.game-options legend {
+  padding: 0 0.4rem;
+  font-weight: 700;
+}
+
+.game-options__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.game-options__value {
+  min-width: 2ch;
+  align-self: center;
+  text-align: center;
+  font-weight: 700;
+}
+
 @keyframes podium-rise {
   from { transform: translateY(40px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }

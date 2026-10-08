@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMusic } from '../audio/useMusic';
-import type { GameDefinition, Roster, Theme, TurnResult } from '../types';
+import type { GameDefinition, GameOptionValues, Roster, Theme, TurnResult } from '../types';
 import type { LineupMode } from './lineup';
 import { PlayerBadge } from './PlayerBadge';
 import { PlayerSetup } from './PlayerSetup';
@@ -12,10 +12,16 @@ import './Match.css';
 type Scores = Record<string, number>;
 type Details = Record<string, string | undefined>;
 
+/** One player's go at one level of a game. */
+interface Turn {
+  level: number;
+  seat: number;
+}
+
 type Stage =
   | { kind: 'setup' }
-  | { kind: 'turn'; seat: number }
-  | { kind: 'between'; seat: number; result: TurnResult }
+  | { kind: 'turn'; turn: Turn }
+  | { kind: 'between'; turn: Turn; result: TurnResult; next: Turn }
   | { kind: 'results' }
   | { kind: 'final' };
 
@@ -27,15 +33,18 @@ interface MatchProps {
   mode: LineupMode;
   /** The game picked from the menu. Tournaments always start from the first one. */
   startAt?: number;
+  /** Each game's settings from the game night settings. */
+  optionsFor: (game: GameDefinition) => GameOptionValues;
   onExit: () => void;
 }
 
 /**
  * Runs the night's games for a group: pick players or teams, give each one a turn
  * (passing the device in between), then show the standings straight away.
+ * Games with levels give everyone a turn at each level, one level after the other.
  * From there, retry the game or move on to the next one.
  */
-export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
+export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: MatchProps) {
   const tournament = mode === 'tournament';
   const [roster, setRoster] = useState<Roster>(loadRoster);
   const [stage, setStage] = useState<Stage>({ kind: 'setup' });
@@ -47,7 +56,9 @@ export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
   const players = roster.players;
   const game = games[gameIndex];
   const next = games[gameIndex + 1];
+  const levels = game.levels ?? 1;
   const nouns = roster.kind === 'teams' ? 'teams' : 'players';
+  const noun = roster.kind === 'teams' ? 'team' : 'player';
 
   // Menu music between turns; the game brings its own sound during a turn.
   useMusic(stage.kind === 'turn' ? null : (theme.music ?? null));
@@ -56,7 +67,7 @@ export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
     setGameIndex(index);
     setScores({});
     setDetails({});
-    setStage({ kind: 'turn', seat: 0 });
+    setStage({ kind: 'turn', turn: { level: 0, seat: 0 } });
   };
 
   const start = () => {
@@ -68,18 +79,26 @@ export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
     play(tournament ? 0 : gameIndex);
   };
 
-  const endTurn = (seat: number, result: TurnResult) => {
-    const { id } = players[seat];
+  /** Everyone plays a level before anyone moves on to the next one. */
+  const nextTurn = ({ level, seat }: Turn): Turn | null => {
+    if (seat < players.length - 1) return { level, seat: seat + 1 };
+    if (level < levels - 1) return { level: level + 1, seat: 0 };
+    return null;
+  };
+
+  const endTurn = (turn: Turn, result: TurnResult) => {
+    const { id } = players[turn.seat];
     const gameScores = { ...scores, [id]: (scores[id] ?? 0) + result.score };
     setScores(gameScores);
     setDetails((previous) => ({ ...previous, [id]: result.detail }));
 
-    if (seat < players.length - 1) {
-      // A moment to pass the device to the next player.
-      setStage({ kind: 'between', seat, result });
+    const next = nextTurn(turn);
+    if (next) {
+      // A moment to pass the device to the next player, or catch a breath before the next level.
+      setStage({ kind: 'between', turn, result, next });
       return;
     }
-    // Everyone has played: straight to the standings.
+    // Everyone has played every level: straight to the standings.
     setRounds((previous) => withAt(previous, gameIndex, gameScores));
     setStage({ kind: 'results' });
   };
@@ -98,22 +117,27 @@ export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
       );
 
     case 'turn': {
-      const { seat } = stage;
+      const { turn } = stage;
       return (
         <game.Component
-          key={`${gameIndex}:${seat}`}
+          key={`${gameIndex}:${turn.level}:${turn.seat}`}
           theme={theme}
-          player={players[seat]}
-          onTurnEnd={(result) => endTurn(seat, result)}
+          player={players[turn.seat]}
+          level={turn.level}
+          options={optionsFor(game)}
+          onTurnEnd={(result) => endTurn(turn, result)}
           onExit={() => setStage({ kind: 'setup' })}
         />
       );
     }
 
     case 'between': {
-      const { seat, result } = stage;
+      const { turn, result, next } = stage;
+      const { level, seat } = turn;
+      const passDevice = next.seat !== seat;
       return (
         <section className="match match--panel">
+          {levels > 1 && <p className="match__eyebrow">Level {level + 1} of {levels}</p>}
           <PlayerBadge player={players[seat]} className="match__who" />
           <p className="match__score">{result.score} points</p>
           {result.detail && <p>{result.detail}</p>}
@@ -122,15 +146,18 @@ export function Match({ theme, games, mode, startAt = 0, onExit }: MatchProps) {
             {players.map((player, i) => (
               <li key={player.id} className={i === seat ? 'match__scoreboard--current' : ''}>
                 <PlayerBadge player={player} />
-                <span>{i <= seat ? scores[player.id] ?? 0 : '–'}</span>
+                <span>{level > 0 || i <= seat ? scores[player.id] ?? 0 : '–'}</span>
               </li>
             ))}
           </ul>
 
-          <p className="match__hint">Pass the device to the next {roster.kind === 'teams' ? 'team' : 'player'}.</p>
+          <p className="match__hint">
+            {next.level !== level && `Up next: level ${next.level + 1} of ${levels}. `}
+            {passDevice && `Pass the device to the next ${noun}.`}
+          </p>
           <div className="match__actions">
-            <button className="btn btn--primary" onClick={() => setStage({ kind: 'turn', seat: seat + 1 })} autoFocus>
-              {players[seat + 1].name}, you're up!
+            <button className="btn btn--primary" onClick={() => setStage({ kind: 'turn', turn: next })} autoFocus>
+              {passDevice ? `${players[next.seat].name}, you're up!` : `Play level ${next.level + 1}`}
             </button>
           </div>
         </section>

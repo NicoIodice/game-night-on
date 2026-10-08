@@ -1,4 +1,4 @@
-import type { GameDefinition, ThemeId } from '../types';
+import type { GameDefinition, GameOption, GameOptionValues, ThemeId } from '../types';
 
 /**
  * How a night is scored: every game on its own, or a tournament where
@@ -11,27 +11,30 @@ export interface LineupEntry {
   enabled: boolean;
 }
 
-/** Which of a theme's games are played, in what order, and how they are scored. */
+/** Which of a theme's games are played, in what order, how they are scored, and each game's settings. */
 export interface Lineup {
   mode: LineupMode;
   entries: LineupEntry[];
+  /** Option values players changed, by game id then option id. Unset options use their default. */
+  options: Record<string, GameOptionValues>;
 }
 
 const LINEUP_KEY = 'game-night-on:lineup:';
 
 /** Every game, in the theme menu's order, scored on its own. */
 export function defaultLineup(games: readonly GameDefinition[]): Lineup {
-  return { mode: 'single', entries: games.map((game) => ({ gameId: game.id, enabled: true })) };
+  return { mode: 'single', entries: games.map((game) => ({ gameId: game.id, enabled: true })), options: {} };
 }
 
 /**
  * Makes a saved lineup fit the games that exist now: unknown or repeated games are dropped,
- * new games are added at the end, and at least one game stays enabled.
+ * new games are added at the end, and at least one game stays enabled. Option values for
+ * options that no longer exist are dropped, and the rest are kept in range.
  */
 export function normalizeLineup(saved: unknown, games: readonly GameDefinition[]): Lineup {
   const fallback = defaultLineup(games);
   if (typeof saved !== 'object' || saved === null) return fallback;
-  const { mode, entries } = saved as Partial<Lineup>;
+  const { mode, entries, options } = saved as Partial<Lineup>;
 
   const known = new Set(games.map((game) => game.id));
   const kept: LineupEntry[] = [];
@@ -45,7 +48,36 @@ export function normalizeLineup(saved: unknown, games: readonly GameDefinition[]
   const all = [...kept, ...added];
   if (all.length > 0 && !all.some((entry) => entry.enabled)) all[0] = { ...all[0], enabled: true };
 
-  return { mode: mode === 'tournament' ? 'tournament' : 'single', entries: all };
+  const keptOptions: Lineup['options'] = {};
+  for (const game of games) {
+    const values = typeof options === 'object' && options !== null ? options[game.id] : undefined;
+    for (const option of game.options ?? []) {
+      const value: unknown = values?.[option.id];
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        keptOptions[game.id] = { ...keptOptions[game.id], [option.id]: clamp(option, value) };
+      }
+    }
+  }
+
+  return { mode: mode === 'tournament' ? 'tournament' : 'single', entries: all, options: keptOptions };
+}
+
+function clamp(option: GameOption, value: number): number {
+  return Math.min(option.max, Math.max(option.min, Math.round(value)));
+}
+
+/** Every option of a game, with the value players set or its default. */
+export function gameOptions(lineup: Lineup, game: GameDefinition): GameOptionValues {
+  const values = lineup.options[game.id] ?? {};
+  return Object.fromEntries((game.options ?? []).map((option) => [option.id, values[option.id] ?? option.default]));
+}
+
+/** Sets one of a game's options, kept within the option's range. */
+export function setGameOption(lineup: Lineup, game: GameDefinition, option: GameOption, value: number): Lineup {
+  return {
+    ...lineup,
+    options: { ...lineup.options, [game.id]: { ...lineup.options[game.id], [option.id]: clamp(option, value) } },
+  };
 }
 
 export function setLineupMode(lineup: Lineup, mode: LineupMode): Lineup {

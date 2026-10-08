@@ -35,7 +35,7 @@ const TICKING_FROM = 5;
 const KIND_NAMES: Record<BatKind, string> = { bat: 'Bat', swift: 'Swift bat', golden: 'Vampire bat' };
 
 export function BatBlitz({ theme, player, onTurnEnd, onExit }: GameProps) {
-  const batImage = theme.cards.find((card) => card.id === 'bat')?.image ?? '';
+  const batImage = theme.decks.flat().find((card) => card.id === 'bat')?.image ?? '';
   const images: Record<BatKind, string> = { bat: batImage, swift: swiftBat, golden: goldenBat };
 
   const [phase, setPhase] = useState<Phase>('intro');
