@@ -1,0 +1,15 @@
+/* The samba stage: confetti on a deep teal night, with a golden spotlight on the big drum. */
+.sequence--samba-parade .sequence__stage {
+  --confetti-a: rgb(0 214 143 / 0.55) 0 1.8px, transparent 2.4px;
+  --confetti-b: rgb(180 77 255 / 0.55) 0 1.6px, transparent 2.2px;
+  background:
+    radial-gradient(circle at 20% 30%, var(--confetti-a)) 0 0 / 120px 110px,
+    radial-gradient(circle at 70% 80%, var(--confetti-b)) 0 0 / 150px 130px,
+    radial-gradient(circle at 50% 50%, rgb(255 204 0 / 0.22), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#123138, #0a1a1f) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--samba-parade .sequence__center-icon {
+  color: #ffcc00;
+}

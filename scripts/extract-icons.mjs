@@ -315,6 +315,41 @@ const ICONS = {
     cone: 'traffic-cone',
     bin: 'trash-can',
   },
+  'src/themes/carnival/assets': {
+    crown: 'crown',
+    clown: 'clown',
+    gown: 'dress',
+    town: 'village',
+    bug: 'spotted-bug',
+    mug: 'coffee-mug',
+    jug: 'jug',
+    plug: 'plug',
+    mask: 'carnival-mask',
+    juggler: 'juggler',
+    jester: 'jester-hat',
+    feather: 'feather',
+    parrot: 'parrot-head',
+    maracas: 'maracas',
+    unicycle: 'unicycle',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    boot: 'cowboy-boot',
+    drop: 'water-drop',
+    note: 'musical-notes',
+    somersault: 'acrobatic',
+    flag: 'brazil-flag',
+    campfire: 'campfire',
+    chair: 'wooden-chair',
+    mole: 'mole',
+    tambourine: 'tambourine',
+    drum: 'drum',
+    favicon: { name: 'carnival-mask', fill: '#00d68f' },
+  },
+  'src/games/samba-parade/assets': {
+    whistle: 'whistle',
+  },
+  'src/games/parade-float/assets': {
+    mime: 'drama-masks',
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

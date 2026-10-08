@@ -8,11 +8,14 @@ import { birthdayCheer } from './birthday-cheer';
 import { bunnyBurrows } from './bunny-burrows';
 import { bunnyHop } from './bunny-hop';
 import { cannonball } from './cannonball';
+import { carnivalCheer } from './carnival-cheer';
 import { cheepCheep } from './cheep-cheep';
 import { confettiCannons } from './confetti-cannons';
+import { costumeCharades } from './costume-charades';
 import { cupidsArrows } from './cupids-arrows';
 import { cupidsFlight } from './cupids-flight';
 import { eggCatch } from './egg-catch';
+import { featherCatch } from './feather-catch';
 import { festiveCharades } from './festive-charades';
 import { fireworkFrenzy } from './firework-frenzy';
 import { gingerbreadDash } from './gingerbread-dash';
@@ -23,11 +26,14 @@ import { hoHoHoller } from './ho-ho-holler';
 import { iLoveYou } from './i-love-you';
 import { loveCharades } from './love-charades';
 import { loveSong } from './love-song';
+import { maskPairs } from './mask-pairs';
 import { midnightChimes } from './midnight-chimes';
 import { midnightDash } from './midnight-dash';
 import { midnightPairs } from './midnight-pairs';
 import { monsterCharades } from './monster-charades';
 import { paintedPairs } from './painted-pairs';
+import { paradeDash } from './parade-dash';
+import { paradeFloat } from './parade-float';
 import { partyBand } from './party-band';
 import { partyCharades } from './party-charades';
 import { partyDash } from './party-dash';
@@ -35,6 +41,7 @@ import { partyPairs } from './party-pairs';
 import { presentPairs } from './present-pairs';
 import { pumpkinPatchMemory } from './pumpkin-patch-memory';
 import { resolutionCharades } from './resolution-charades';
+import { sambaParade } from './samba-parade';
 import { sandyCrabs } from './sandy-crabs';
 import { screamMeter } from './scream-meter';
 import { shellPairs } from './shell-pairs';
@@ -60,6 +67,7 @@ export const GAMES: GameDefinition[] = [
   splashAttack,
   cupidsArrows,
   fireworkFrenzy,
+  featherCatch,
   pumpkinPatchMemory,
   presentPairs,
   partyPairs,
@@ -67,6 +75,7 @@ export const GAMES: GameDefinition[] = [
   shellPairs,
   sweetheartPairs,
   midnightPairs,
+  maskPairs,
   witchsCauldron,
   bellChoir,
   partyBand,
@@ -74,6 +83,7 @@ export const GAMES: GameDefinition[] = [
   beachBeats,
   loveSong,
   midnightChimes,
+  sambaParade,
   hauntedHouse,
   adventAmbush,
   surpriseBoxes,
@@ -81,6 +91,7 @@ export const GAMES: GameDefinition[] = [
   sandyCrabs,
   heartWindows,
   confettiCannons,
+  paradeFloat,
   monsterCharades,
   festiveCharades,
   partyCharades,
@@ -88,6 +99,7 @@ export const GAMES: GameDefinition[] = [
   summerCharades,
   loveCharades,
   resolutionCharades,
+  costumeCharades,
   screamMeter,
   hoHoHoller,
   birthdayCheer,
@@ -95,6 +107,7 @@ export const GAMES: GameDefinition[] = [
   cannonball,
   iLoveYou,
   happyNewYear,
+  carnivalCheer,
   trickOrTreatDash,
   gingerbreadDash,
   partyDash,
@@ -102,6 +115,7 @@ export const GAMES: GameDefinition[] = [
   surfDash,
   cupidsFlight,
   midnightDash,
+  paradeDash,
 ];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */

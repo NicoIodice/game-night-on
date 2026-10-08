@@ -1,0 +1,80 @@
+/* A carnival street at night: confetti falling, streamers strung overhead, and the crowd's glow below. */
+.shooter--feather-catch .shooter__arena {
+  --confetti-a: #00d68f 0 2px, transparent 2.6px;
+  --confetti-b: #ffcc00 0 2px, transparent 2.6px;
+  --confetti-c: #b44dff 0 1.8px, transparent 2.4px;
+  background:
+    radial-gradient(circle at 14% 22%, var(--confetti-a)) 0 0 / 151px 139px,
+    radial-gradient(circle at 61% 48%, var(--confetti-b)) 0 0 / 151px 139px,
+    radial-gradient(circle at 37% 81%, var(--confetti-c)) 0 0 / 151px 139px,
+    radial-gradient(ellipse 80% 40% at 50% 110%, rgb(255 204 0 / 0.25), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#0a1a1f, #123138) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+  animation: feather-catch-confetti 12s linear infinite;
+}
+
+/* Moves the confetti a whole number of tiles, so the loop is seamless. */
+@keyframes feather-catch-confetti {
+  to {
+    background-position: -151px 556px, 151px 556px, -151px 556px, 0 0, 0 0;
+  }
+}
+
+/* Streamers strung across the top: wavy green, gold and purple ribbons. */
+.shooter--feather-catch .shooter__arena::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 54px;
+  background:
+    radial-gradient(42px 26px at 50% 0, transparent 70%, #00d68f 72% 92%, transparent 94%) 0 0 / 84px 30px,
+    radial-gradient(42px 26px at 50% 0, transparent 70%, #ffcc00 72% 92%, transparent 94%) 28px 12px / 84px 30px,
+    radial-gradient(42px 26px at 50% 0, transparent 70%, #b44dff 72% 92%, transparent 94%) 56px 24px / 84px 30px;
+  background-repeat: repeat-x;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Feathers, parrots and the golden mask */
+.shooter--feather-catch .shooter__target--common {
+  --target: #00d68f;
+}
+
+.shooter--feather-catch .shooter__target--swift {
+  --target: #ff5f5f;
+}
+
+.shooter--feather-catch .shooter__target--golden {
+  --target: #ffcc00;
+}
+
+.shooter--feather-catch .shooter__arena .icon {
+  animation: feather-catch-sway 700ms ease-in-out infinite alternate;
+}
+
+.shooter--feather-catch .shooter__arena .shooter__target--swift .icon {
+  animation-duration: 200ms;
+}
+
+/* A catch bursts into confetti ringed in the player's colour. */
+.shooter--feather-catch .shooter__shot--hit::before {
+  background:
+    radial-gradient(circle at 30% 30%, #ffcc00 0 3px, transparent 4px),
+    radial-gradient(circle at 70% 35%, #00d68f 0 3px, transparent 4px),
+    radial-gradient(circle at 45% 72%, #b44dff 0 3px, transparent 4px),
+    radial-gradient(circle, var(--player), transparent 65%);
+}
+
+@keyframes feather-catch-sway {
+  from { transform: rotate(-18deg) translateX(-4%); }
+  to { transform: rotate(18deg) translateX(4%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooter--feather-catch .shooter__arena,
+  .shooter--feather-catch .shooter__arena .icon {
+    animation: none;
+  }
+}

@@ -114,6 +114,10 @@
   color: #c77dff;
 }
 
+.tile[data-theme-tile='carnival'] .tile__icon {
+  color: #00d68f;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

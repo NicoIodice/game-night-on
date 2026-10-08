@@ -1,0 +1,11 @@
+/* Carnival masks on a harlequin table: purple and green diamonds on the backs, gold masks, bright cards. */
+.memory--mask-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(255 204 0 / 0.14), transparent 70%),
+    linear-gradient(#123138, #0a1a1f);
+  --card-back:
+    conic-gradient(from 45deg, #7a2fd1 0 25%, #0f9e6a 25% 50%, #7a2fd1 50% 75%, #0f9e6a 75%) 0 0 / 28px 28px;
+  --card-back-ink: #ffcc00;
+  --card-face: #fffbea;
+  --card-face-ink: #123138;
+}

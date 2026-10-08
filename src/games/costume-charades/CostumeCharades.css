@@ -1,0 +1,20 @@
+/* A word card like a carnival ticket: cream with a gold edge, on a confetti night. */
+.charades--costume-charades {
+  --card: linear-gradient(#fffef5, #fff3c4);
+  --card-ink: #123138;
+}
+
+.charades--costume-charades .charades__card {
+  box-shadow: inset 0 0 0 8px #b44dff, 0 0 40px color-mix(in srgb, var(--player) 35%, transparent);
+}
+
+.charades--costume-charades .charades__icon {
+  color: #0f9e6a;
+}
+
+.charades--costume-charades .charades__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 204 0 / 0.55) 0 1.8px, transparent 2.4px) 0 0 / 110px 100px,
+    radial-gradient(circle at 70% 75%, rgb(0 214 143 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 80px 70px,
+    linear-gradient(#0a1a1f, #123138);
+}

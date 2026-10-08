@@ -102,6 +102,18 @@
   --font-display: 'Righteous', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='carnival'] {
+  --bg: #0a1a1f;
+  --surface: #123138;
+  --border: #1f5560;
+  --text: #f4fffd;
+  --text-muted: #9cc7c4;
+  --accent: #ffcc00;
+  --highlight: #00d68f;
+  --glow: rgb(255 204 0 / 0.4);
+  --font-display: 'Bungee', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

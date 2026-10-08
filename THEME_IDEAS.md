@@ -108,15 +108,19 @@ Fits the "couples" side of the app.
 - **Happy New Year!** (shout): HAPPY NEW YEAR! / FELIZ ANO NOVO!; the firework climbs the meter.
 - **Midnight Dash** (runner): racing through the city to the party before midnight, jumping cones and bins.
 
-### 6. Carnival
-- **Cards** (rhymes): mask, flask, task · drum, gum, thumb · then confetti, juggler, parade, costume…
-- **Shooter**: catch flying confetti and streamers.
-- **Memory**: masks on the backs.
-- **Sequence**: samba drums.
-- **Pop-up**: clowns pop out of the parade float. Don't tap the mime!
-- **Charades**: costumes and carnival characters.
-- **Shout**: a carnival-crowd cheer meter.
-- **Runner**: dancing through the parade, jumping drums.
+### 6. Carnival ✅ built (`carnival`)
+- **Cards**: crown, clown, gown, town · bug, mug, jug, plug · then mask, juggler, jester, feather, parrot, maracas,
+  unicycle. Portuguese: bota, gota, nota, cambalhota · bandeira, fogueira, cadeira, toupeira · then máscara,
+  malabarista, pandeireta, coroa, pena, tambor, monociclo. (game-icons has no confetti or flask-and-cask set, hence
+  different rhymes from the idea.)
+- **Feather Catch** (shooter): catch feathers flying off the parade under the streamers; parrots are quick, plus a
+  golden mask.
+- **Mask Pairs** (memory): carnival masks on harlequin backs.
+- **Samba Parade** (sequence): tambourine, maracas, whistle, feather, crown and parrot around the big samba drum.
+- **Parade Float** (pop-up): clowns pop out of the float's portholes, the jester is the boss. Don't tap the mime!
+- **Costume Charades**: costumes and carnival characters.
+- **Carnival Cheer** (shout): CARNIVAL! / CARNAVAL!; the parrot rides up the meter.
+- **Parade Dash** (runner): the juggler dances down the parade route, jumping drums and unicycles, grabbing feathers.
 
 ### 7. Space Night
 Not tied to a date, so it works any night.

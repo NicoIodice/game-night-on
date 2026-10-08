@@ -1,0 +1,15 @@
+/* A carnival night with falling confetti; the meter goes from parade green to gold. */
+.shout--carnival-cheer {
+  --meter-low: #00d68f;
+  --meter-high: #ffcc00;
+  --mascot: #ff5f5f;
+}
+
+.shout--carnival-cheer .shout__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 204 0 / 0.55) 0 1.8px, transparent 2.4px) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 70%, rgb(180 77 255 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    radial-gradient(ellipse 120% 30% at 50% 105%, rgb(0 214 143 / 0.3), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#0a1a1f, #123138) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}

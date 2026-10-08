@@ -1,0 +1,33 @@
+/* A parade street at night: confetti in the sky, the crowd's silhouettes, and a striped parade route. */
+.runner--parade-dash {
+  --hero: #ffcc00;
+  --obstacle: #ff5f5f;
+  --treat: #00d68f;
+}
+
+.runner--parade-dash .runner__obstacle--tall {
+  --obstacle: #c9b6e4;
+}
+
+.runner--parade-dash .runner__stage {
+  background:
+    radial-gradient(circle at 20% 25%, rgb(255 204 0 / 0.55) 0 1.8px, transparent 2.4px) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, rgb(180 77 255 / 0.5) 0 1.6px, transparent 2.2px) 0 0 / 90px 80px,
+    linear-gradient(#0a1a1f, #1f5560) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+/* The crowd lining the street: heads on round shoulders, shoulder to shoulder. */
+.runner--parade-dash .runner__far {
+  background-image:
+    radial-gradient(circle 1.1cqw at 50% 62%, #0a2328 96%, transparent),
+    radial-gradient(ellipse 1.9cqw 30% at 50% 100%, #0a2328 96%, transparent);
+  background-size: 4cqw 100%;
+}
+
+.runner--parade-dash .runner__ground {
+  background:
+    linear-gradient(#ffcc00 0 5px, transparent 5px),
+    repeating-linear-gradient(90deg, #3d1a6b 0 30px, #0d4a3a 30px 60px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

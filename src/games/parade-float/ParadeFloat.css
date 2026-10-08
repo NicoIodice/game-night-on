@@ -1,0 +1,21 @@
+/* A parade float: harlequin panels in purple and green, with gold-framed round portholes. */
+.peek--parade-float {
+  --rascal: #ff5f5f;
+  --boss: #ffcc00;
+  --friend: #f4fffd;
+  --hole: radial-gradient(circle at 50% 45%, #1f5560, #0a1a1f 80%);
+  --frame: #ffcc00;
+}
+
+.peek--parade-float .peek__stage {
+  background: conic-gradient(from 45deg, #3d1a6b 0 25%, #0d4a3a 25% 50%, #3d1a6b 50% 75%, #0d4a3a 75%) 0 0 / 64px 64px;
+}
+
+.peek--parade-float .peek__hole {
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px var(--frame), 0 0 18px rgb(255 204 0 / 0.35);
+}
+
+.peek--parade-float .turn__legend .peek__kind--friend {
+  color: #f4fffd;
+}
