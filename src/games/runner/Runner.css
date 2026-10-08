@@ -1,0 +1,129 @@
+/* A running game's stage: sky, far scenery and ground that scroll past (from --distance, in screens),
+   with the runner, obstacles and treats on top. Each skin paints the layers under `.runner--<skin>`:
+   .runner__stage (sky), .runner__far (hills, houses… repeating sideways) and .runner__ground, and colours
+   --hero, --obstacle and --treat. */
+.runner {
+  --hero: var(--accent);
+  --obstacle: var(--text);
+  --treat: var(--highlight);
+  /* Height of the ground strip; things stand on top of it. */
+  --ground: 16%;
+}
+
+.runner__legend-runner { --item: var(--hero); }
+.runner__legend-obstacle { --item: var(--obstacle); }
+.runner__legend-treat { --item: var(--treat); }
+
+.runner__lives {
+  display: inline-flex;
+  gap: 0.15rem;
+  color: var(--player);
+  font-size: 1.2rem;
+}
+
+.runner__life--lost {
+  opacity: 0.2;
+}
+
+.runner__stage {
+  cursor: pointer;
+}
+
+/* Far scenery drifts by slowly; the ground moves with the runner. */
+.runner__far {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--ground);
+  height: 45%;
+  background-repeat: repeat-x;
+  background-position: calc(var(--distance, 0) * -35cqw) bottom;
+  pointer-events: none;
+}
+
+.runner__ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ground);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+  pointer-events: none;
+}
+
+.runner__thing {
+  position: absolute;
+  bottom: calc(var(--ground) + var(--lift, 0) * 100cqh);
+  translate: -50% 0;
+  display: grid;
+  place-items: end center;
+  pointer-events: none;
+}
+
+.runner__thing .icon {
+  width: 100%;
+  height: 100%;
+}
+
+.runner__hero {
+  z-index: 2;
+  width: 15cqh;
+  height: 15cqh;
+  color: var(--hero);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--player) 70%, transparent));
+}
+
+.runner__hero:not(.runner__hero--air) .icon {
+  animation: runner-step 260ms ease-in-out infinite alternate;
+}
+
+.runner__hero--safe {
+  animation: runner-blink 160ms steps(2) infinite;
+}
+
+.runner__obstacle {
+  width: calc(var(--size) * 115cqh);
+  height: calc(var(--size) * 115cqh);
+  color: var(--obstacle);
+}
+
+.runner__treat {
+  width: 7cqh;
+  height: 7cqh;
+  color: var(--treat);
+  filter: drop-shadow(0 0 8px var(--treat));
+  animation: runner-float 700ms ease-in-out infinite alternate;
+}
+
+.runner__treat--taken {
+  animation: runner-grab 300ms ease-out forwards;
+}
+
+.runner__stage--over .runner__thing {
+  animation: none;
+}
+
+@keyframes runner-step {
+  from { transform: translateY(0) rotate(-3deg); }
+  to { transform: translateY(-6%) rotate(3deg); }
+}
+
+@keyframes runner-blink {
+  50% { opacity: 0.25; }
+}
+
+@keyframes runner-float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-15%); }
+}
+
+@keyframes runner-grab {
+  to { transform: translateY(-80%) scale(1.6); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .runner__hero .icon,
+  .runner__treat {
+    animation: none;
+  }
+}

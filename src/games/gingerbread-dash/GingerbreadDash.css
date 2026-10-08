@@ -1,0 +1,34 @@
+/* A snowy night: starry sky, white rolling hills, a snowy path. */
+.runner--gingerbread-dash {
+  --hero: #e0a46a;
+  --obstacle: #ff4d4d;
+  --treat: #ff8fa3;
+}
+
+.runner--gingerbread-dash .runner__obstacle--tall {
+  --obstacle: #dff0ff;
+  filter: drop-shadow(0 0 2px #1c4377);
+}
+
+.runner--gingerbread-dash .runner__stage {
+  --star: rgb(255 255 255 / 0.55) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, var(--star)) 0 0 / 90px 80px,
+    linear-gradient(#06112a, #1c4377) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.runner--gingerbread-dash .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #b9d7f0 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #d6e9f8 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--gingerbread-dash .runner__ground {
+  background:
+    linear-gradient(#ffffff 0 5px, transparent 5px),
+    repeating-linear-gradient(90deg, #eaf5ff 0 46px, #dcecfb 46px 50px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

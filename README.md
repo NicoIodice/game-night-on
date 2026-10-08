@@ -55,6 +55,10 @@ src/
                      microphone meter screen and shoutGame() which turns a ShoutSkin into a game
     scream-meter/    Halloween skin: scream to make the ghost fly
     ho-ho-holler/    Christmas skin: HO HO HO to make the reindeer fly
+    runner/          shared running game: jumping, obstacles, treats and lives (dash.ts, pure, tested; a test checks a
+                     whole run stays jumpable), the scrolling screen and runnerGame() which turns a RunnerSkin into a game
+    trick-or-treat-dash/  Halloween skin: jump pumpkins and graves, grab sweets
+    gingerbread-dash/     Christmas skin: the gingerbread man jumps presents and snowmen, grabs candy canes
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

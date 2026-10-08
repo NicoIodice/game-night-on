@@ -1,0 +1,30 @@
+/* A spooky street at night: purple sky and moon, rolling dark hills, a cobbled path. */
+.runner--trick-or-treat-dash {
+  --hero: #f6eefe;
+  --obstacle: #ff7a18;
+  --treat: #ff5fa2;
+}
+
+.runner--trick-or-treat-dash .runner__obstacle--tall {
+  --obstacle: #a99bc2;
+}
+
+.runner--trick-or-treat-dash .runner__stage {
+  background:
+    radial-gradient(circle at 80% 18%, #fff7d6 0 5%, rgb(255 247 214 / 0.16) 5.5%, transparent 15%),
+    linear-gradient(#0d0617, #2a1543 80%);
+}
+
+.runner--trick-or-treat-dash .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #1d0f2e 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #24133a 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--trick-or-treat-dash .runner__ground {
+  background:
+    linear-gradient(#5a3a7a 0 4px, transparent 4px),
+    repeating-linear-gradient(90deg, #1a0f24 0 38px, #140b1c 38px 40px);
+  background-position: calc(var(--distance, 0) * -100cqw) top;
+}

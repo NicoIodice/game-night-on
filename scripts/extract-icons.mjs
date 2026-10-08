@@ -57,6 +57,13 @@ const ICONS = {
     imp: 'imp',
     'imp-boss': 'imp-laugh',
   },
+  'src/games/trick-or-treat-dash/assets': {
+    runner: 'run',
+    sweet: 'wrapped-sweet',
+  },
+  'src/games/gingerbread-dash/assets': {
+    'candy-cane': 'candy-canes',
+  },
   'src/themes/christmas/assets': {
     tree: 'pine-tree',
     ski: 'skis',
