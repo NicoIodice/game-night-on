@@ -16,7 +16,7 @@ npm run build
 src/
   core/              shared, game-agnostic pieces
     audio/           BeatClock (Tone.js, beat-synced callbacks) + useBeatClock hook;
-                     themeSounds.ts = the sound-effects contract every festivity fills in
+                     themeSounds.ts = the sound-effects contract every festivity fills in; micMeter.ts = mic loudness
     match/           player/team setup, turns, podium + standings (wraps every game);
                      lineup.ts = per-theme game night settings (games, order, single vs tournament)
     ui/              shared components (Icon…)
@@ -51,6 +51,10 @@ src/
                      the turn screen and charadesGame() which turns a CharadesSkin (title + word list) into a game
     monster-charades/   Halloween skin: spooky words to act out
     festive-charades/   Christmas skin: Christmas words to act out
+    shout/           shared shouting game: room noise, loudness and scoring (loudness.ts, pure, tested), the
+                     microphone meter screen and shoutGame() which turns a ShoutSkin into a game
+    scream-meter/    Halloween skin: scream to make the ghost fly
+    ho-ho-holler/    Christmas skin: HO HO HO to make the reindeer fly
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

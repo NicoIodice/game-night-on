@@ -4,9 +4,11 @@ import { batBlitz } from './bat-blitz';
 import { bellChoir } from './bell-choir';
 import { festiveCharades } from './festive-charades';
 import { hauntedHouse } from './haunted-house';
+import { hoHoHoller } from './ho-ho-holler';
 import { monsterCharades } from './monster-charades';
 import { presentPairs } from './present-pairs';
 import { pumpkinPatchMemory } from './pumpkin-patch-memory';
+import { screamMeter } from './scream-meter';
 import { singOnTheBeat } from './sing-on-the-beat';
 import { snowballShowdown } from './snowball-showdown';
 import { witchsCauldron } from './witchs-cauldron';
@@ -24,6 +26,8 @@ export const GAMES: GameDefinition[] = [
   adventAmbush,
   monsterCharades,
   festiveCharades,
+  screamMeter,
+  hoHoHoller,
 ];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */

@@ -1,0 +1,13 @@
+/* A misty graveyard under the moon; the meter glows from slime green to pumpkin orange. */
+.shout--scream-meter {
+  --meter-low: #8cff5a;
+  --meter-high: #ff7a18;
+  --mascot: #f6eefe;
+}
+
+.shout--scream-meter .shout__stage {
+  background:
+    radial-gradient(circle at 82% 16%, #fff7d6 0 5%, rgb(255 247 214 / 0.16) 5.5%, transparent 16%),
+    radial-gradient(ellipse 120% 30% at 50% 105%, rgb(185 165 214 / 0.25), transparent 70%),
+    linear-gradient(#0e0716, #1d0f2e);
+}

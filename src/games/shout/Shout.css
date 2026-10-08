@@ -1,0 +1,126 @@
+/* A shouting game's stage: a tall meter the mascot rides up as the player gets louder.
+   Skins colour it under `.shout--<skin>`: --meter-low and --meter-high (the fill's gradient), --mascot. */
+.shout {
+  --meter-low: var(--good);
+  --meter-high: var(--bad);
+  --mascot: var(--text);
+}
+
+.shout__preview {
+  font-size: 5rem;
+  color: var(--mascot);
+  filter: drop-shadow(0 0 16px var(--glow));
+  animation: shout-bob 1.4s ease-in-out infinite alternate;
+}
+
+/* Inside the stage, so it can follow the stage's shape (container queries style what's inside the container). */
+.shout__layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  gap: clamp(1rem, 6cqmin, 4rem);
+  width: 100%;
+  height: 100%;
+  padding: clamp(1rem, 5cqmin, 3rem) clamp(1rem, 8cqmin, 5rem);
+}
+
+.shout__meter {
+  --mascot-size: clamp(3rem, 16cqmin, 8rem);
+  position: relative;
+  width: clamp(4rem, 16cqmin, 8rem);
+  min-height: 0;
+  border: 3px solid var(--border);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.35);
+  overflow: visible;
+}
+
+.shout__fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--fill) * 100%);
+  border-radius: 999px;
+  background: linear-gradient(to top, var(--meter-low), var(--meter-high));
+  background-size: 100% calc(100% / max(var(--fill), 0.01));
+  background-position: bottom;
+  box-shadow: 0 0 30px color-mix(in srgb, var(--meter-high) 50%, transparent);
+  transition: height 80ms linear;
+}
+
+/* The loudest moment so far, in the player's colour. */
+.shout__best {
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  bottom: calc(var(--best) * 100%);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--player);
+  box-shadow: 0 0 10px var(--player);
+}
+
+.shout__mascot {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--fill) * (100% - var(--mascot-size)));
+  translate: -50% 0;
+  width: var(--mascot-size);
+  height: var(--mascot-size);
+  color: var(--mascot);
+  filter: drop-shadow(0 0 14px var(--mascot));
+  transition: bottom 80ms linear;
+}
+
+.shout__side {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.shout__call {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 16cqmin, 9rem);
+  line-height: 1;
+  color: var(--player);
+  text-shadow: 0 0 30px var(--player);
+  animation: shout-shake 120ms linear infinite alternate;
+}
+
+.shout__hush {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(1rem, 4cqmin, 1.6rem);
+}
+
+@container (aspect-ratio < 1) {
+  .shout__layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    justify-items: center;
+  }
+
+  .shout__side {
+    grid-row: 2;
+  }
+}
+
+@keyframes shout-bob {
+  from { translate: 0 0; }
+  to { translate: 0 -10px; }
+}
+
+@keyframes shout-shake {
+  from { transform: rotate(-2deg) scale(1); }
+  to { transform: rotate(2deg) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shout__preview,
+  .shout__call {
+    animation: none;
+  }
+}
