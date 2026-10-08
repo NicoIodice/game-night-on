@@ -1,0 +1,62 @@
+import pumpkin from '../../themes/halloween/assets/pumpkin.svg';
+import { charadesGame } from '../charades/game';
+import thumbnail from './assets/thumbnail.jpg';
+import './MonsterCharades.css';
+
+export const monsterCharades = charadesGame(
+  {
+    id: 'monster-charades',
+    title: 'Monster Charades',
+    intro:
+      'Act out the spooky word on the screen without saying a word, while everyone else shouts their guesses. Every word they get earns you points. Stuck? Skip it!',
+    icon: pumpkin,
+    words: [
+      'Vampire',
+      'Werewolf',
+      'Mummy',
+      'Zombie',
+      'Ghost',
+      'Witch on a broom',
+      'Black cat',
+      'Skeleton dancing',
+      'Frankenstein',
+      'Carving a pumpkin',
+      'Trick or treat',
+      'Haunted house',
+      'Spider spinning a web',
+      'Bat flying',
+      'Stirring a cauldron',
+      'Scarecrow',
+      'Owl',
+      'Eating candy',
+      'Casting a spell',
+      'Creaky door',
+      'Monster under the bed',
+      'Jack-o-lantern',
+      'Graveyard',
+      'Bobbing for apples',
+      'Wizard',
+      'Pirate',
+      'Dragon',
+      'Robot',
+      'Superhero',
+      'Scared of the dark',
+      'Full moon',
+      'Howling wolf',
+      'Mad scientist',
+      'Putting on a costume',
+      'Magic wand',
+      'Crystal ball',
+      'Sleeping vampire in a coffin',
+      'Ghost train',
+      'Spooky story by the fire',
+      'Rat running',
+    ],
+  },
+  {
+    enabled: true,
+    description: 'Act out spooky words without speaking while the others guess. Vampires, mummies and more!',
+    themes: ['halloween'],
+    thumbnail,
+  },
+);

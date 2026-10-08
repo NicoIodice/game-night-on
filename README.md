@@ -47,6 +47,10 @@ src/
                      (peek.ts, pure, tested), the turn screen and peekGame() which turns a PeekSkin into a game
     haunted-house/   Halloween skin: ghosts in the windows, don't bonk the black cat
     advent-ambush/   Christmas skin: imps behind advent calendar doors, don't bonk the reindeer
+    charades/        shared charades game: a no-repeat word bag per night and scoring (words.ts, pure, tested),
+                     the turn screen and charadesGame() which turns a CharadesSkin (title + word list) into a game
+    monster-charades/   Halloween skin: spooky words to act out
+    festive-charades/   Christmas skin: Christmas words to act out
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

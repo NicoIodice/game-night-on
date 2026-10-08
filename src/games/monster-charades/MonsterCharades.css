@@ -1,0 +1,12 @@
+/* A word card like an old spell book page, under a purple glow. */
+.charades--monster-charades {
+  --card: linear-gradient(#2a1543, #1b0d2c);
+  --card-ink: #f6eefe;
+}
+
+.charades--monster-charades .charades__stage {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgb(255 122 24 / 0.16), transparent 70%),
+    radial-gradient(circle at 85% 12%, #fff7d6 0 4%, rgb(255 247 214 / 0.15) 4.5%, transparent 14%),
+    #0e0716;
+}

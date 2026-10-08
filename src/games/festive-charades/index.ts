@@ -1,0 +1,62 @@
+import santaHat from '../../themes/christmas/assets/santa-hat.svg';
+import { charadesGame } from '../charades/game';
+import thumbnail from './assets/thumbnail.jpg';
+import './FestiveCharades.css';
+
+export const festiveCharades = charadesGame(
+  {
+    id: 'festive-charades',
+    title: 'Festive Charades',
+    intro:
+      'Act out the Christmas word on the screen without saying a word, while everyone else shouts their guesses. Every word they get earns you points. Stuck? Skip it!',
+    icon: santaHat,
+    words: [
+      'Santa coming down the chimney',
+      'Reindeer',
+      'Building a snowman',
+      'Wrapping a present',
+      'Decorating the tree',
+      'Snowball fight',
+      'Ice skating',
+      'Elf making toys',
+      'Opening presents',
+      'Sledding down a hill',
+      'Singing carols',
+      'Gingerbread man',
+      'Hanging a stocking',
+      'Eating Christmas dinner',
+      'Leaving cookies for Santa',
+      'Angel',
+      'Nutcracker',
+      'Skiing',
+      'Penguin',
+      'Polar bear',
+      'Pulling a cracker',
+      'Hot chocolate',
+      'Snowflake falling',
+      'Christmas lights',
+      'Sleigh ride',
+      'Writing a letter to Santa',
+      'Shaking a present',
+      'Star on top of the tree',
+      'Candy cane',
+      'Jingle bells',
+      'Rudolph with a shiny nose',
+      'Fireplace',
+      'Cold toes',
+      'Wearing an ugly sweater',
+      'Baking cookies',
+      'Snow angel',
+      'Toy soldier',
+      'Mistletoe',
+      'New Year fireworks',
+      'Falling asleep after dinner',
+    ],
+  },
+  {
+    enabled: true,
+    description: 'Act out Christmas words without speaking while the others guess. Reindeer, elves and more!',
+    themes: ['christmas'],
+    thumbnail,
+  },
+);
