@@ -72,12 +72,9 @@
 
 .sotb__heard {
   margin: 0;
+  min-height: 1.5em;
   color: var(--text-muted);
   text-align: center;
-}
-
-.sotb__heard strong {
-  color: var(--text);
 }
 
 .sotb__turn {
@@ -105,10 +102,17 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(min(var(--cards), 4), minmax(0, 1fr));
+  grid-template-columns: repeat(min(var(--cards), 5), minmax(0, 1fr));
   gap: clamp(0.5rem, 3vw, 1.5rem);
   /* Keep cards fitting short screens (laptops, TVs) while still filling phones. */
-  width: min(100%, calc(min(var(--cards), 4) * min(240px, (100dvh - 280px) * 0.75)));
+  width: min(100%, calc(min(var(--cards), 5) * min(240px, (100dvh - 280px) * 0.75)));
+}
+
+.sotb__slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .sotb__card {
@@ -160,6 +164,25 @@
 
 .sotb__card-icon {
   font-size: clamp(3rem, 18vw, 8rem);
+}
+
+/* The word heard for a card, coloured like its mark. Long or garbled words are cut short. */
+.sotb__word {
+  min-height: 1.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.sotb__word--correct {
+  color: var(--good);
+}
+
+.sotb__word--wrong {
+  color: var(--bad);
 }
 
 

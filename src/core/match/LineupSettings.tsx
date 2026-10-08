@@ -2,7 +2,9 @@ import type { GameDefinition } from '../types';
 import {
   defaultLineup,
   enabledCount,
+  gameOptions,
   moveGame,
+  setGameOption,
   setLineupMode,
   toggleGame,
   type Lineup,
@@ -26,9 +28,10 @@ const MODES: { mode: LineupMode; label: string; hint: string }[] = [
   },
 ];
 
-/** Sets up the night: how it's scored, which games are played and in what order. */
+/** Sets up the night: how it's scored, which games are played and in what order, and each game's settings. */
 export function LineupSettings({ games, lineup, onChange, onDone }: LineupSettingsProps) {
   const lastOne = enabledCount(lineup) === 1;
+  const configurable = games.filter((game) => game.options?.length);
 
   return (
     <section className="match match--panel">
@@ -88,9 +91,47 @@ export function LineupSettings({ games, lineup, onChange, onDone }: LineupSettin
       </ol>
       <p className="match__hint">Unticked games are hidden from the menu and skipped by the tournament.</p>
 
+      {configurable.map((game) => {
+        const values = gameOptions(lineup, game);
+        return (
+          <fieldset key={game.id} className="game-options">
+            <legend>{game.name}</legend>
+            {game.options!.map((option) => {
+              const value = values[option.id];
+              const step = option.step ?? 1;
+              const set = (to: number) => onChange(setGameOption(lineup, game, option, to));
+              return (
+                <div key={option.id} className="game-options__row">
+                  <span>{option.label}</span>
+                  <span className="lineup__moves">
+                    <button
+                      className="btn btn--small"
+                      onClick={() => set(value - step)}
+                      disabled={value <= option.min}
+                      aria-label={`Fewer ${option.label.toLowerCase()}`}
+                    >
+                      −
+                    </button>
+                    <output className="game-options__value">{value}</output>
+                    <button
+                      className="btn btn--small"
+                      onClick={() => set(value + step)}
+                      disabled={value >= option.max}
+                      aria-label={`More ${option.label.toLowerCase()}`}
+                    >
+                      +
+                    </button>
+                  </span>
+                </div>
+              );
+            })}
+          </fieldset>
+        );
+      })}
+
       <div className="match__actions">
         <button className="btn btn--primary" onClick={onDone} autoFocus>Done</button>
-        <button className="btn" onClick={() => onChange(setLineupMode(defaultLineup(games), lineup.mode))}>
+        <button className="btn" onClick={() => onChange({ ...defaultLineup(games), mode: lineup.mode, options: lineup.options })}>
           Reset games
         </button>
       </div>

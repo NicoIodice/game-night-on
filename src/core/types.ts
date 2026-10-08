@@ -18,9 +18,15 @@ export interface Theme {
   name: string;
   tagline: string;
   icon: string;
+  /** Browser tab icon while this festivity is chosen. */
+  favicon: string;
   /** Disabled themes are listed as "coming soon". */
   enabled: boolean;
-  cards: Card[];
+  /**
+   * Picture cards, in decks from easiest to hardest. Words within the early decks rhyme
+   * (bat, rat, hat…); later decks mix words of different lengths.
+   */
+  decks: Card[][];
   /** Plays on the theme's menus. */
   music?: Music;
 }
@@ -46,10 +52,27 @@ export interface TurnResult {
   detail?: string;
 }
 
+/** A setting a game offers in the game night settings, e.g. "Rounds per level". Whole numbers only. */
+export interface GameOption {
+  id: string;
+  label: string;
+  min: number;
+  max: number;
+  /** How much the − and + buttons change the value. Defaults to 1. */
+  step?: number;
+  default: number;
+}
+
+/** Values for a game's options, by option id. Every option has a value. */
+export type GameOptionValues = Record<string, number>;
+
 /** A game component plays one turn for one player, then reports the score. */
 export interface GameProps {
   theme: Theme;
   player: Player;
+  /** Which level this turn plays, from 0. Always 0 for games without levels. */
+  level: number;
+  options: GameOptionValues;
   onTurnEnd: (result: TurnResult) => void;
   onExit: () => void;
 }
@@ -70,5 +93,12 @@ export interface GameDefinition {
   themes: ThemeId[] | 'all';
   /** Whether a theme has what the game needs (cards, music…). */
   supports: (theme: Theme) => boolean;
+  /**
+   * How many levels the game has (default 1). Each level is one turn per player:
+   * everyone plays level 1, then everyone plays level 2, and so on.
+   */
+  levels?: number;
+  /** Settings players can change in the game night settings. */
+  options?: GameOption[];
   Component: ComponentType<GameProps>;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { loadMuted, setMuted, unlockAudio } from './core/audio/sound';
 import { useMusic } from './core/audio/useMusic';
-import { loadLineup, playlist, saveLineup, type Lineup } from './core/match/lineup';
+import { gameOptions, loadLineup, playlist, saveLineup, type Lineup } from './core/match/lineup';
 import { LineupSettings } from './core/match/LineupSettings';
 import { Match } from './core/match/Match';
 import type { Theme } from './core/types';
@@ -11,6 +11,9 @@ import { lobbyMusic } from './app/lobbyMusic';
 import { gamesFor } from './games/registry';
 import { THEMES } from './themes/registry';
 import './App.css';
+
+/** The tab icon from index.html, used until a festivity is chosen. */
+const LOBBY_FAVICON = `${import.meta.env.BASE_URL}favicon.svg`;
 
 export default function App() {
   const [entered, setEntered] = useState(false);
@@ -27,6 +30,8 @@ export default function App() {
   // Theme colours and fonts are CSS variables keyed off this attribute (see index.css).
   useEffect(() => {
     document.documentElement.dataset.theme = theme?.id ?? '';
+    const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (icon) icon.href = theme?.favicon ?? LOBBY_FAVICON;
   }, [theme]);
 
   useEffect(() => setMuted(muted), [muted]);
@@ -74,6 +79,7 @@ export default function App() {
           games={games}
           mode={lineup.mode}
           startAt={session.startAt}
+          optionsFor={(game) => gameOptions(lineup, game)}
           onExit={() => setSession(null)}
         />
         {soundToggle}

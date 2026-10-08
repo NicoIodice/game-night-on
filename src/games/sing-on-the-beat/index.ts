@@ -1,6 +1,6 @@
 import type { GameDefinition } from '../../core/types';
 import thumbnail from './assets/thumbnail.jpg';
-import { LEVELS } from './levels';
+import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
 import { SingOnTheBeat } from './SingOnTheBeat';
 
 export const singOnTheBeat: GameDefinition = {
@@ -11,6 +11,15 @@ export const singOnTheBeat: GameDefinition = {
   players: '1–8 players or teams',
   thumbnail,
   themes: 'all',
-  supports: (theme) => LEVELS.every((level) => theme.cards.length >= level.cardTypes),
+  supports: (theme) =>
+    LEVELS.every((level) => {
+      const deck = theme.decks[level.deck];
+      return deck !== undefined && deck.length * level.maxRepeats >= level.cardCount;
+    }),
+  levels: LEVELS.length,
+  options: [
+    { id: 'rounds', label: 'Rounds per level', min: 1, max: 10, default: DEFAULT_ROUNDS },
+    { id: 'tempo', label: 'Tempo (beats per minute)', min: 60, max: 110, step: 5, default: DEFAULT_TEMPO },
+  ],
   Component: SingOnTheBeat,
 };
