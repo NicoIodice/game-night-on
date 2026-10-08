@@ -118,6 +118,10 @@
   color: #00d68f;
 }
 
+.tile[data-theme-tile='space'] .tile__icon {
+  color: #5ef0ff;
+}
+
 .tile__name {
   font-family: var(--font-display);
   font-size: 1.75rem;

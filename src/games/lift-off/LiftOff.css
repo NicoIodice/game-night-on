@@ -1,0 +1,16 @@
+/* From the launch pad into the stars; the meter goes from engine orange to cyan. */
+.shout--lift-off {
+  --meter-low: #ff7a5c;
+  --meter-high: #5ef0ff;
+  --mascot: #eef3ff;
+}
+
+.shout--lift-off .shout__stage {
+  --star: rgb(255 255 255 / 0.6) 0 1.3px, transparent 2.3px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 70%, var(--star)) 0 0 / 90px 80px,
+    radial-gradient(ellipse 120% 30% at 50% 108%, rgb(255 122 92 / 0.35), transparent 70%) 0 0 / 100% 100%,
+    linear-gradient(#050816, #1b2450) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}

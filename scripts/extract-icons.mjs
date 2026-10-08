@@ -350,6 +350,36 @@ const ICONS = {
   'src/games/parade-float/assets': {
     mime: 'drama-masks',
   },
+  'src/themes/space/assets': {
+    star: 'polar-star',
+    car: 'city-car',
+    jar: 'mason-jar',
+    guitar: 'guitar',
+    moon: 'moon',
+    spoon: 'spoon',
+    raccoon: 'raccoon-head',
+    balloon: 'air-balloon',
+    rocket: 'rocket',
+    astronaut: 'astronaut-helmet',
+    planet: 'ringed-planet',
+    alien: 'alien-stare',
+    satellite: 'satellite',
+    comet: 'evil-comet',
+    telescope: 'telescope',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    parcel: 'cardboard-box-closed',
+    whip: 'whip',
+    saw: 'hand-saw',
+    cape: 'cape',
+    trumpet: 'trumpet',
+    tag: 'price-tag',
+    robot: 'vintage-robot',
+    // Not cards: used by the space games.
+    ufo: 'ufo',
+    asteroid: 'asteroid',
+    radar: 'radar-dish',
+    favicon: { name: 'ringed-planet', fill: '#5ef0ff' },
+  },
 };
 
 const set = JSON.parse(readFileSync('node_modules/@iconify-json/game-icons/icons.json', 'utf8'));

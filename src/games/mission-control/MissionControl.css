@@ -1,0 +1,13 @@
+/* A control room screen: a faint grid over deep space, with a cyan glow around the radar dish. */
+.sequence--mission-control .sequence__stage {
+  background:
+    linear-gradient(90deg, rgb(94 240 255 / 0.06) 0 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(rgb(94 240 255 / 0.06) 0 1px, transparent 1px) 0 0 / 40px 40px,
+    radial-gradient(circle at 50% 50%, rgb(94 240 255 / 0.2), transparent 34%) 0 0 / 100% 100%,
+    linear-gradient(#0f1630, #050816) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
+.sequence--mission-control .sequence__center-icon {
+  color: #5ef0ff;
+}

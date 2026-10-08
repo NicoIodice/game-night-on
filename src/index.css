@@ -114,6 +114,18 @@
   --font-display: 'Bungee', 'Nunito', system-ui, sans-serif;
 }
 
+:root[data-theme='space'] {
+  --bg: #050816;
+  --surface: #0f1630;
+  --border: #23305e;
+  --text: #eef3ff;
+  --text-muted: #9aa8d6;
+  --accent: #5ef0ff;
+  --highlight: #ff7ad9;
+  --glow: rgb(94 240 255 / 0.4);
+  --font-display: 'Orbitron', 'Nunito', system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {

@@ -1,12 +1,13 @@
 import type { GameDefinition } from '../../core/types';
 import birthdayThumbnail from './assets/thumbnail-birthday.jpg';
-import easterThumbnail from './assets/thumbnail-easter.jpg';
-import summerThumbnail from './assets/thumbnail-summer.jpg';
-import valentineThumbnail from './assets/thumbnail-valentine.jpg';
-import newyearThumbnail from './assets/thumbnail-newyear.jpg';
 import carnivalThumbnail from './assets/thumbnail-carnival.jpg';
 import christmasThumbnail from './assets/thumbnail-christmas.jpg';
+import easterThumbnail from './assets/thumbnail-easter.jpg';
 import halloweenThumbnail from './assets/thumbnail-halloween.jpg';
+import newyearThumbnail from './assets/thumbnail-newyear.jpg';
+import spaceThumbnail from './assets/thumbnail-space.jpg';
+import summerThumbnail from './assets/thumbnail-summer.jpg';
+import valentineThumbnail from './assets/thumbnail-valentine.jpg';
 import { LOCALES } from '../../core/i18n/locales';
 import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
 import { singOnTheBeatName } from './name';
@@ -23,7 +24,17 @@ export const singOnTheBeat: GameDefinition = {
   },
   kind: 'voice',
   players: { min: 1, max: 8 },
-  thumbnail: { halloween: halloweenThumbnail, christmas: christmasThumbnail, birthday: birthdayThumbnail, easter: easterThumbnail, summer: summerThumbnail, valentine: valentineThumbnail, newyear: newyearThumbnail, carnival: carnivalThumbnail },
+  thumbnail: {
+    halloween: halloweenThumbnail,
+    christmas: christmasThumbnail,
+    birthday: birthdayThumbnail,
+    easter: easterThumbnail,
+    summer: summerThumbnail,
+    valentine: valentineThumbnail,
+    newyear: newyearThumbnail,
+    carnival: carnivalThumbnail,
+    space: spaceThumbnail,
+  },
   themes: 'all',
   // Every language needs a deck for every level.
   supports: (theme) =>

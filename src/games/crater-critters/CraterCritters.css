@@ -1,0 +1,24 @@
+/* The grey surface of the Moon, pitted with little craters; the holes are big dark craters with a bright rim. */
+.peek--crater-critters {
+  --rascal: #7ee08a;
+  --boss: #ffd166;
+  --friend: #eef3ff;
+  --hole: radial-gradient(circle at 45% 40%, #3a3f52, #1a1d2a 80%);
+  --frame: #a8adbf;
+}
+
+.peek--crater-critters .peek__stage {
+  background:
+    radial-gradient(circle at 20% 30%, #6f7488 0 6px, #8a8fa3 7px 9px, transparent 10px) 0 0 / 130px 110px,
+    radial-gradient(circle at 70% 70%, #6f7488 0 4px, #8a8fa3 5px 6px, transparent 7px) 0 0 / 90px 80px,
+    linear-gradient(#7d8296, #5f6478);
+}
+
+.peek--crater-critters .peek__hole {
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--frame), inset 0 10px 16px rgb(0 0 0 / 0.5);
+}
+
+.peek--crater-critters .turn__legend .peek__kind--friend {
+  color: #eef3ff;
+}

@@ -1,0 +1,13 @@
+/* Planets laid out on a star map: cosmic purple backs with a starfield, turned over to bright cards. */
+.memory--planet-pairs {
+  --table:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgb(94 240 255 / 0.14), transparent 70%),
+    linear-gradient(#0f1630, #050816);
+  --card-back:
+    radial-gradient(circle at 25% 30%, rgb(255 255 255 / 0.8) 0 1px, transparent 1.6px) 0 0 / 16px 18px,
+    radial-gradient(circle at 70% 120%, #ff7ad9, transparent 70%),
+    linear-gradient(#3b1f8a, #14104a);
+  --card-back-ink: #5ef0ff;
+  --card-face: #eef3ff;
+  --card-face-ink: #0f1630;
+}

@@ -1,5 +1,6 @@
 import type { GameDefinition, Theme } from '../core/types';
 import { adventAmbush } from './advent-ambush';
+import { alienZapper } from './alien-zapper';
 import { balloonPop } from './balloon-pop';
 import { batBlitz } from './bat-blitz';
 import { beachBeats } from './beach-beats';
@@ -12,6 +13,7 @@ import { carnivalCheer } from './carnival-cheer';
 import { cheepCheep } from './cheep-cheep';
 import { confettiCannons } from './confetti-cannons';
 import { costumeCharades } from './costume-charades';
+import { craterCritters } from './crater-critters';
 import { cupidsArrows } from './cupids-arrows';
 import { cupidsFlight } from './cupids-flight';
 import { eggCatch } from './egg-catch';
@@ -24,13 +26,16 @@ import { hauntedHouse } from './haunted-house';
 import { heartWindows } from './heart-windows';
 import { hoHoHoller } from './ho-ho-holler';
 import { iLoveYou } from './i-love-you';
+import { liftOff } from './lift-off';
 import { loveCharades } from './love-charades';
 import { loveSong } from './love-song';
 import { maskPairs } from './mask-pairs';
 import { midnightChimes } from './midnight-chimes';
 import { midnightDash } from './midnight-dash';
 import { midnightPairs } from './midnight-pairs';
+import { missionControl } from './mission-control';
 import { monsterCharades } from './monster-charades';
+import { moonBounce } from './moon-bounce';
 import { paintedPairs } from './painted-pairs';
 import { paradeDash } from './parade-dash';
 import { paradeFloat } from './parade-float';
@@ -38,6 +43,7 @@ import { partyBand } from './party-band';
 import { partyCharades } from './party-charades';
 import { partyDash } from './party-dash';
 import { partyPairs } from './party-pairs';
+import { planetPairs } from './planet-pairs';
 import { presentPairs } from './present-pairs';
 import { pumpkinPatchMemory } from './pumpkin-patch-memory';
 import { resolutionCharades } from './resolution-charades';
@@ -47,6 +53,7 @@ import { screamMeter } from './scream-meter';
 import { shellPairs } from './shell-pairs';
 import { singOnTheBeat } from './sing-on-the-beat';
 import { snowballShowdown } from './snowball-showdown';
+import { spaceCharades } from './space-charades';
 import { splashAttack } from './splash-attack';
 import { springCharades } from './spring-charades';
 import { springChorus } from './spring-chorus';
@@ -68,6 +75,7 @@ export const GAMES: GameDefinition[] = [
   cupidsArrows,
   fireworkFrenzy,
   featherCatch,
+  alienZapper,
   pumpkinPatchMemory,
   presentPairs,
   partyPairs,
@@ -76,6 +84,7 @@ export const GAMES: GameDefinition[] = [
   sweetheartPairs,
   midnightPairs,
   maskPairs,
+  planetPairs,
   witchsCauldron,
   bellChoir,
   partyBand,
@@ -84,6 +93,7 @@ export const GAMES: GameDefinition[] = [
   loveSong,
   midnightChimes,
   sambaParade,
+  missionControl,
   hauntedHouse,
   adventAmbush,
   surpriseBoxes,
@@ -92,6 +102,7 @@ export const GAMES: GameDefinition[] = [
   heartWindows,
   confettiCannons,
   paradeFloat,
+  craterCritters,
   monsterCharades,
   festiveCharades,
   partyCharades,
@@ -100,6 +111,7 @@ export const GAMES: GameDefinition[] = [
   loveCharades,
   resolutionCharades,
   costumeCharades,
+  spaceCharades,
   screamMeter,
   hoHoHoller,
   birthdayCheer,
@@ -108,6 +120,7 @@ export const GAMES: GameDefinition[] = [
   iLoveYou,
   happyNewYear,
   carnivalCheer,
+  liftOff,
   trickOrTreatDash,
   gingerbreadDash,
   partyDash,
@@ -116,6 +129,7 @@ export const GAMES: GameDefinition[] = [
   cupidsFlight,
   midnightDash,
   paradeDash,
+  moonBounce,
 ];
 
 /** The theme's games that are switched on (`enabled`) and that the theme has everything for. */

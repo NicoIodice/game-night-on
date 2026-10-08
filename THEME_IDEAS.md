@@ -1,10 +1,8 @@
 # Theme ideas
 
 New festivities to add after Halloween and Christmas, with what each of the 8 games would look like in them.
-Themes marked ✅ are built; the notes under them describe what was made.
-
-**Recommended first: Birthday Party.** It gets played several times a year instead of once, and every game
-has an obvious version of it.
+All seven ideas below are built (✅); the notes under each one describe what was made, so they double as a record
+of the choices behind each theme. The checklist still applies to any new festivity.
 
 ## What a new theme needs
 
@@ -43,6 +41,8 @@ Use `src/themes/halloween/` and `src/themes/christmas/` as the reference.
 Every game also gets a `thumbnail.jpg` for its menu tile: a 960-pixel-wide screenshot of the game being played.
 
 ## The ideas
+
+Cards that didn't make it are noted: the voice check (`npm run check:voices`) caught them.
 
 ### 1. Birthday Party ✅ built (`birthday`)
 Useful all year, not just one night.
@@ -122,13 +122,16 @@ Fits the "couples" side of the app.
 - **Carnival Cheer** (shout): CARNIVAL! / CARNAVAL!; the parrot rides up the meter.
 - **Parade Dash** (runner): the juggler dances down the parade route, jumping drums and unicycles, grabbing feathers.
 
-### 7. Space Night
+### 7. Space Night ✅ built (`space`)
 Not tied to a date, so it works any night.
-- **Cards** (rhymes): star, car, jar · moon, spoon, balloon · then rocket, astronaut, planet, alien…
-- **Shooter**: zap aliens and asteroids.
-- **Memory**: planets on the backs.
-- **Sequence**: control-panel beeps.
-- **Pop-up**: aliens peek out of craters. Don't tap the astronaut!
-- **Charades**: space things (moonwalk, rocket launch, zero gravity…).
-- **Shout**: a "3, 2, 1, LIFT OFF!" meter; the rocket climbs.
-- **Runner**: an astronaut bouncing across the Moon with low gravity, jumping craters.
+- **Cards**: star, car, jar, guitar · moon, spoon, raccoon, balloon · then rocket, astronaut, planet, alien, satellite,
+  comet, telescope. Portuguese: pacote, chicote, serrote, capote · planeta, cometa, trombeta, etiqueta · then foguetão,
+  astronauta, lua, satélite, extraterrestre, telescópio, robô. (Short words such as "ave", "pote" and "nave" were
+  often not heard alone, so the first Portuguese deck uses three-syllable rhymes.)
+- **Alien Zapper** (shooter): zap aliens drifting past the stars; asteroids are quick, the mothership UFO is the prize.
+- **Planet Pairs** (memory): ringed planets on the backs.
+- **Mission Control** (sequence): rocket, planet, moon, comet, satellite and star beep around a radar dish.
+- **Crater Critters** (pop-up): aliens peek out of Moon craters, the UFO is the boss. Don't tap the astronaut!
+- **Space Charades**: space things (moonwalk, rocket launch, zero gravity…).
+- **Lift Off!** (shout): 3, 2, 1, LIFT OFF! / 3, 2, 1, DESCOLAR!; the rocket climbs the meter.
+- **Moon Bounce** (runner): an astronaut bouncing across the Moon, jumping moon rocks and radar dishes, collecting stars.

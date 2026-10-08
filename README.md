@@ -93,6 +93,7 @@ src/
     cupids-arrows/   Valentine skin: shoot Cupid's arrows at floating hearts
     firework-frenzy/ New Year skin: burst the fireworks before they fade
     feather-catch/   Carnival skin: catch the feathers flying off the parade
+    alien-zapper/    Space skin: zap aliens and asteroids around the space station
     memory/          shared memory game: pairs, streaks and scoring (board.ts, pure, tested), the turn screen
                      and memoryGame() which turns a MemorySkin into a game
     pumpkin-patch-memory/  Halloween skin: spooky friends under pumpkins
@@ -103,6 +104,7 @@ src/
     sweetheart-pairs/  Valentine skin: sweethearts under roses
     midnight-pairs/  New Year skin: New Year surprises under party poppers
     mask-pairs/      Carnival skin: carnival surprises behind masks
+    planet-pairs/    Space skin: space surprises under planets
     sequence/        shared repeat-the-sequence game: growing sequence, lives and scoring (sequence.ts, pure, tested),
                      the turn screen (pads in a ring) and sequenceGame() which turns a SequenceSkin into a game
     witchs-cauldron/ Halloween skin: add the ingredients to the brew in order
@@ -113,6 +115,7 @@ src/
     love-song/       Valentine skin: sing the sweet things back in order
     midnight-chimes/ New Year skin: chime the party things back in order
     samba-parade/    Carnival skin: play the samba school back in order
+    mission-control/ Space skin: beep the control panel back in order
     peekaboo/        shared pop-up game: characters peek out of holes, catch the rascals but not the friend
                      (peek.ts, pure, tested), the turn screen and peekGame() which turns a PeekSkin into a game
     haunted-house/   Halloween skin: ghosts in the windows, don't bonk the black cat
@@ -123,6 +126,7 @@ src/
     heart-windows/   Valentine skin: hearts in the windows, don't bonk the grumpy cat
     confetti-cannons/  New Year skin: confetti cannons pop up, don't wake the sleepy guest
     parade-float/    Carnival skin: clowns on the parade float, don't bonk the mime
+    crater-critters/ Space skin: aliens out of Moon craters, don't bonk the astronaut
     charades/        shared charades game: a no-repeat word bag per night and scoring (words.ts, pure, tested),
                      the turn screen and charadesGame() which turns a CharadesSkin (title + word list) into a game
     monster-charades/   Halloween skin: spooky words to act out
@@ -133,6 +137,7 @@ src/
     love-charades/      Valentine skin: famous couples and romantic moments to act out
     resolution-charades/  New Year skin: New Year's resolutions to act out
     costume-charades/   Carnival skin: costumes and carnival characters to act out
+    space-charades/     Space skin: space things to act out
     shout/           shared shouting game: room noise, loudness and scoring (loudness.ts, pure, tested), the
                      microphone meter screen and shoutGame() which turns a ShoutSkin into a game
     scream-meter/    Halloween skin: scream to make the ghost fly
@@ -143,6 +148,7 @@ src/
     i-love-you/      Valentine skin: I LOVE YOU! to make the winged heart fly
     happy-new-year/  New Year skin: HAPPY NEW YEAR! to send the firework sky-high
     carnival-cheer/  Carnival skin: CARNIVAL! to make the parrot fly
+    lift-off/        Space skin: 3, 2, 1, LIFT OFF! to make the rocket climb
     runner/          shared running game: jumping, obstacles, treats and lives (dash.ts, pure, tested; a test checks a
                      whole run stays jumpable), the scrolling screen and runnerGame() which turns a RunnerSkin into a game
     trick-or-treat-dash/  Halloween skin: jump pumpkins and graves, grab sweets
@@ -153,6 +159,7 @@ src/
     cupids-flight/        Valentine skin: Cupid dashes across the clouds, jumping cactuses and rain clouds
     midnight-dash/        New Year skin: race to the party before midnight, jumping cones and bins
     parade-dash/          Carnival skin: the juggler dances down the parade, jumping drums and unicycles
+    moon-bounce/          Space skin: the astronaut bounces across the Moon, jumping rocks and radar dishes
 scripts/extract-icons.mjs   copies the icons we use from game-icons.net
 ```
 

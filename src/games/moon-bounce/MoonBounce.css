@@ -1,0 +1,36 @@
+/* On the Moon: a black starry sky with the Earth rising, grey hills, and the cratered moon dust underfoot. */
+.runner--moon-bounce {
+  --hero: #eef3ff;
+  --obstacle: #a8adbf;
+  --treat: #ffd166;
+}
+
+.runner--moon-bounce .runner__obstacle--tall {
+  --obstacle: #5ef0ff;
+}
+
+.runner--moon-bounce .runner__stage {
+  --star: rgb(255 255 255 / 0.65) 0 1.2px, transparent 2px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--star)) 0 0 / 120px 100px,
+    radial-gradient(circle at 65% 60%, var(--star)) 0 0 / 90px 80px,
+    radial-gradient(circle at 80% 22%, #4aa3ff 0 3%, #2b6fd1 4.5%, transparent 5%) 0 0 / 100% 100%,
+    radial-gradient(circle at 79.5% 21%, #7ee08a 0 1.4%, transparent 1.6%) 0 0 / 100% 100%,
+    linear-gradient(#020309, #0f1630) 0 0 / 100% 100%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat;
+}
+
+.runner--moon-bounce .runner__far {
+  background-image:
+    radial-gradient(ellipse 46% 70% at 50% 100%, #3a3f52 70%, transparent 71%),
+    radial-gradient(ellipse 44% 50% at 50% 100%, #4a4f63 70%, transparent 71%);
+  background-size: 60cqw 100%, 37cqw 100%;
+}
+
+.runner--moon-bounce .runner__ground {
+  background:
+    radial-gradient(ellipse 14px 5px at 50% 50%, #6f7488 0 70%, transparent 72%) 0 14px / 90px 40px,
+    linear-gradient(#a8adbf 0 4px, transparent 4px),
+    linear-gradient(#8a8fa3, #7d8296);
+  background-position: calc(var(--distance, 0) * -100cqw) 14px, 0 0, 0 0;
+}
