@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { Music } from './audio/BeatClock';
+import type { ThemeSounds } from './audio/themeSounds';
 
 export type ThemeId = 'halloween' | 'christmas';
 
@@ -29,6 +30,8 @@ export interface Theme {
   decks: Card[][];
   /** Plays on the theme's menus. */
   music?: Music;
+  /** Sound effects in the theme's style, for games that don't bring their own. */
+  createSounds: () => ThemeSounds;
 }
 
 /** Whether the people at the table play one by one or grouped in teams. */
@@ -83,6 +86,8 @@ export interface GameProps {
  */
 export interface GameDefinition {
   id: string;
+  /** Whether the game is offered at all. Switch off to hide a game from every menu (e.g. while it's unfinished). */
+  enabled: boolean;
   name: string;
   description: string;
   kind: 'voice' | 'keyboard' | 'party';

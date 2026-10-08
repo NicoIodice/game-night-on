@@ -4,6 +4,7 @@ import { BatBlitz } from './BatBlitz';
 
 export const batBlitz: GameDefinition = {
   id: 'bat-blitz',
+  enabled: true,
   name: 'Bat Blitz',
   description: 'The cave is swarming with bats! Zap as many as you can before time runs out.',
   kind: 'party',

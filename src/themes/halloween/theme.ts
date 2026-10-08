@@ -17,6 +17,7 @@ import spider from './assets/spider.svg';
 import stake from './assets/stake.svg';
 import witch from './assets/witch.svg';
 import { halloweenMusic } from './music';
+import { createHalloweenSounds } from './sounds';
 
 export const halloween: Theme = {
   id: 'halloween',
@@ -50,4 +51,5 @@ export const halloween: Theme = {
     ],
   ],
   music: halloweenMusic,
+  createSounds: createHalloweenSounds,
 };

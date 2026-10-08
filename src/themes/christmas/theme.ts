@@ -17,6 +17,7 @@ import swing from './assets/swing.svg';
 import tree from './assets/tree.svg';
 import wing from './assets/wing.svg';
 import { christmasMusic } from './music';
+import { createChristmasSounds } from './sounds';
 
 export const christmas: Theme = {
   id: 'christmas',
@@ -49,4 +50,5 @@ export const christmas: Theme = {
     ],
   ],
   music: christmasMusic,
+  createSounds: createChristmasSounds,
 };

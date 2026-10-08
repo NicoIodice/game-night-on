@@ -6,8 +6,11 @@ import { snowballShowdown } from './snowball-showdown';
 /** Every game. Adding a game = one folder exporting a GameDefinition + one line here. */
 export const GAMES: GameDefinition[] = [singOnTheBeat, batBlitz, snowballShowdown];
 
-export function gamesFor(theme: Theme): GameDefinition[] {
-  return GAMES.filter((game) => (game.themes === 'all' || game.themes.includes(theme.id)) && game.supports(theme));
+/** The theme's games that are switched on (`enabled`) and that the theme has everything for. */
+export function gamesFor(theme: Theme, games: readonly GameDefinition[] = GAMES): GameDefinition[] {
+  return games.filter(
+    (game) => game.enabled && (game.themes === 'all' || game.themes.includes(theme.id)) && game.supports(theme),
+  );
 }
 
 /** The game's menu screenshot as played in this theme, if it has one. */

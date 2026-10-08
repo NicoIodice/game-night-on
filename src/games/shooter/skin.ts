@@ -1,4 +1,3 @@
-import * as Tone from 'tone';
 import type { Cue } from '../../core/audio/beeper';
 import type { TargetKind } from './hunt';
 
@@ -25,19 +24,4 @@ export interface ShooterSkin {
   /** What a hit is counted as in the turn summary, one and many: ['bat', 'bats']. */
   hitNoun: [string, string];
   createSfx: () => Sfx;
-}
-
-/**
- * Start times for sounds triggered by taps. Taps can land in the same audio frame, and
- * Tone needs each start time to be later than the last.
- */
-export function createStartTimes() {
-  let last = 0;
-  return {
-    next: () => (last = Math.max(Tone.now(), last + 0.01)),
-    /** Keeps the next sound from starting before `time`, e.g. while a jingle plays out. */
-    holdUntil(time: number) {
-      last = Math.max(last, time);
-    },
-  };
 }

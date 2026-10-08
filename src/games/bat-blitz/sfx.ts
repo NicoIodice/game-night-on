@@ -1,7 +1,8 @@
 import * as Tone from 'tone';
 import { createBeeper } from '../../core/audio/beeper';
 import type { TargetKind } from '../shooter/hunt';
-import { createStartTimes, type Sfx } from '../shooter/skin';
+import { createStartTimes } from '../../core/audio/startTimes';
+import type { Sfx } from '../shooter/skin';
 
 const SQUEAKS: Record<TargetKind, string[]> = {
   common: ['E6'],

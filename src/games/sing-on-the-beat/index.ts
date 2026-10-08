@@ -6,6 +6,7 @@ import { SingOnTheBeat } from './SingOnTheBeat';
 
 export const singOnTheBeat: GameDefinition = {
   id: 'sing-on-the-beat',
+  enabled: true,
   name: 'Sing on the Beat',
   description: 'Say each card out loud right on the beat. Faster than it sounds!',
   kind: 'voice',
