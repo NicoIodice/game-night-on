@@ -218,3 +218,86 @@
     transition: none;
   }
 }
+
+.sotb__voice {
+  margin: 0;
+}
+
+.sotb__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Voice debug panel (`?debug`): plain and compact, it's for tuning, not for players. */
+.sotb__debug {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.sotb__debug table {
+  width: 100%;
+  margin-top: 0.4rem;
+  border-collapse: collapse;
+}
+
+.sotb__debug th,
+.sotb__debug td {
+  padding: 0.15rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+/* Voice settings, inside Sing on the Beat's box in the game night settings. */
+.voice-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.voice-settings__select {
+  min-height: 36px;
+  padding: 0 0.6rem;
+  border: 2px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.voice-settings .voice-settings__on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.voice-settings__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.voice-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.voice-settings__toggle {
+  display: inline-flex;
+  gap: 0.4rem;
+}

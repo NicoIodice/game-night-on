@@ -5,17 +5,20 @@ import { PlayerBadge } from '../../core/match/PlayerBadge';
 import type { Card, GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
 import microphone from '../../core/ui/icons/microphone.svg';
+import { LANGUAGES, lateWordGraceMs, loadCalibration, needsVoiceCheck } from '../../core/voice/calibration';
 import { SpeechListener, type ListenResult } from '../../core/voice/SpeechListener';
+import { VoiceCheck } from '../../core/voice/VoiceCheck';
 import { createCueTrack } from './cueTrack';
 import { dealRounds } from './deal';
 import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
+import { VoiceDebug } from './VoiceDebug';
 import {
   judgeHand,
-  LATE_WORD_GRACE_MS,
   scoreRounds,
   totalScore,
   type CardResult,
   type HeardWord,
+  type Hearing,
   type Mark,
   type RoundScore,
 } from './scoring';
@@ -28,6 +31,9 @@ type CardState = 'hidden' | 'shown' | 'active' | 'sung';
 type Stamp = Omit<HeardWord, 'word'>;
 
 const marksOf = (rounds: readonly CardResult[][]): Mark[][] => rounds.map((round) => round.map((card) => card.mark));
+
+/** Add `?debug` to the address to see every word heard, with its timing, while playing. */
+const DEBUG = typeof location !== 'undefined' && new URLSearchParams(location.search).has('debug');
 
 const VOICE_OFF_REASON: Record<Exclude<ListenResult, 'listening'>, string> = {
   unsupported: "This browser can't listen. Use Chrome or Edge to get scored.",
@@ -82,6 +88,12 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   const stampsRef = useRef<Stamp[]>([]);
   const graceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  /** The voice check to run before playing: all of it the first time, or just a new theme's words. */
+  const [checking, setChecking] = useState(() =>
+    SpeechListener.isSupported() ? needsVoiceCheck(loadCalibration(), theme.id) : null,
+  );
+  /** How this device hears players, from the voice check; set when the turn starts. */
+  const [hearing, setHearing] = useState<Hearing>({});
   const [starting, setStarting] = useState(false);
   const [voice, setVoice] = useState<ListenResult | null>(null);
   const [hands, setHands] = useState<Card[][]>([]);
@@ -106,6 +118,14 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
 
   const play = async () => {
     void unlockAudio();
+    const calibration = loadCalibration();
+    const turnHearing: Hearing = {
+      aliases: calibration?.aliases,
+      relaxed: calibration?.strictness === 'relaxed',
+      deck,
+      graceMs: lateWordGraceMs(calibration, 60000 / bpm),
+    };
+    setHearing(turnHearing);
     const cardsById = new Map(deck.map((card) => [card.id, card]));
     const dealt = dealRounds(deck.map((card) => card.id), level, rounds).map((hand) =>
       hand.map((id) => cardsById.get(id)!),
@@ -117,7 +137,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     setStarting(true);
 
     listenerRef.current?.stop();
-    const listener = new SpeechListener('en-US');
+    const listener = new SpeechListener(calibration?.lang ?? 'en-US');
     listenerRef.current = listener;
     /** The round's words so far, each with the time it first arrived, even if the recogniser rewrites it later. */
     const stampedAnswers = (from: number): HeardWord[] => {
@@ -154,14 +174,14 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
           litRef.current = { card: lit, since: performance.now() };
           setGraceOver(false);
           clearTimeout(graceTimerRef.current);
-          graceTimerRef.current = setTimeout(() => setGraceOver(true), LATE_WORD_GRACE_MS);
+          graceTimerRef.current = setTimeout(() => setGraceOver(true), turnHearing.graceMs);
         }
       }
       if (next.phase === 'result' && next.final && answersFromRef.current !== null) {
         const answers = stampedAnswers(answersFromRef.current);
         answersFromRef.current = null;
         setHeard(answers);
-        allResults.push(judgeHand(dealt[next.round], answers, level.cardCount));
+        allResults.push(judgeHand(dealt[next.round], answers, level.cardCount, turnHearing));
         setResults([...allResults]);
       }
       if (next.phase === 'done') {
@@ -190,6 +210,17 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     listenerRef.current = null;
     onExit();
   };
+
+  if (checking) {
+    return (
+      <VoiceCheck
+        theme={theme}
+        mode={checking}
+        onDone={() => setChecking(null)}
+        onCancel={needsVoiceCheck(loadCalibration(), theme.id) ? undefined : () => setChecking(null)}
+      />
+    );
+  }
 
   if (starting) {
     return (
@@ -232,6 +263,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
           <button className="btn btn--primary" onClick={play}>Start</button>
           <button className="btn" onClick={exit}>Back</button>
         </div>
+        {SpeechListener.isSupported() && <VoiceSummary onRecheck={() => setChecking('full')} />}
       </section>
     );
   }
@@ -246,7 +278,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   // A card's time is up once the next one has been lit for a moment; the last card waits for the result.
   const lit = step.phase === 'sing' ? step.active : hand.length;
   const passed = Math.min(Math.max(0, lit - (graceOver ? 0 : 1)), hand.length - 1);
-  const cardResults = scored && answering ? (finalResults ?? judgeHand(hand, heard, passed)) : null;
+  const cardResults = scored && answering ? (finalResults ?? judgeHand(hand, heard, passed, hearing)) : null;
 
   return (
     <section className="sotb">
@@ -290,6 +322,19 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
       {!scored && <p className="sotb__hint">{VOICE_OFF_REASON[voice ?? 'failed']}</p>}
 
       <div key={`pulse-${beat}`} className="sotb__pulse" aria-hidden />
+      {DEBUG && scored && <VoiceDebug hand={hand} heard={heard} hearing={hearing} />}
     </section>
+  );
+}
+
+/** How the game is listening on this device, with a way to run the voice check again. */
+function VoiceSummary({ onRecheck }: { onRecheck: () => void }) {
+  const calibration = loadCalibration();
+  const language = LANGUAGES.find((l) => l.id === calibration?.lang)?.label ?? 'English (US)';
+  return (
+    <p className="sotb__hint sotb__voice">
+      Listening in {language} · {calibration?.strictness === 'relaxed' ? 'relaxed' : 'strict'} scoring ·{' '}
+      <button className="sotb__link" onClick={onRecheck}>Voice check</button>
+    </p>
   );
 }

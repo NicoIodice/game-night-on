@@ -90,7 +90,7 @@ export default function App() {
   if (theme && lineup && settingsOpen) {
     return (
       <main className="app">
-        <LineupSettings games={themeGames} lineup={lineup} onChange={changeLineup} onDone={() => setSettingsOpen(false)} />
+        <LineupSettings theme={theme} games={themeGames} lineup={lineup} onChange={changeLineup} onDone={() => setSettingsOpen(false)} />
         {soundToggle}
       </main>
     );

@@ -1,4 +1,4 @@
-import type { GameDefinition } from '../types';
+import type { GameDefinition, Theme } from '../types';
 import {
   defaultLineup,
   enabledCount,
@@ -12,6 +12,7 @@ import {
 } from './lineup';
 
 interface LineupSettingsProps {
+  theme: Theme;
   /** The theme's games, in menu order. */
   games: GameDefinition[];
   lineup: Lineup;
@@ -29,9 +30,9 @@ const MODES: { mode: LineupMode; label: string; hint: string }[] = [
 ];
 
 /** Sets up the night: how it's scored, which games are played and in what order, and each game's settings. */
-export function LineupSettings({ games, lineup, onChange, onDone }: LineupSettingsProps) {
+export function LineupSettings({ theme, games, lineup, onChange, onDone }: LineupSettingsProps) {
   const lastOne = enabledCount(lineup) === 1;
-  const configurable = games.filter((game) => game.options?.length);
+  const configurable = games.filter((game) => game.options?.length || game.Settings);
 
   return (
     <section className="match match--panel">
@@ -96,7 +97,7 @@ export function LineupSettings({ games, lineup, onChange, onDone }: LineupSettin
         return (
           <fieldset key={game.id} className="game-options">
             <legend>{game.name}</legend>
-            {game.options!.map((option) => {
+            {(game.options ?? []).map((option) => {
               const value = values[option.id];
               const step = option.step ?? 1;
               const set = (to: number) => onChange(setGameOption(lineup, game, option, to));
@@ -125,6 +126,7 @@ export function LineupSettings({ games, lineup, onChange, onDone }: LineupSettin
                 </div>
               );
             })}
+            {game.Settings && <game.Settings theme={theme} />}
           </fieldset>
         );
       })}

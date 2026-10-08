@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from '../../core/types';
-import { judgeHand, LATE_WORD_GRACE_MS, scoreRounds, totalScore, type HeardWord, type Mark } from './scoring';
+import { judgeHand, LATE_WORD_GRACE_MS, placeWords, scoreRounds, totalScore, type HeardWord, type Mark } from './scoring';
 
 const card = (id: string, sayAs?: string[]): Card => ({ id, label: id[0].toUpperCase() + id.slice(1), image: '', sayAs });
 const [cat, rat, bat, hat] = [card('cat', ['kat']), card('rat'), card('bat'), card('hat')];
@@ -84,5 +84,28 @@ describe('scoreRounds', () => {
     expect(scoreRounds([perfect, perfect, perfect]).map((r) => r.points)).toEqual([350, 400, 450]);
     expect(scoreRounds([perfect, slip, perfect]).map((r) => r.streak)).toEqual([1, 0, 1]);
     expect(totalScore([perfect, slip, perfect])).toBe(900);
+  });
+});
+
+describe('hearing from the voice check', () => {
+  const bell = card('bell');
+  const star = card('star');
+
+  it('accepts words learned on this device', () => {
+    expect(marks([cat, rat], [said('cap', 0), said('rat', 1)], 2, { aliases: { cat: ['cap'] } })).toEqual(['correct', 'correct']);
+    expect(marks([cat, rat], [said('cap', 0), said('rat', 1)], 2)).toEqual(['wrong', 'correct']);
+  });
+
+  it('accepts near misses only when relaxed, and never a rhyme of another card', () => {
+    const deck = [bell, star, cat, hat];
+    expect(marks([bell, star], [said('bel', 0), said('star', 1)], 2)).toEqual(['wrong', 'correct']);
+    expect(marks([bell, star], [said('bel', 0), said('star', 1)], 2, { relaxed: true, deck })).toEqual(['correct', 'correct']);
+    expect(marks([cat, hat], [said('hat', 0), said('hat', 1)], 2, { relaxed: true, deck })).toEqual(['wrong', 'correct']);
+  });
+
+  it("uses the device's own window for late words", () => {
+    const late = [said('cat', 1, LATE_WORD_GRACE_MS + 150), said('rat', 1, LATE_WORD_GRACE_MS + 300)];
+    expect(placeWords([cat, rat], late)).toEqual([1, 1]);
+    expect(placeWords([cat, rat], late, { graceMs: LATE_WORD_GRACE_MS + 200 })).toEqual([0, 1]);
   });
 });

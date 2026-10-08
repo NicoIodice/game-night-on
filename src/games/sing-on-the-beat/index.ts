@@ -3,6 +3,7 @@ import christmasThumbnail from './assets/thumbnail-christmas.jpg';
 import halloweenThumbnail from './assets/thumbnail-halloween.jpg';
 import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
 import { SingOnTheBeat } from './SingOnTheBeat';
+import { VoiceSettings } from './VoiceSettings';
 
 export const singOnTheBeat: GameDefinition = {
   id: 'sing-on-the-beat',
@@ -23,5 +24,6 @@ export const singOnTheBeat: GameDefinition = {
     { id: 'rounds', label: 'Rounds per level', min: 1, max: 10, default: DEFAULT_ROUNDS },
     { id: 'tempo', label: 'Tempo (beats per minute)', min: 60, max: 110, step: 5, default: DEFAULT_TEMPO },
   ],
+  Settings: VoiceSettings,
   Component: SingOnTheBeat,
 };

@@ -20,6 +20,8 @@ src/
     match/           player/team setup, turns, podium + standings (wraps every game);
                      lineup.ts = per-theme game night settings (games, order, single vs tournament)
     ui/              shared components (Icon…)
+    voice/           speech recognition (SpeechListener), word matching (exact, learned and near-miss words),
+                     and the voice check: calibration.ts (saved per device) + VoiceCheck.tsx (the check's screens)
     random.ts        injectable/seeded RNG helpers
     types.ts         Theme, Card, Player, GameDefinition contracts
   themes/            one folder per festivity: card decks (easiest first), music, sound effects (sounds.ts), icon,
@@ -31,6 +33,8 @@ src/
       scoring.ts     judging what was said on each card's beat, points and perfect-round streak bonus (pure, tested)
       deal.ts        card dealing rules (pure, tested)
       timeline.ts    beat -> screen step mapping (pure, tested)
+      VoiceSettings.tsx   accent, strictness and voice check buttons in the game night settings
+      VoiceDebug.tsx      `?debug` panel: every word heard, when, and which card it counted for
     shooter/         shared shooting game: targets, shots, streaks and scoring (hunt.ts, pure, tested),
                      the turn screen (Shooter.tsx), and the ShooterSkin each festivity's version fills in
     bat-blitz/       Halloween skin: zap bats in a cave
@@ -72,7 +76,13 @@ scripts/extract-icons.mjs   copies the icons we use from game-icons.net
   choosing players or teams, passing the device between turns and showing the standings as soon as the last turn ends.
   A game with `levels: n` gets one turn per player per level: everyone plays level 1, then everyone plays level 2…
   (the component receives the `level` to play). A game's `options` (e.g. rounds per level) show up in the game night
-  settings and reach the component as `options`.
+  settings and reach the component as `options`. A game can also add its own controls there with `Settings`.
+- **Voice check** (Sing on the Beat): the first time the game is played on a device, a short check sets the accent,
+  measures how late this device's speech recognition reports words (so on-time words aren't marked wrong), learns
+  words it mishears for each card, and asks for strict or relaxed scoring. A new festivity only re-checks its own
+  words. The result is saved in the browser's `localStorage` under `game-night-on:voice-check`: delete that entry
+  (or clear the site's data), or use **Run the voice check again** / **Forget it** in the game night settings (also
+  "Voice check" on the game's intro screen) to run it again. Add `?debug` to the address to see the voice debug panel.
 - **Game night settings** (theme menu): pick which games are played and in what order (default: registry order), and
   whether each game is scored on its own (retry it or go to the next game) or as a **tournament** where everyone plays
   every game in order and the scores add up to a final winner. Games with options (e.g. Sing on the Beat's rounds per

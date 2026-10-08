@@ -105,5 +105,7 @@ export interface GameDefinition {
   levels?: number;
   /** Settings players can change in the game night settings. */
   options?: GameOption[];
+  /** Extra settings of the game's own, shown under its options in the game night settings (e.g. the voice check). */
+  Settings?: ComponentType<{ theme: Theme }>;
   Component: ComponentType<GameProps>;
 }
