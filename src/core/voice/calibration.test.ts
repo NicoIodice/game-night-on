@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  accentFor,
   BASE_GRACE_MS,
   defaultCalibration,
   lateWordGraceMs,
@@ -7,16 +8,31 @@ import {
   needsVoiceCheck,
   normalizeCalibration,
   TYPICAL_DELAY_MS,
+  withAccent,
   withAlias,
-  withThemeTested,
+  withDeckTested,
 } from './calibration';
 
 describe('needsVoiceCheck', () => {
   it('runs the full check the first time, then only the words of new themes', () => {
-    expect(needsVoiceCheck(null, 'halloween')).toBe('full');
-    const checked = withThemeTested(defaultCalibration(), 'halloween');
-    expect(needsVoiceCheck(checked, 'halloween')).toBeNull();
-    expect(needsVoiceCheck(checked, 'christmas')).toBe('words');
+    expect(needsVoiceCheck(null, 'halloween', 'en-US')).toBe('full');
+    const checked = withDeckTested(defaultCalibration(), 'halloween', 'en-US');
+    expect(needsVoiceCheck(checked, 'halloween', 'en-US')).toBeNull();
+    expect(needsVoiceCheck(checked, 'christmas', 'en-US')).toBe('words');
+  });
+
+  it('tests the words again in another language, since its cards are other words', () => {
+    const checked = withDeckTested(defaultCalibration(), 'halloween', 'en-US');
+    expect(needsVoiceCheck(checked, 'halloween', 'pt-PT')).toBe('words');
+  });
+});
+
+describe('accentFor', () => {
+  it("keeps one accent per language, defaulting to the language's own", () => {
+    const british = withAccent(defaultCalibration(), 'en-US', 'en-GB');
+    expect(accentFor(british, 'en-US')).toBe('en-GB');
+    expect(accentFor(british, 'pt-PT')).toBe('pt-PT');
+    expect(accentFor(null, 'en-US')).toBe('en-US');
   });
 });
 
@@ -58,26 +74,34 @@ describe('lateWordGraceMs', () => {
 describe('normalizeCalibration', () => {
   it('keeps good data and drops broken fields', () => {
     const saved = {
-      lang: 'en-GB',
+      // An English accent can't be Portugal's, and 'xx' isn't a language.
+      accents: { 'en-US': 'en-GB', 'pt-PT': 'en-GB', xx: 'pt-PT' },
       delayMs: 512.4,
       strictness: 'relaxed',
       aliases: { bee: ['b', 3], cat: 'nope' },
-      testedThemes: ['christmas', 7],
+      testedDecks: ['christmas:en-US', 7],
       checkedAt: '2026-10-08T10:00:00.000Z',
     };
     expect(normalizeCalibration(saved)).toEqual({
-      lang: 'en-GB',
+      accents: { 'en-US': 'en-GB' },
       delayMs: 512,
       strictness: 'relaxed',
       aliases: { bee: ['b'] },
-      testedThemes: ['christmas'],
+      testedDecks: ['christmas:en-US'],
       checkedAt: '2026-10-08T10:00:00.000Z',
+    });
+  });
+
+  it('reads data saved before there were languages as English', () => {
+    expect(normalizeCalibration({ lang: 'en-GB', testedThemes: ['christmas', 7] })).toMatchObject({
+      accents: { 'en-US': 'en-GB' },
+      testedDecks: ['christmas:en-US'],
     });
   });
 
   it('falls back for unknown values, and rejects non-objects', () => {
     expect(normalizeCalibration({ lang: 'xx', delayMs: -5, strictness: 'loose' })).toMatchObject({
-      lang: 'en-US',
+      accents: {},
       delayMs: null,
       strictness: 'strict',
     });

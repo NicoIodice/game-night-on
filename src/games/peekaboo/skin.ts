@@ -1,3 +1,4 @@
+import type { Localized } from '../../core/i18n/locales';
 import type { PeekKind } from './peek';
 
 /**
@@ -6,12 +7,12 @@ import type { PeekKind } from './peek';
  */
 export interface PeekSkin {
   id: string;
-  title: string;
+  title: Localized<string>;
   /** How the turn is explained on the intro screen. */
-  intro: string;
-  kinds: Record<PeekKind, { name: string; image: string }>;
-  /** What a catch is counted as in the turn summary, one and many: ['ghost', 'ghosts']. */
-  caughtNoun: [string, string];
+  intro: Localized<string>;
+  kinds: Record<PeekKind, { name: Localized<string>; image: string }>;
+  /** What a catch is counted as in the turn summary, one and many: ['ghost caught', 'ghosts caught']. */
+  caughtNoun: Localized<[string, string]>;
   /** Shown on a hole when nobody is in it, e.g. advent calendar numbers. */
   holeLabel?: (hole: number) => string;
 }

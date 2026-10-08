@@ -10,7 +10,7 @@ export function peekGame(skin: PeekSkin, details: SkinDetails): GameDefinition {
     id: skin.id,
     name: skin.title,
     kind: 'party',
-    players: '1–8 players or teams',
+    players: { min: 1, max: 8 },
     supports: () => true,
     Component: (props: GameProps) => <Peekaboo {...props} skin={skin} />,
     ...details,

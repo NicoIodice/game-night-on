@@ -23,4 +23,12 @@ describe('roster', () => {
     const roster = renamePlayer(createRoster('teams', 2), 1, '   ');
     expect(finalizeRoster(roster).players.map((p) => p.name)).toEqual(['Team 1', 'Team 2']);
   });
+
+  it('gives untouched names in the language played in', () => {
+    const roster = renamePlayer(createRoster('players', 2, 'pt-PT'), 0, 'Ana');
+    expect(roster.players.map((p) => p.name)).toEqual(['Ana', 'Jogador 2']);
+    expect(setRosterKind(roster, 'teams', 'pt-PT').players.map((p) => p.name)).toEqual(['Ana', 'Equipa 2']);
+    // An English default name is still a default name in Portuguese.
+    expect(setRosterKind(createRoster('players', 1), 'teams', 'pt-PT').players[0].name).toBe('Equipa 1');
+  });
 });

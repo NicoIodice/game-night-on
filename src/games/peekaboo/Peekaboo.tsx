@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { useMusic } from '../../core/audio/useMusic';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
+import { plural } from '../../core/i18n/locales';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
@@ -18,6 +20,7 @@ import {
   type Peek,
   type PeekKind,
 } from './peek';
+import { MESSAGES } from './messages';
 import type { PeekSkin } from './skin';
 import './Peekaboo.css';
 
@@ -29,6 +32,8 @@ interface PeekabooProps extends GameProps {
 
 /** One turn of a pop-up game: tap the rascals as they peek out, but leave the friend alone. */
 export function Peekaboo({ skin, theme, player, onTurnEnd, onExit }: PeekabooProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const [phase, setPhase] = useState<TurnPhase>('intro');
   const [peek, setPeek] = useState<Peek>(createPeek);
   const peekRef = useRef(peek);
@@ -58,14 +63,13 @@ export function Peekaboo({ skin, theme, player, onTurnEnd, onExit }: PeekabooPro
 
   useAfter(phase === 'over', OVER_MS, () => {
     const done = peekRef.current;
-    const [one, many] = skin.caughtNoun;
-    const friend = skin.kinds.friend.name.toLowerCase();
+    const [one, many] = skin.caughtNoun[locale];
     onTurnEnd({
       score: done.score,
       detail: [
-        `${done.caught} ${done.caught === 1 ? one : many}`,
-        `${done.escaped} got away`,
-        done.oops === 0 ? `no ${friend} bonked` : `${done.oops} ${friend} ${done.oops === 1 ? 'bonk' : 'bonks'}`,
+        `${done.caught} ${plural(locale, done.caught, one, many)}`,
+        t.gotAway(done.escaped),
+        t.bonks(skin.kinds.friend.name[locale], done.oops),
       ].join(' · '),
     });
   });
@@ -85,10 +89,10 @@ export function Peekaboo({ skin, theme, player, onTurnEnd, onExit }: PeekabooPro
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`${TURN_SECONDS} seconds · 5 in a row = double points`}
+        hint={t.hint(TURN_SECONDS)}
         onStart={() => {
           sounds();
           update(createPeek());
@@ -96,13 +100,13 @@ export function Peekaboo({ skin, theme, player, onTurnEnd, onExit }: PeekabooPro
         }}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <ul className="turn__legend">
           {(Object.keys(PEEK_KINDS) as PeekKind[]).map((kind) => (
             <li key={kind} className={`peek__kind--${kind}`}>
               <Icon src={skin.kinds[kind].image} />
-              {skin.kinds[kind].name}{' '}
-              <strong>{PEEK_KINDS[kind].points > 0 ? PEEK_KINDS[kind].points : `−${-PEEK_KINDS[kind].points} — don't tap!`}</strong>
+              {skin.kinds[kind].name[locale]}{' '}
+              <strong>{PEEK_KINDS[kind].points > 0 ? PEEK_KINDS[kind].points : t.dontTap(-PEEK_KINDS[kind].points)}</strong>
             </li>
           ))}
         </ul>
@@ -138,7 +142,7 @@ export function Peekaboo({ skin, theme, player, onTurnEnd, onExit }: PeekabooPro
                     whack(hole);
                   }}
                   onClick={(event) => event.detail === 0 && whack(hole)}
-                  aria-label={peeker && state === 'out' ? skin.kinds[peeker.kind].name : `Hole ${hole + 1}`}
+                  aria-label={peeker && state === 'out' ? skin.kinds[peeker.kind].name[locale] : t.hole(hole + 1)}
                 >
                   {skin.holeLabel && <span className="peek__label">{skin.holeLabel(hole)}</span>}
                   {peeker && (

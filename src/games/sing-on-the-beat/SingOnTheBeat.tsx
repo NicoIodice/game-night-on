@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { unlockAudio } from '../../core/audio/sound';
 import { useBeatClock } from '../../core/audio/useBeatClock';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
 import { PlayerBadge } from '../../core/match/PlayerBadge';
 import type { Card, GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
 import microphone from '../../core/ui/icons/microphone.svg';
-import { LANGUAGES, lateWordGraceMs, loadCalibration, needsVoiceCheck } from '../../core/voice/calibration';
+import { accentFor, ACCENTS, lateWordGraceMs, loadCalibration, needsVoiceCheck } from '../../core/voice/calibration';
 import { SpeechListener, type ListenResult } from '../../core/voice/SpeechListener';
 import { VoiceCheck } from '../../core/voice/VoiceCheck';
 import { createCueTrack } from './cueTrack';
 import { dealRounds } from './deal';
 import { DEFAULT_ROUNDS, DEFAULT_TEMPO, LEVELS } from './levels';
+import { MESSAGES as KIT_MESSAGES } from '../kit/messages';
+import { MESSAGES, type Messages } from './messages';
+import { singOnTheBeatName } from './name';
 import { VoiceDebug } from './VoiceDebug';
 import {
   judgeHand,
@@ -35,12 +39,6 @@ const marksOf = (rounds: readonly CardResult[][]): Mark[][] => rounds.map((round
 /** Add `?debug` to the address to see every word heard, with its timing, while playing. */
 const DEBUG = typeof location !== 'undefined' && new URLSearchParams(location.search).has('debug');
 
-const VOICE_OFF_REASON: Record<Exclude<ListenResult, 'listening'>, string> = {
-  unsupported: "This browser can't listen. Use Chrome or Edge to get scored.",
-  denied: 'Microphone access was blocked, so this game is not scored.',
-  failed: "Couldn't start listening, so this game is not scored.",
-};
-
 function cardState(step: Step, index: number): CardState {
   switch (step.phase) {
     case 'countdown':
@@ -54,26 +52,30 @@ function cardState(step: Step, index: number): CardState {
   }
 }
 
-function caption(step: Step, roundScore: RoundScore | undefined, scored: boolean): string {
+function caption(t: Messages, step: Step, roundScore: RoundScore | undefined, scored: boolean): string {
   switch (step.phase) {
     case 'countdown':
-      return step.count === null ? 'Get ready!' : String(step.count);
+      return step.count === null ? t.getReady : String(step.count);
     case 'sing':
-      return 'Say it!';
+      return t.sayIt;
     case 'result':
-      if (!scored) return 'Nice!';
-      if (!roundScore) return 'Listening…';
-      if (roundScore.streak > 1) return `Perfect ×${roundScore.streak}! +${roundScore.points}`;
-      if (roundScore.streak === 1) return `Perfect! +${roundScore.points}`;
-      return roundScore.points === 0 ? 'No points!' : `+${roundScore.points} points`;
+      if (!scored) return t.nice;
+      if (!roundScore) return t.listening;
+      if (roundScore.streak > 1) return t.perfectStreak(roundScore.streak, roundScore.points);
+      if (roundScore.streak === 1) return t.perfect(roundScore.points);
+      return roundScore.points === 0 ? t.noPoints : t.plusPoints(roundScore.points);
     case 'done':
       return '';
   }
 }
 
 export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTurnEnd, onExit }: GameProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
+  const kit = useMessages(KIT_MESSAGES);
   const level = LEVELS[levelIndex];
-  const deck = theme.decks[level.deck];
+  // The cards are words in the app's language, and the game listens in that language too.
+  const deck = theme.decks[locale][level.deck];
   const rounds = options.rounds ?? DEFAULT_ROUNDS;
   const bpm = (options.tempo ?? DEFAULT_TEMPO) + level.faster;
   const plan: Plan = useMemo(() => ({ rounds, cardCount: level.cardCount }), [rounds, level.cardCount]);
@@ -90,7 +92,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
 
   /** The voice check to run before playing: all of it the first time, or just a new theme's words. */
   const [checking, setChecking] = useState(() =>
-    SpeechListener.isSupported() ? needsVoiceCheck(loadCalibration(), theme.id) : null,
+    SpeechListener.isSupported() ? needsVoiceCheck(loadCalibration(), theme.id, locale) : null,
   );
   /** How this device hears players, from the voice check; set when the turn starts. */
   const [hearing, setHearing] = useState<Hearing>({});
@@ -137,7 +139,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     setStarting(true);
 
     listenerRef.current?.stop();
-    const listener = new SpeechListener(calibration?.lang ?? 'en-US');
+    const listener = new SpeechListener(accentFor(calibration, locale));
     listenerRef.current = listener;
     /** The round's words so far, each with the time it first arrived, even if the recogniser rewrites it later. */
     const stampedAnswers = (from: number): HeardWord[] => {
@@ -191,11 +193,8 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
         const cardsRight = marks.flat().filter((mark) => mark === 'correct').length;
         onTurnEnd(
           voiceResult === 'listening'
-            ? {
-                score: totalScore(marks),
-                detail: `Level ${level.number}: ${cardsRight} of ${rounds * level.cardCount} cards right`,
-              }
-            : { score: 0, detail: VOICE_OFF_REASON[voiceResult] },
+            ? { score: totalScore(marks), detail: t.detail(level.number, cardsRight, rounds * level.cardCount) }
+            : { score: 0, detail: t.voiceOff[voiceResult] },
         );
       }
       setBeat(nextBeat);
@@ -217,7 +216,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
         theme={theme}
         mode={checking}
         onDone={() => setChecking(null)}
-        onCancel={needsVoiceCheck(loadCalibration(), theme.id) ? undefined : () => setChecking(null)}
+        onCancel={needsVoiceCheck(loadCalibration(), theme.id, locale) ? undefined : () => setChecking(null)}
       />
     );
   }
@@ -225,10 +224,10 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   if (starting) {
     return (
       <section className="sotb sotb--panel">
-        <h2>Get ready…</h2>
-        <p>If your browser asks, allow the microphone so we can hear your answers.</p>
+        <h2>{t.starting}</h2>
+        <p>{t.allowMic}</p>
         <div className="sotb__actions">
-          <button className="btn" onClick={exit}>Back</button>
+          <button className="btn" onClick={exit}>{t.back}</button>
         </div>
       </section>
     );
@@ -237,15 +236,12 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   if (step === null) {
     return (
       <section className="sotb sotb--panel">
-        <h2>Sing on the Beat</h2>
+        <h2>{singOnTheBeatName[locale]}</h2>
         <p className="sotb__turn">
-          <PlayerBadge player={player} />, your turn!
+          <PlayerBadge player={player} />
+          {kit.yourTurn}
         </p>
-        <p>
-          After the countdown all the cards appear. Say each word out loud <strong>on the beat</strong> as it lights
-          up. Right word: points and a green card. Wrong or silent: red card, no points. Get a whole round right for
-          a bonus that grows with every perfect round in a row.
-        </p>
+        <p>{t.rules}</p>
         <div className="sotb__deck">
           {deck.map((card) => (
             <span key={card.id} className="sotb__deck-card">
@@ -255,13 +251,12 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
           ))}
         </div>
         <p className="sotb__hint">
-          Level {level.number} of {LEVELS.length} · {rounds} {rounds === 1 ? 'round' : 'rounds'} ·{' '}
-          {level.cardCount} cards · {bpm} BPM ·{' '}
-          {SpeechListener.isSupported() ? 'uses your microphone' : VOICE_OFF_REASON.unsupported}
+          {t.hint(level.number, LEVELS.length, rounds, level.cardCount, bpm)} ·{' '}
+          {SpeechListener.isSupported() ? t.usesMic : t.voiceOff.unsupported}
         </p>
         <div className="sotb__actions">
-          <button className="btn btn--primary" onClick={play}>Start</button>
-          <button className="btn" onClick={exit}>Back</button>
+          <button className="btn btn--primary" onClick={play}>{t.start}</button>
+          <button className="btn" onClick={exit}>{t.back}</button>
         </div>
         {SpeechListener.isSupported() && <VoiceSummary onRecheck={() => setChecking('full')} />}
       </section>
@@ -284,15 +279,15 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     <section className="sotb">
       <header className="sotb__status">
         <PlayerBadge player={player} />
-        <span>Level {level.number}</span>
-        <span>Round {round + 1}/{rounds}</span>
-        {scored && <span className="sotb__score">{score} pts</span>}
-        {scored && <Icon src={microphone} label="Listening" className="sotb__mic" />}
-        <button className="btn btn--small" onClick={exit}>Quit</button>
+        <span>{t.level(level.number)}</span>
+        <span>{t.round(round + 1, rounds)}</span>
+        {scored && <span className="sotb__score">{kit.pts(score)}</span>}
+        {scored && <Icon src={microphone} label={t.mic} className="sotb__mic" />}
+        <button className="btn btn--small" onClick={exit}>{t.quit}</button>
       </header>
 
       <p key={beat} className={`sotb__caption sotb__caption--${step.phase}`} aria-live="polite">
-        {caption(step, finalResults && roundScores[round], scored)}
+        {caption(t, step, finalResults && roundScores[round], scored)}
       </p>
 
       <ol className="sotb__cards" style={{ '--cards': hand.length } as CSSProperties}>
@@ -316,10 +311,10 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
 
       {scored && answering && (
         <p className="sotb__heard">
-          {heard.length > 0 ? '' : finalResults ? 'Nothing heard' : 'Waiting for your voice…'}
+          {heard.length > 0 ? '' : finalResults ? t.nothingHeard : t.waiting}
         </p>
       )}
-      {!scored && <p className="sotb__hint">{VOICE_OFF_REASON[voice ?? 'failed']}</p>}
+      {!scored && <p className="sotb__hint">{t.voiceOff[voice ?? 'failed']}</p>}
 
       <div key={`pulse-${beat}`} className="sotb__pulse" aria-hidden />
       {DEBUG && scored && <VoiceDebug hand={hand} heard={heard} hearing={hearing} />}
@@ -329,12 +324,15 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
 
 /** How the game is listening on this device, with a way to run the voice check again. */
 function VoiceSummary({ onRecheck }: { onRecheck: () => void }) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const calibration = loadCalibration();
-  const language = LANGUAGES.find((l) => l.id === calibration?.lang)?.label ?? 'English (US)';
+  const accent = accentFor(calibration, locale);
+  const language = ACCENTS[locale].find((a) => a.id === accent)?.label ?? accent;
   return (
     <p className="sotb__hint sotb__voice">
-      Listening in {language} · {calibration?.strictness === 'relaxed' ? 'relaxed' : 'strict'} scoring ·{' '}
-      <button className="sotb__link" onClick={onRecheck}>Voice check</button>
+      {t.listeningIn(language, calibration?.strictness === 'relaxed')} ·{' '}
+      <button className="sotb__link" onClick={onRecheck}>{t.voiceCheck}</button>
     </p>
   );
 }

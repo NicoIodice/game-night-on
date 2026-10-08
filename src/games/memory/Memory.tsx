@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useMusic } from '../../core/audio/useMusic';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
@@ -17,6 +18,7 @@ import {
   pairsFound,
   type Board,
 } from './board';
+import { MESSAGES } from './messages';
 import { memoryFaces, type MemorySkin } from './skin';
 import './Memory.css';
 
@@ -30,9 +32,11 @@ interface MemoryProps extends GameProps {
 
 /** One turn of a memory game: find every pair before the clock runs out. */
 export function Memory({ skin, theme, player, level: levelIndex, options, onTurnEnd, onExit }: MemoryProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const level = LEVELS[Math.min(levelIndex, LEVELS.length - 1)];
   const seconds = options.seconds ?? DEFAULT_SECONDS;
-  const faces = memoryFaces(theme, skin);
+  const faces = memoryFaces(theme, skin, locale);
   const facesById = new Map(faces.map((card) => [card.id, card]));
 
   const [phase, setPhase] = useState<TurnPhase>('intro');
@@ -76,9 +80,9 @@ export function Memory({ skin, theme, player, level: levelIndex, options, onTurn
     onTurnEnd({
       score: done.score + bonus,
       detail: [
-        `${pairsFound(done)} of ${level.pairs} pairs`,
-        `${done.flips} flips`,
-        cleared ? `${Math.floor(leftRef.current)}s to spare` : `best streak ${done.bestStreak}`,
+        t.pairs(pairsFound(done), level.pairs),
+        t.flips(done.flips),
+        cleared ? t.spare(Math.floor(leftRef.current)) : t.bestStreak(done.bestStreak),
       ].join(' · '),
     });
   });
@@ -110,17 +114,17 @@ export function Memory({ skin, theme, player, level: levelIndex, options, onTurn
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`Level ${levelIndex + 1} · ${level.pairs} pairs · ${seconds} seconds · pairs in a row earn a bonus`}
+        hint={t.hint(levelIndex + 1, level.pairs, seconds)}
         onStart={() => {
           sounds();
           setPhase('countdown');
         }}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <div className="memory__preview" aria-hidden>
           <span className="memory__mini memory__mini--back"><Icon src={skin.back} /></span>
           <span className="memory__mini"><Icon src={faces[0].image} /></span>
@@ -138,7 +142,7 @@ export function Memory({ skin, theme, player, level: levelIndex, options, onTurn
       player={player}
       className={className}
       score={board.score + bonus}
-      extra={board.streak > 1 && <Badge key={board.streak}>{board.streak} in a row</Badge>}
+      extra={board.streak > 1 && <Badge key={board.streak}>{t.inARow(board.streak)}</Badge>}
       seconds={left}
       timeLeft={left / seconds}
       hurry={Math.ceil(left) <= TICKING_FROM && phase === 'playing'}
@@ -168,7 +172,7 @@ export function Memory({ skin, theme, player, level: levelIndex, options, onTurn
                   className={`memory__card memory__card--${state}`}
                   onClick={() => turnOver(index)}
                   disabled={phase !== 'playing' || matched}
-                  aria-label={up ? face?.label : `Card ${index + 1}, face down`}
+                  aria-label={up ? face?.label : t.faceDown(index + 1)}
                 >
                   <span className="memory__inner">
                     <span className="memory__side memory__side--back"><Icon src={skin.back} /></span>
@@ -186,7 +190,7 @@ export function Memory({ skin, theme, player, level: levelIndex, options, onTurn
           </StageCaption>
         )}
         {phase === 'over' && (
-          <TurnOver title={cleared ? 'All pairs found!' : "Time's up!"} score={board.score + bonus} />
+          <TurnOver title={cleared ? t.allFound : undefined} score={board.score + bonus} />
         )}
       </div>
     </TurnScreen>

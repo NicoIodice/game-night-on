@@ -1,12 +1,15 @@
 import type { ComponentType } from 'react';
 import type { Music } from './audio/BeatClock';
 import type { ThemeSounds } from './audio/themeSounds';
+import type { Localized } from './i18n/locales';
 
 export type ThemeId = 'halloween' | 'christmas';
 
-/** A picture card a game can show, e.g. "bat". Themes supply their own deck. */
+/** A picture card a game can show, e.g. "bat". Themes supply their own decks, one set per language. */
 export interface Card {
+  /** Unique across every theme and language: learned words are saved by card id. Also counts as saying the card. */
   id: string;
+  /** The word to say, in the deck's language. */
   label: string;
   image: string;
   /** Extra words that count as saying this card (plurals are always accepted). */
@@ -16,18 +19,19 @@ export interface Card {
 /** Everything that makes a festivity look and sound different. Pure data + factories. */
 export interface Theme {
   id: ThemeId;
-  name: string;
-  tagline: string;
+  name: Localized<string>;
+  tagline: Localized<string>;
   icon: string;
   /** Browser tab icon while this festivity is chosen. */
   favicon: string;
   /** Disabled themes are listed as "coming soon". */
   enabled: boolean;
   /**
-   * Picture cards, in decks from easiest to hardest. Words within the early decks rhyme
-   * (bat, rat, hat…); later decks mix words of different lengths.
+   * Picture cards, in decks from easiest to hardest, for each language. Words within the early
+   * decks rhyme (bat, rat, hat… / gato, rato, pato…); later decks mix words of different lengths.
+   * Each language picks its own words so they rhyme in that language: translations rarely do.
    */
-  decks: Card[][];
+  decks: Localized<Card[][]>;
   /** Plays on the theme's menus. */
   music?: Music;
   /** Sound effects in the theme's style, for games that don't bring their own. */
@@ -58,7 +62,7 @@ export interface TurnResult {
 /** A setting a game offers in the game night settings, e.g. "Rounds per level". Whole numbers only. */
 export interface GameOption {
   id: string;
-  label: string;
+  label: Localized<string>;
   min: number;
   max: number;
   /** How much the − and + buttons change the value. Defaults to 1. */
@@ -88,15 +92,16 @@ export interface GameDefinition {
   id: string;
   /** Whether the game is offered at all. Switch off to hide a game from every menu (e.g. while it's unfinished). */
   enabled: boolean;
-  name: string;
-  description: string;
+  name: Localized<string>;
+  description: Localized<string>;
   kind: 'voice' | 'keyboard' | 'party';
-  players: string;
+  /** How many players or teams it's for. */
+  players: { min: number; max: number };
   /** A screenshot of the game being played, shown on its menu tile. Can differ per theme. */
   thumbnail?: string | Partial<Record<ThemeId, string>>;
   /** 'all' for common games, or the themes a theme-specific game belongs to. */
   themes: ThemeId[] | 'all';
-  /** Whether a theme has what the game needs (cards, music…). */
+  /** Whether a theme has what the game needs (cards, music…), in every language. */
   supports: (theme: Theme) => boolean;
   /**
    * How many levels the game has (default 1). Each level is one turn per player:

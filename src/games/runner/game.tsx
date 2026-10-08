@@ -11,9 +11,18 @@ export function runnerGame(skin: RunnerSkin, details: SkinDetails): GameDefiniti
     id: skin.id,
     name: skin.title,
     kind: 'keyboard',
-    players: '1–8 players or teams',
+    players: { min: 1, max: 8 },
     supports: () => true,
-    options: [{ id: 'seconds', label: 'Seconds per run', min: 20, max: 90, step: 5, default: DEFAULT_SECONDS }],
+    options: [
+      {
+        id: 'seconds',
+        label: { 'en-US': 'Seconds per run', 'pt-PT': 'Segundos por corrida' },
+        min: 20,
+        max: 90,
+        step: 5,
+        default: DEFAULT_SECONDS,
+      },
+    ],
     Component: (props: GameProps) => <Runner {...props} skin={skin} />,
     ...details,
   };

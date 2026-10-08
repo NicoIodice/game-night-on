@@ -11,9 +11,18 @@ export function charadesGame(skin: CharadesSkin, details: SkinDetails): GameDefi
     id: skin.id,
     name: skin.title,
     kind: 'party',
-    players: '2–8 players or teams',
-    supports: () => skin.words.length > 0,
-    options: [{ id: 'seconds', label: 'Seconds per turn', min: 30, max: 120, step: 15, default: DEFAULT_SECONDS }],
+    players: { min: 2, max: 8 },
+    supports: () => Object.values(skin.words).every((words) => words.length > 0),
+    options: [
+      {
+        id: 'seconds',
+        label: { 'en-US': 'Seconds per turn', 'pt-PT': 'Segundos por vez' },
+        min: 30,
+        max: 120,
+        step: 15,
+        default: DEFAULT_SECONDS,
+      },
+    ],
     Component: (props: GameProps) => <Charades {...props} skin={skin} />,
     ...details,
   };

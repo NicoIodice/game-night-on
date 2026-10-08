@@ -1,3 +1,4 @@
+import type { Locale, Localized } from '../../core/i18n/locales';
 import type { Card, Theme } from '../../core/types';
 
 /**
@@ -6,16 +7,14 @@ import type { Card, Theme } from '../../core/types';
  */
 export interface MemorySkin {
   id: string;
-  title: string;
+  title: Localized<string>;
   /** How the turn is explained on the intro screen. */
-  intro: string;
-  /** Drawn on the back of every card. */
+  intro: Localized<string>;
+  /** Drawn on the back of every card, so no card shows it on its face. */
   back: string;
-  /** Theme cards left out of the game, e.g. the picture used on the backs. */
-  skip?: string[];
 }
 
-/** The pictures to find: every picture card in the theme's decks, minus the skipped ones. */
-export function memoryFaces(theme: Theme, skin: MemorySkin): Card[] {
-  return theme.decks.flat().filter((card) => !skin.skip?.includes(card.id));
+/** The pictures to find: every picture card in the theme's decks, minus the one on the backs. */
+export function memoryFaces(theme: Theme, skin: MemorySkin, locale: Locale): Card[] {
+  return theme.decks[locale].flat().filter((card) => card.image !== skin.back);
 }

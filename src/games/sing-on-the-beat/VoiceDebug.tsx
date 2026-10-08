@@ -1,5 +1,6 @@
+import { useLocale } from '../../core/i18n/I18n';
 import type { Card } from '../../core/types';
-import { loadCalibration } from '../../core/voice/calibration';
+import { accentFor, loadCalibration } from '../../core/voice/calibration';
 import { placeWords, saysCard, type HeardWord, type Hearing } from './scoring';
 
 interface VoiceDebugProps {
@@ -11,15 +12,17 @@ interface VoiceDebugProps {
 /**
  * For tuning the game (open it with `?debug` in the address): every word heard this round,
  * which card was lit when it arrived and how late, which card it was counted for, and whether
- * it matched. Shows whether misses come from timing, mishearing or noise.
+ * it matched. Shows whether misses come from timing, mishearing or noise. A tool for tuning,
+ * so it stays in English.
  */
 export function VoiceDebug({ hand, heard, hearing }: VoiceDebugProps) {
+  const locale = useLocale();
   const calibration = loadCalibration();
   const slots = placeWords(hand, heard, hearing);
   return (
     <details className="sotb__debug" open>
       <summary>
-        Voice debug · {calibration?.lang ?? 'en-US'} · delay {calibration?.delayMs ?? '—'} ms · late-word window{' '}
+        Voice debug · {accentFor(calibration, locale)} · delay {calibration?.delayMs ?? '—'} ms · late-word window{' '}
         {hearing.graceMs} ms · {hearing.relaxed ? 'relaxed' : 'strict'}
       </summary>
       <table>

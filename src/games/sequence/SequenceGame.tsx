@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useRef, useState, type CSSProperties } from 'react';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
@@ -15,6 +16,7 @@ import {
   stepMs,
   type Sequence,
 } from './sequence';
+import { MESSAGES } from './messages';
 import type { SequenceSkin } from './skin';
 import './SequenceGame.css';
 
@@ -30,6 +32,8 @@ interface SequenceGameProps extends GameProps {
 
 /** One turn of a sequence game: watch the pads light up, then press them back in order. */
 export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }: SequenceGameProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const pads = skin.pads.slice(0, Math.min(skin.pads.length, options.pads ?? DEFAULT_PADS));
   const baseMs = options.flash ?? DEFAULT_STEP_MS;
 
@@ -74,7 +78,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
     handles.push(
       setTimeout(() => {
         setMode('input');
-        setMessage('Your turn!');
+        setMessage(t.yourTurn);
       }, BEFORE_SHOW_MS + steps.length * ms),
     );
     return handles;
@@ -86,7 +90,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
     return () => handles.forEach(clearTimeout);
   }, [showings]);
 
-  const show = (text = 'Watch…') => {
+  const show = (text = t.watch) => {
     setMode('show');
     setMessage(text);
     setShowings((n) => n + 1);
@@ -119,15 +123,15 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
     if (outcome === 'repeated') {
       sounds().note(pads[pad].note, PRESS_MS / 1000);
       later(250, () => sounds().good(next.steps.length >= 8 ? 1 : 0));
-      setMessage('Well done!');
+      setMessage(t.wellDone);
       later(900, () => {
         update(extend(sequenceRef.current, defaultRng));
         show();
       });
     } else if (outcome === 'slip') {
       sounds().bad();
-      setMessage('Oops! Watch again…');
-      later(1200, () => show('Watch again…'));
+      setMessage(t.oops);
+      later(1200, () => show(t.watchAgain));
     } else if (outcome === 'out') {
       sounds().bad();
       later(400, () => sounds().timeUp());
@@ -152,7 +156,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
     const done = sequenceRef.current;
     onTurnEnd({
       score: done.score,
-      detail: `Longest sequence ${done.best} · ${done.slips} ${done.slips === 1 ? 'slip' : 'slips'}`,
+      detail: t.detail(done.best, done.slips),
     });
   });
 
@@ -161,19 +165,19 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`${pads.length} pads · ${options.lives ?? DEFAULT_LIVES} ${(options.lives ?? DEFAULT_LIVES) === 1 ? 'life' : 'lives'} · keys 1–${pads.length} work too`}
+        hint={t.hint(pads.length, options.lives ?? DEFAULT_LIVES)}
         onStart={start}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <ul className="turn__legend">
           {pads.map((pad) => (
-            <li key={pad.name} style={{ '--item': pad.color } as CSSProperties}>
+            <li key={pad.note} style={{ '--item': pad.color } as CSSProperties}>
               <Icon src={pad.image} />
-              {pad.name}
+              {pad.name[locale]}
             </li>
           ))}
         </ul>
@@ -190,8 +194,8 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
       score={sequence.score}
       extra={
         <>
-          <Badge key={sequence.steps.length}>{sequence.steps.length} steps</Badge>
-          <span className="sequence__lives">{livesLeft} {livesLeft === 1 ? 'life' : 'lives'}</span>
+          <Badge key={sequence.steps.length}>{t.steps(sequence.steps.length)}</Badge>
+          <span className="sequence__lives">{t.lives(livesLeft)}</span>
         </>
       }
       onExit={onExit}
@@ -200,7 +204,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
         <div className="sequence__ring" style={{ '--pads': pads.length } as CSSProperties}>
           {pads.map((pad, i) => (
             <button
-              key={pad.name}
+              key={pad.note}
               className={`sequence__pad ${lit === i ? 'sequence__pad--lit' : ''}`}
               style={{ '--i': i, '--pad': pad.color } as CSSProperties}
               onPointerDown={(event) => {
@@ -210,7 +214,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
               // Enter or Space on a focused pad (pointer presses are handled above).
               onClick={(event) => event.detail === 0 && pressPad(i)}
               disabled={phase !== 'playing'}
-              aria-label={`${pad.name} (key ${i + 1})`}
+              aria-label={t.pad(pad.name[locale], i + 1)}
             >
               <Icon src={pad.image} />
             </button>
@@ -226,7 +230,7 @@ export function SequenceGame({ skin, theme, player, options, onTurnEnd, onExit }
           </div>
         </div>
         {phase === 'over' && (
-          <TurnOver title={won ? `All ${MAX_LENGTH} in a row!` : skin.outTitle} score={sequence.score} />
+          <TurnOver title={won ? t.allInARow(MAX_LENGTH) : skin.outTitle[locale]} score={sequence.score} />
         )}
       </div>
     </TurnScreen>

@@ -1,5 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { useMusic } from '../../core/audio/useMusic';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
+import { plural } from '../../core/i18n/locales';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
@@ -20,6 +22,7 @@ import {
   type Dash,
   type ObstacleKind,
 } from './dash';
+import { MESSAGES } from './messages';
 import type { RunnerSkin } from './skin';
 import './Runner.css';
 
@@ -31,6 +34,8 @@ interface RunnerProps extends GameProps {
 
 /** One turn of a running game: jump the obstacles and grab treats until time or lives run out. */
 export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: RunnerProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const seconds = options.seconds ?? DEFAULT_SECONDS;
   const [phase, setPhase] = useState<TurnPhase>('intro');
   const [dash, setDash] = useState<Dash>(createDash);
@@ -63,13 +68,13 @@ export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: Runn
 
   useAfter(phase === 'over', OVER_MS, () => {
     const done = dashRef.current;
-    const [one, many] = skin.treatNoun;
+    const [one, many] = skin.treatNoun[locale];
     onTurnEnd({
       score: scoreDash(done),
       detail: [
-        `${done.distance.toFixed(1)} screens run`,
-        `${done.treatsTaken} ${done.treatsTaken === 1 ? one : many}`,
-        `${done.bumps} ${done.bumps === 1 ? 'bump' : 'bumps'}`,
+        t.distance(done.distance),
+        `${done.treatsTaken} ${plural(locale, done.treatsTaken, one, many)}`,
+        t.bumps(done.bumps),
       ].join(' · '),
     });
   });
@@ -98,10 +103,10 @@ export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: Runn
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`${seconds} seconds · ${LIVES} lives · tap, click, Space or ↑ to jump`}
+        hint={t.hint(seconds, LIVES)}
         onStart={() => {
           sounds();
           update(createDash());
@@ -109,21 +114,21 @@ export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: Runn
         }}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <ul className="turn__legend">
           <li className="runner__legend-runner">
             <Icon src={skin.runner} />
-            You
+            {t.you}
           </li>
           {(Object.keys(OBSTACLES) as ObstacleKind[]).map((kind) => (
             <li key={kind} className={`runner__legend-obstacle runner__obstacle--${kind}`}>
               <Icon src={skin.obstacles[kind].image} />
-              {skin.obstacles[kind].name} <strong>jump!</strong>
+              {skin.obstacles[kind].name[locale]} <strong>{t.jump}</strong>
             </li>
           ))}
           <li className="runner__legend-treat">
             <Icon src={skin.treat.image} />
-            {skin.treat.name} <strong>+{POINTS_PER_TREAT}</strong>
+            {skin.treat.name[locale]} <strong>+{POINTS_PER_TREAT}</strong>
           </li>
         </ul>
       </TurnIntro>
@@ -138,7 +143,7 @@ export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: Runn
       className={className}
       score={scoreDash(dash)}
       extra={
-        <span className="runner__lives" aria-label={`${dash.lives} lives`}>
+        <span className="runner__lives" aria-label={t.lives(dash.lives)}>
           {Array.from({ length: LIVES }, (_, i) => (
             <Icon key={i} src={skin.runner} className={i < dash.lives ? '' : 'runner__life--lost'} />
           ))}
@@ -192,7 +197,7 @@ export function Runner({ skin, theme, player, options, onTurnEnd, onExit }: Runn
             <p>{count}</p>
           </StageCaption>
         )}
-        {phase === 'over' && <TurnOver title={dash.lives > 0 ? "Time's up!" : 'Out of lives!'} score={scoreDash(dash)} />}
+        {phase === 'over' && <TurnOver title={dash.lives > 0 ? undefined : t.outOfLives} score={scoreDash(dash)} />}
       </div>
     </TurnScreen>
   );

@@ -16,6 +16,7 @@ const ICONS = {
     person: 'person',
     team: 'three-friends',
     trophy: 'trophy-cup',
+    globe: 'globe',
   },
   'src/themes/halloween/assets': {
     cat: 'cat',
@@ -35,6 +36,13 @@ const ICONS = {
     ghost: 'ghost',
     spider: 'hanging-spider',
     skeleton: 'skeleton',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    duck: 'duck',
+    shoe: 'high-heel',
+    coffin: 'coffin',
+    dragon: 'dragon-head',
+    hand: 'skeletal-hand',
+    dog: 'hound',
     favicon: { name: 'pumpkin-lantern', fill: '#ff7a18' },
   },
   'src/games/bat-blitz/assets': {
@@ -81,6 +89,13 @@ const ICONS = {
     reindeer: 'deer',
     gingerbread: 'gingerbread-man',
     'santa-hat': 'santa-hat',
+    // Extra cards for the Portuguese decks, which need words that rhyme in Portuguese.
+    window: 'window',
+    pot: 'cooking-pot',
+    ice: 'ice-cube',
+    camel: 'camel',
+    hammer: 'claw-hammer',
+    castle: 'castle',
     favicon: { name: 'santa-hat', fill: '#e63946' },
   },
 };

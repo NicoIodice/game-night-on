@@ -1,3 +1,4 @@
+import { LOCALES } from '../../core/i18n/locales';
 import type { GameDefinition, GameProps } from '../../core/types';
 import { DEFAULT_SECONDS, LEVELS } from './board';
 import { Memory } from './Memory';
@@ -12,10 +13,19 @@ export function memoryGame(skin: MemorySkin, details: SkinDetails): GameDefiniti
     id: skin.id,
     name: skin.title,
     kind: 'party',
-    players: '1–8 players or teams',
-    supports: (theme) => memoryFaces(theme, skin).length >= pairsNeeded,
+    players: { min: 1, max: 8 },
+    supports: (theme) => LOCALES.every(({ id }) => memoryFaces(theme, skin, id).length >= pairsNeeded),
     levels: LEVELS.length,
-    options: [{ id: 'seconds', label: 'Seconds per level', min: 30, max: 180, step: 15, default: DEFAULT_SECONDS }],
+    options: [
+      {
+        id: 'seconds',
+        label: { 'en-US': 'Seconds per level', 'pt-PT': 'Segundos por nível' },
+        min: 30,
+        max: 180,
+        step: 15,
+        default: DEFAULT_SECONDS,
+      },
+    ],
     Component: (props: GameProps) => <Memory {...props} skin={skin} />,
     ...details,
   };

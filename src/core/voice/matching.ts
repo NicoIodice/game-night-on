@@ -8,9 +8,18 @@ export function namesOf(card: Card, aliases?: Aliases): string[] {
   return [card.id, card.label.toLowerCase(), ...(card.sayAs ?? []), ...(aliases?.[card.id] ?? [])];
 }
 
-/** True when a heard word names the card exactly, or as a plural ("bat", "bats", "kat"…). */
+/** A word without accents, for comparing: "caixão" -> "caixao". Speech recognition sometimes drops them. */
+export function fold(word: string): string {
+  return word.normalize('NFD').replace(/\p{M}/gu, '');
+}
+
+/** True when a heard word names the card exactly, or as a plural ("bat", "bats", "kat"…). Accents don't matter. */
 export function saysExactly(card: Card, word: string, aliases?: Aliases): boolean {
-  return namesOf(card, aliases).some((name) => word === name || word === `${name}s`);
+  const heard = fold(word);
+  return namesOf(card, aliases).some((name) => {
+    const folded = fold(name);
+    return heard === folded || heard === `${folded}s`;
+  });
 }
 
 /** Letters to add, remove or change to turn one word into the other (Levenshtein distance). */
@@ -26,10 +35,13 @@ export function editDistance(a: string, b: string): number {
   return previous[b.length];
 }
 
-/** How far a word is from a card: the closest of its names, ignoring a plural "s". */
+/** How far a word is from a card: the closest of its names, ignoring a plural "s" and accents. */
 function distanceTo(card: Card, word: string, aliases?: Aliases): number {
-  const singular = word.endsWith('s') ? word.slice(0, -1) : word;
-  return Math.min(...namesOf(card, aliases).flatMap((name) => [editDistance(word, name), editDistance(singular, name)]));
+  const heard = fold(word);
+  const singular = heard.endsWith('s') ? heard.slice(0, -1) : heard;
+  return Math.min(
+    ...namesOf(card, aliases).map(fold).flatMap((name) => [editDistance(heard, name), editDistance(singular, name)]),
+  );
 }
 
 /**

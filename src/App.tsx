@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { MESSAGES } from './app/messages';
 import { loadMuted, setMuted, unlockAudio } from './core/audio/sound';
+import { useLocale, useMessages } from './core/i18n/I18n';
 import { useMusic } from './core/audio/useMusic';
 import { gameOptions, loadLineup, playlist, saveLineup, type Lineup } from './core/match/lineup';
 import { LineupSettings } from './core/match/LineupSettings';
 import { Match } from './core/match/Match';
 import type { Theme } from './core/types';
 import { Icon } from './core/ui/Icon';
+import { LanguagePicker } from './core/ui/LanguagePicker';
 import { SoundToggle } from './core/ui/SoundToggle';
 import { lobbyMusic } from './app/lobbyMusic';
 import { gamesFor, thumbnailFor } from './games/registry';
@@ -16,6 +19,8 @@ import './App.css';
 const LOBBY_FAVICON = `${import.meta.env.BASE_URL}favicon.svg`;
 
 export default function App() {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const [entered, setEntered] = useState(false);
   const [muted, setMutedState] = useState(loadMuted);
   const [theme, setTheme] = useState<Theme | null>(null);
@@ -58,14 +63,21 @@ export default function App() {
   const launch = (startAt: number) => setSession({ id: Date.now(), startAt });
 
   const soundToggle = <SoundToggle muted={muted} onChange={setMutedState} />;
+  // Not during a match: the turn in play (and its speech recognition) stays in one language.
+  const controls = (
+    <>
+      <LanguagePicker />
+      {soundToggle}
+    </>
+  );
 
   if (!entered) {
     return (
       <main className="app app--splash">
         <h1 className="app__title">Game Night On</h1>
-        <p className="app__subtitle">Fun little games for memorable nights</p>
-        <button className="btn btn--primary" onClick={enter} autoFocus>Let's play</button>
-        {soundToggle}
+        <p className="app__subtitle">{t.subtitle}</p>
+        <button className="btn btn--primary" onClick={enter} autoFocus>{t.letsPlay}</button>
+        {controls}
       </main>
     );
   }
@@ -91,7 +103,7 @@ export default function App() {
     return (
       <main className="app">
         <LineupSettings theme={theme} games={themeGames} lineup={lineup} onChange={changeLineup} onDone={() => setSettingsOpen(false)} />
-        {soundToggle}
+        {controls}
       </main>
     );
   }
@@ -102,18 +114,15 @@ export default function App() {
     <main className="app">
       <header className="app__header">
         <h1 className="app__title">Game Night On</h1>
-        <p className="app__subtitle">{theme ? theme.tagline : 'Pick a festivity'}</p>
+        <p className="app__subtitle">{theme ? theme.tagline[locale] : t.pickFestivity}</p>
       </header>
 
       {theme ? (
         <>
           {tournament && (
             <div className="app__tournament">
-              <p>
-                Tournament: everyone plays {games.length === 1 ? 'this game' : `these ${games.length} games in order`}, and the
-                scores add up.
-              </p>
-              <button className="btn btn--primary" onClick={() => launch(0)} autoFocus>Start the tournament</button>
+              <p>{t.tournament(games.length)}</p>
+              <button className="btn btn--primary" onClick={() => launch(0)} autoFocus>{t.startTournament}</button>
             </div>
           )}
           <ol className="tiles">
@@ -122,10 +131,10 @@ export default function App() {
               const content = (
                 <>
                   {thumbnail && <img className="tile__thumb" src={thumbnail} alt="" loading="lazy" />}
-                  {tournament && <span className="tile__order">Game {index + 1}</span>}
-                  <span className="tile__name">{g.name}</span>
-                  <span className="tile__text">{g.description}</span>
-                  <span className="tile__meta">{g.players}</span>
+                  {tournament && <span className="tile__order">{t.gameNumber(index + 1)}</span>}
+                  <span className="tile__name">{g.name[locale]}</span>
+                  <span className="tile__text">{g.description[locale]}</span>
+                  <span className="tile__meta">{t.players(g.players.min, g.players.max)}</span>
                 </>
               );
               return (
@@ -140,18 +149,23 @@ export default function App() {
             })}
           </ol>
           <div className="app__actions">
-            <button className="btn" onClick={() => setSettingsOpen(true)}>Game night settings</button>
-            <button className="btn" onClick={() => chooseTheme(null)}>Change festivity</button>
+            <button className="btn" onClick={() => setSettingsOpen(true)}>{t.settings}</button>
+            <button className="btn" onClick={() => chooseTheme(null)}>{t.changeFestivity}</button>
           </div>
         </>
       ) : (
         <ul className="tiles">
-          {THEMES.map((t) => (
-            <li key={t.id}>
-              <button className="tile" data-theme-tile={t.id} disabled={!t.enabled} onClick={() => chooseTheme(t)}>
-                <Icon src={t.icon} className="tile__icon" />
-                <span className="tile__name">{t.name}</span>
-                <span className="tile__text">{t.enabled ? t.tagline : 'Coming soon'}</span>
+          {THEMES.map((festivity) => (
+            <li key={festivity.id}>
+              <button
+                className="tile"
+                data-theme-tile={festivity.id}
+                disabled={!festivity.enabled}
+                onClick={() => chooseTheme(festivity)}
+              >
+                <Icon src={festivity.icon} className="tile__icon" />
+                <span className="tile__name">{festivity.name[locale]}</span>
+                <span className="tile__text">{festivity.enabled ? festivity.tagline[locale] : t.comingSoon}</span>
               </button>
             </li>
           ))}
@@ -159,9 +173,9 @@ export default function App() {
       )}
 
       <footer className="app__footer">
-        Icons by <a href="https://game-icons.net" target="_blank" rel="noreferrer">game-icons.net</a> (CC BY 3.0)
+        {t.iconsBy} <a href="https://game-icons.net" target="_blank" rel="noreferrer">game-icons.net</a> (CC BY 3.0)
       </footer>
-      {soundToggle}
+      {controls}
     </main>
   );
 }

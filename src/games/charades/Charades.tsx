@@ -1,23 +1,27 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
+import type { Locale } from '../../core/i18n/locales';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
 import { OVER_MS, secondsCrossed, useAfter, useCountdown, useFrameLoop, useThemeSounds, type TurnPhase } from '../kit/hooks';
 import { StageCaption, TurnIntro, TurnOver, TurnScreen } from '../kit/TurnScreens';
+import { MESSAGES } from './messages';
 import type { CharadesSkin } from './skin';
 import { createWordBag, DEFAULT_SECONDS, POINTS_PER_WORD, scoreTally, type Tally, type WordBag } from './words';
 import './Charades.css';
 
 const TICKING_FROM = 10;
 
-/** One bag of words per game for the whole night, so nobody gets a word someone already acted. */
+/** One bag of words per game and language for the whole night, so nobody gets a word someone already acted. */
 const bags = new Map<string, WordBag>();
 
-function bagFor(skin: CharadesSkin): WordBag {
-  let bag = bags.get(skin.id);
+function bagFor(skin: CharadesSkin, locale: Locale): WordBag {
+  const key = `${skin.id}:${locale}`;
+  let bag = bags.get(key);
   if (!bag) {
-    bag = createWordBag(skin.words, defaultRng);
-    bags.set(skin.id, bag);
+    bag = createWordBag(skin.words[locale], defaultRng);
+    bags.set(key, bag);
   }
   return bag;
 }
@@ -28,6 +32,8 @@ interface CharadesProps extends GameProps {
 
 /** One turn of charades: act out as many words as the others can guess before time runs out. */
 export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: CharadesProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const seconds = options.seconds ?? DEFAULT_SECONDS;
   const [phase, setPhase] = useState<TurnPhase>('intro');
   const [word, setWord] = useState('');
@@ -39,7 +45,7 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
   const count = useCountdown(
     phase === 'countdown',
     () => {
-      setWord(bagFor(skin).draw());
+      setWord(bagFor(skin, locale).draw());
       setPhase('playing');
     },
     (cue) => sounds().cue(cue),
@@ -63,7 +69,7 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
     const { guessed, skipped } = tally;
     onTurnEnd({
       score: scoreTally(tally),
-      detail: `${guessed.length} guessed · ${skipped.length} skipped`,
+      detail: t.detail(guessed.length, skipped.length),
     });
   });
 
@@ -74,7 +80,7 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
     );
     if (got) sounds().good(0);
     else sounds().tap();
-    setWord(bagFor(skin).draw());
+    setWord(bagFor(skin, locale).draw());
   };
 
   // Right arrow or Enter: got it. Left arrow: skip.
@@ -94,24 +100,21 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`${seconds} seconds · ${POINTS_PER_WORD} points per word guessed · skipping is free`}
-        startLabel="Show me a word"
+        hint={t.hint(seconds, POINTS_PER_WORD)}
+        startLabel={t.showWord}
         onStart={() => {
           sounds();
           setPhase('countdown');
         }}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <p className="charades__secret">
           <Icon src={skin.icon} />
-          <span>
-            Only you look at the screen. Act it out without speaking, and tap <strong>Got it!</strong> when someone
-            guesses right.
-          </span>
+          <span>{t.secret}</span>
         </p>
       </TurnIntro>
     );
@@ -122,7 +125,7 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
       player={player}
       className={className}
       score={scoreTally(tally)}
-      extra={<span className="charades__count">{tally.guessed.length} guessed</span>}
+      extra={<span className="charades__count">{t.guessed(tally.guessed.length)}</span>}
       seconds={left}
       timeLeft={left / seconds}
       hurry={Math.ceil(left) <= TICKING_FROM && phase === 'playing'}
@@ -136,8 +139,8 @@ export function Charades({ skin, theme, player, options, onTurnEnd, onExit }: Ch
               <p className="charades__word" aria-live="polite">{word}</p>
             </div>
             <div className="charades__buttons">
-              <button className="charades__btn charades__btn--skip" onClick={() => next(false)}>Skip</button>
-              <button className="charades__btn charades__btn--got" onClick={() => next(true)}>Got it!</button>
+              <button className="charades__btn charades__btn--skip" onClick={() => next(false)}>{t.skip}</button>
+              <button className="charades__btn charades__btn--got" onClick={() => next(true)}>{t.gotIt}</button>
             </div>
           </>
         )}

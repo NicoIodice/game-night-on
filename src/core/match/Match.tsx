@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useMusic } from '../audio/useMusic';
+import { useLocale, useMessages } from '../i18n/I18n';
 import type { GameDefinition, GameOptionValues, Roster, Theme, TurnResult } from '../types';
 import type { LineupMode } from './lineup';
+import { MESSAGES } from './messages';
 import { PlayerBadge } from './PlayerBadge';
 import { PlayerSetup } from './PlayerSetup';
 import { finalizeRoster, loadRoster, saveRoster } from './roster';
@@ -45,8 +47,10 @@ interface MatchProps {
  * From there, retry the game or move on to the next one.
  */
 export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: MatchProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const tournament = mode === 'tournament';
-  const [roster, setRoster] = useState<Roster>(loadRoster);
+  const [roster, setRoster] = useState<Roster>(() => loadRoster(locale));
   const [stage, setStage] = useState<Stage>({ kind: 'setup' });
   const [gameIndex, setGameIndex] = useState(tournament ? 0 : startAt);
   const [scores, setScores] = useState<Scores>({});
@@ -57,8 +61,6 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
   const game = games[gameIndex];
   const next = games[gameIndex + 1];
   const levels = game.levels ?? 1;
-  const nouns = roster.kind === 'teams' ? 'teams' : 'players';
-  const noun = roster.kind === 'teams' ? 'team' : 'player';
 
   // Menu music between turns; the game brings its own sound during a turn.
   useMusic(stage.kind === 'turn' ? null : (theme.music ?? null));
@@ -71,7 +73,7 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
   };
 
   const start = () => {
-    const ready = finalizeRoster(roster);
+    const ready = finalizeRoster(roster, locale);
     setRoster(ready);
     saveRoster(ready);
     // New players mean a new tournament.
@@ -107,8 +109,8 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
     case 'setup':
       return (
         <PlayerSetup
-          title={tournament ? 'Tournament' : game.name}
-          description={tournament ? games.map((g) => g.name).join(' → ') : game.description}
+          title={tournament ? t.tournament : game.name[locale]}
+          description={tournament ? games.map((g) => g.name[locale]).join(' → ') : game.description[locale]}
           roster={roster}
           onChange={setRoster}
           onStart={start}
@@ -137,12 +139,12 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
       const passDevice = next.seat !== seat;
       return (
         <section className="match match--panel">
-          {levels > 1 && <p className="match__eyebrow">Level {level + 1} of {levels}</p>}
+          {levels > 1 && <p className="match__eyebrow">{t.levelOf(level + 1, levels)}</p>}
           <PlayerBadge player={players[seat]} className="match__who" />
-          <p className="match__score">{result.score} points</p>
+          <p className="match__score">{t.points(result.score)}</p>
           {result.detail && <p>{result.detail}</p>}
 
-          <ul className="match__scoreboard" aria-label="Scores so far">
+          <ul className="match__scoreboard" aria-label={t.scoresSoFar}>
             {players.map((player, i) => (
               <li key={player.id} className={i === seat ? 'match__scoreboard--current' : ''}>
                 <PlayerBadge player={player} />
@@ -152,12 +154,12 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
           </ul>
 
           <p className="match__hint">
-            {next.level !== level && `Up next: level ${next.level + 1} of ${levels}. `}
-            {passDevice && `Pass the device to the next ${noun}.`}
+            {next.level !== level && t.upNext(next.level + 1, levels)}
+            {passDevice && t.passDevice(roster.kind)}
           </p>
           <div className="match__actions">
             <button className="btn btn--primary" onClick={() => setStage({ kind: 'turn', turn: next })} autoFocus>
-              {passDevice ? `${players[next.seat].name}, you're up!` : `Play level ${next.level + 1}`}
+              {passDevice ? t.youreUp(players[next.seat].name) : t.playLevel(next.level + 1)}
             </button>
           </div>
         </section>
@@ -170,14 +172,14 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
       return (
         <section className="match match--panel match--results">
           <p className="match__eyebrow">
-            {tournament ? `Game ${gameIndex + 1} of ${games.length} · ${game.name}` : game.name}
+            {tournament ? t.gameOf(gameIndex + 1, games.length, game.name[locale]) : game.name[locale]}
           </p>
           <Outcome standings={standings} details={details} />
 
           {tournament && (
             <div className="match__totals">
-              <h3>Tournament so far</h3>
-              <ul className="match__scoreboard" aria-label="Tournament scores so far">
+              <h3>{t.tournamentSoFar}</h3>
+              <ul className="match__scoreboard" aria-label={t.tournamentScoresSoFar}>
                 {totals.map(({ player, score }) => (
                   <li key={player.id}>
                     <PlayerBadge player={player} />
@@ -191,12 +193,12 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
           <div className="match__actions">
             {next ? (
               <button className="btn btn--primary" onClick={() => play(gameIndex + 1)} autoFocus>
-                Next game: {next.name}
+                {t.nextGame(next.name[locale])}
               </button>
             ) : (
               tournament && (
                 <button className="btn btn--primary" onClick={() => setStage({ kind: 'final' })} autoFocus>
-                  Final standings
+                  {t.finalStandings}
                 </button>
               )
             )}
@@ -205,14 +207,14 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
               onClick={() => play(gameIndex)}
               autoFocus={!next && !tournament}
             >
-              {tournament ? 'Retry this game' : 'Play again'}
+              {tournament ? t.retryGame : t.playAgain}
             </button>
             {!tournament && (
-              <button className="btn" onClick={() => setStage({ kind: 'setup' })}>Change {nouns}</button>
+              <button className="btn" onClick={() => setStage({ kind: 'setup' })}>{t.change(roster.kind)}</button>
             )}
-            <button className="btn" onClick={onExit}>{tournament ? 'Quit tournament' : 'Back to menu'}</button>
+            <button className="btn" onClick={onExit}>{tournament ? t.quitTournament : t.backToMenu}</button>
           </div>
-          {tournament && <p className="match__hint">A retry replaces this game's scores.</p>}
+          {tournament && <p className="match__hint">{t.retryReplaces}</p>}
         </section>
       );
     }
@@ -223,17 +225,17 @@ export function Match({ theme, games, mode, startAt = 0, optionsFor, onExit }: M
       const breakdown: Details = Object.fromEntries(
         players.map((player) => [
           player.id,
-          games.map((g, i) => `${g.name} ${rounds[i]?.[player.id] ?? 0}`).join(' · '),
+          games.map((g, i) => `${g.name[locale]} ${rounds[i]?.[player.id] ?? 0}`).join(' · '),
         ]),
       );
       return (
         <section className="match match--panel match--results">
-          <p className="match__eyebrow">Tournament · {games.length} {games.length === 1 ? 'game' : 'games'}</p>
+          <p className="match__eyebrow">{t.tournamentGames(games.length)}</p>
           <Outcome standings={standings} details={breakdown} night />
           <div className="match__actions">
-            <button className="btn btn--primary" onClick={start} autoFocus>Play the tournament again</button>
-            <button className="btn" onClick={() => setStage({ kind: 'setup' })}>Change {nouns}</button>
-            <button className="btn" onClick={onExit}>Back to menu</button>
+            <button className="btn btn--primary" onClick={start} autoFocus>{t.playTournamentAgain}</button>
+            <button className="btn" onClick={() => setStage({ kind: 'setup' })}>{t.change(roster.kind)}</button>
+            <button className="btn" onClick={onExit}>{t.backToMenu}</button>
           </div>
         </section>
       );
@@ -250,20 +252,21 @@ interface OutcomeProps {
 
 /** Who won, then the podium and table (or just the score for a solo game). */
 function Outcome({ standings, details, night = false }: OutcomeProps) {
+  const t = useMessages(MESSAGES);
   const top = winners(standings);
   if (standings.length === 1) {
     const [{ player, score }] = standings;
     return (
       <>
-        <h2>Well played!</h2>
-        <p className="match__score">{score} points</p>
+        <h2>{t.wellPlayed}</h2>
+        <p className="match__score">{t.points(score)}</p>
         {details[player.id] && <p>{details[player.id]}</p>}
       </>
     );
   }
   return (
     <>
-      <h2>{top.length > 1 ? "It's a tie!" : `${top[0].player.name} wins${night ? ' the night' : ''}!`}</h2>
+      <h2>{top.length > 1 ? t.tie : t.wins(top[0].player.name, night)}</h2>
       <Standings standings={standings} details={details} />
     </>
   );

@@ -1,50 +1,76 @@
+import { isLocale, type Locale, type Localized } from '../i18n/locales';
 import type { ThemeId } from '../types';
 
 /**
  * What the voice check learned about this device, so speech games hear players better:
- * the recognition language, how late recognised words arrive, how strict to be, and extra
- * words to accept for some cards. Saved in the browser (`localStorage`); deleting it, or
- * the "Run the voice check again" button, makes the check run again.
+ * the recognition accent for each language, how late recognised words arrive, how strict to be,
+ * and extra words to accept for some cards. Saved in the browser (`localStorage`); deleting it,
+ * or the "Run the voice check again" button, makes the check run again.
  */
 
 /** 'strict': exact words only. 'relaxed': near misses count too, and late words get more time. */
 export type Strictness = 'strict' | 'relaxed';
 
 export interface VoiceCalibration {
-  /** Speech recognition language, e.g. 'en-GB'. */
-  lang: string;
+  /** Speech recognition accent picked for each app language, e.g. { 'en-US': 'en-GB' }. */
+  accents: Partial<Record<Locale, string>>;
   /** How long after a word is said the browser reports it, in milliseconds; null if not measured. */
   delayMs: number | null;
   strictness: Strictness;
-  /** Extra words accepted per card id, learned in the word test. */
+  /** Extra words accepted per card id, learned in the word test. Card ids are unique across languages. */
   aliases: Record<string, string[]>;
-  /** Themes whose cards have been through the word test. */
-  testedThemes: ThemeId[];
+  /** Decks whose cards have been through the word test, as `theme:language`, e.g. 'halloween:pt-PT'. */
+  testedDecks: string[];
   /** When the check last ran (ISO date). */
   checkedAt: string;
 }
 
 export const STORAGE_KEY = 'game-night-on:voice-check';
 
-/** Accents the browser's speech recognition knows. The card words are English. */
-export const LANGUAGES: { id: string; label: string }[] = [
-  { id: 'en-US', label: 'English (US)' },
-  { id: 'en-GB', label: 'English (UK)' },
-  { id: 'en-IE', label: 'English (Ireland)' },
-  { id: 'en-AU', label: 'English (Australia)' },
-  { id: 'en-CA', label: 'English (Canada)' },
-  { id: 'en-IN', label: 'English (India)' },
-  { id: 'en-ZA', label: 'English (South Africa)' },
-];
+/** Accents the browser's speech recognition knows, for each app language (the cards' language). The first is the default. */
+export const ACCENTS: Localized<{ id: string; label: string }[]> = {
+  'en-US': [
+    { id: 'en-US', label: 'English (US)' },
+    { id: 'en-GB', label: 'English (UK)' },
+    { id: 'en-IE', label: 'English (Ireland)' },
+    { id: 'en-AU', label: 'English (Australia)' },
+    { id: 'en-CA', label: 'English (Canada)' },
+    { id: 'en-IN', label: 'English (India)' },
+    { id: 'en-ZA', label: 'English (South Africa)' },
+  ],
+  'pt-PT': [{ id: 'pt-PT', label: 'Português (Portugal)' }],
+};
 
-export function defaultCalibration(): VoiceCalibration {
-  return { lang: 'en-US', delayMs: null, strictness: 'strict', aliases: {}, testedThemes: [], checkedAt: new Date().toISOString() };
+/** The speech recognition accent to listen with in a language: the one picked, else the language's default. */
+export function accentFor(calibration: VoiceCalibration | null, locale: Locale): string {
+  const picked = calibration?.accents[locale];
+  return ACCENTS[locale].find((accent) => accent.id === picked)?.id ?? ACCENTS[locale][0].id;
 }
 
-/** Makes saved data safe to use: unknown or broken fields fall back to the defaults. */
+export function withAccent(calibration: VoiceCalibration, locale: Locale, accent: string): VoiceCalibration {
+  return { ...calibration, accents: { ...calibration.accents, [locale]: accent } };
+}
+
+export function defaultCalibration(): VoiceCalibration {
+  return { accents: {}, delayMs: null, strictness: 'strict', aliases: {}, testedDecks: [], checkedAt: new Date().toISOString() };
+}
+
+const deckKey = (themeId: ThemeId, locale: Locale) => `${themeId}:${locale}`;
+
+/** What older versions saved, when the app only spoke English: one accent and the themes tested. */
+interface EnglishOnlyCalibration {
+  lang?: unknown;
+  testedThemes?: unknown;
+}
+
+/**
+ * Makes saved data safe to use: unknown or broken fields fall back to the defaults. Data saved
+ * before the app spoke other languages (`lang`, `testedThemes`) is read as English.
+ */
 export function normalizeCalibration(saved: unknown): VoiceCalibration | null {
   if (typeof saved !== 'object' || saved === null) return null;
-  const { lang, delayMs, strictness, aliases, testedThemes, checkedAt } = saved as Partial<VoiceCalibration>;
+  const { accents, delayMs, strictness, aliases, testedDecks, checkedAt, lang, testedThemes } = saved as Partial<VoiceCalibration> &
+    EnglishOnlyCalibration;
   const fallback = defaultCalibration();
   const cleanAliases: Record<string, string[]> = {};
   if (typeof aliases === 'object' && aliases !== null) {
@@ -52,12 +78,22 @@ export function normalizeCalibration(saved: unknown): VoiceCalibration | null {
       if (Array.isArray(words)) cleanAliases[cardId] = words.filter((w): w is string => typeof w === 'string' && w.length > 0);
     }
   }
+  const cleanAccents: VoiceCalibration['accents'] = {};
+  const savedAccents: Record<string, unknown> = typeof accents === 'object' && accents !== null ? accents : { 'en-US': lang };
+  for (const [locale, accent] of Object.entries(savedAccents)) {
+    if (isLocale(locale) && ACCENTS[locale].some((a) => a.id === accent)) cleanAccents[locale] = accent as string;
+  }
+  const decks: unknown[] = Array.isArray(testedDecks)
+    ? testedDecks
+    : Array.isArray(testedThemes)
+      ? testedThemes.map((theme) => (typeof theme === 'string' ? deckKey(theme as ThemeId, 'en-US') : null))
+      : [];
   return {
-    lang: LANGUAGES.some((l) => l.id === lang) ? lang! : fallback.lang,
+    accents: cleanAccents,
     delayMs: typeof delayMs === 'number' && Number.isFinite(delayMs) && delayMs >= 0 && delayMs < 5000 ? Math.round(delayMs) : null,
     strictness: strictness === 'relaxed' ? 'relaxed' : 'strict',
     aliases: cleanAliases,
-    testedThemes: Array.isArray(testedThemes) ? testedThemes.filter((t): t is ThemeId => typeof t === 'string') : [],
+    testedDecks: decks.filter((deck): deck is string => typeof deck === 'string'),
     checkedAt: typeof checkedAt === 'string' ? checkedAt : fallback.checkedAt,
   };
 }
@@ -86,10 +122,13 @@ export function clearCalibration(): void {
   }
 }
 
-/** The whole check runs once per device; after that, only new themes need their words tested. */
-export function needsVoiceCheck(calibration: VoiceCalibration | null, themeId: ThemeId): 'full' | 'words' | null {
+/**
+ * The whole check runs once per device; after that, only new decks need their words tested:
+ * a new theme, or a theme in another language (its cards are other words).
+ */
+export function needsVoiceCheck(calibration: VoiceCalibration | null, themeId: ThemeId, locale: Locale): 'full' | 'words' | null {
   if (!calibration) return 'full';
-  return calibration.testedThemes.includes(themeId) ? null : 'words';
+  return calibration.testedDecks.includes(deckKey(themeId, locale)) ? null : 'words';
 }
 
 export function withAlias(calibration: VoiceCalibration, cardId: string, word: string): VoiceCalibration {
@@ -98,14 +137,15 @@ export function withAlias(calibration: VoiceCalibration, cardId: string, word: s
   return { ...calibration, aliases: { ...calibration.aliases, [cardId]: [...words, word] } };
 }
 
-export function withThemeTested(calibration: VoiceCalibration, themeId: ThemeId): VoiceCalibration {
-  if (calibration.testedThemes.includes(themeId)) return calibration;
-  return { ...calibration, testedThemes: [...calibration.testedThemes, themeId] };
+export function withDeckTested(calibration: VoiceCalibration, themeId: ThemeId, locale: Locale): VoiceCalibration {
+  const key = deckKey(themeId, locale);
+  if (calibration.testedDecks.includes(key)) return calibration;
+  return { ...calibration, testedDecks: [...calibration.testedDecks, key] };
 }
 
-/** The check is done for this theme: marks its words as tested and stamps the time. */
-export function completeCheck(calibration: VoiceCalibration, themeId: ThemeId): VoiceCalibration {
-  return { ...withThemeTested(calibration, themeId), checkedAt: new Date().toISOString() };
+/** The check is done for this theme in this language: marks its words as tested and stamps the time. */
+export function completeCheck(calibration: VoiceCalibration, themeId: ThemeId, locale: Locale): VoiceCalibration {
+  return { ...withDeckTested(calibration, themeId, locale), checkedAt: new Date().toISOString() };
 }
 
 /** The delay the game's fixed timing was tuned for, used when the device hasn't been measured. */

@@ -15,6 +15,13 @@ describe('saysExactly', () => {
     expect(saysExactly(cat, 'cap')).toBe(false);
     expect(saysExactly(cat, 'cap', { cat: ['cap'] })).toBe(true);
   });
+
+  it("doesn't mind accents", () => {
+    const caixao: Card = { id: 'caixao', label: 'Caixão', image: '' };
+    expect(saysExactly(caixao, 'caixão')).toBe(true);
+    expect(saysExactly(caixao, 'caixao')).toBe(true);
+    expect(saysExactly({ id: 'arvore', label: 'Árvore', image: '' }, 'árvores')).toBe(true);
+  });
 });
 
 describe('editDistance', () => {

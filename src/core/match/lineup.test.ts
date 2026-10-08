@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import type { GameDefinition } from '../types';
 import { defaultLineup, gameOptions, moveGame, normalizeLineup, playlist, setGameOption, toggleGame } from './lineup';
 
-const game = (id: string) => ({ id, name: id }) as GameDefinition;
+const game = (id: string) => ({ id, name: { 'en-US': id, 'pt-PT': id } }) as GameDefinition;
 const games = ['a', 'b', 'c'].map(game);
-const rounds = { id: 'rounds', label: 'Rounds', min: 1, max: 10, default: 3 };
+const rounds = { id: 'rounds', label: { 'en-US': 'Rounds', 'pt-PT': 'Rondas' }, min: 1, max: 10, default: 3 };
 const withOptions = { ...game('a'), options: [rounds] } as GameDefinition;
 const order = (lineup: { entries: { gameId: string }[] }) => lineup.entries.map((e) => e.gameId);
 

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { unlockAudio } from '../../core/audio/sound';
 import { useMusic } from '../../core/audio/useMusic';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
+import { plural } from '../../core/i18n/locales';
 import { defaultRng } from '../../core/random';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
@@ -19,6 +21,7 @@ import {
   type Hunt,
   type TargetKind,
 } from './hunt';
+import { MESSAGES } from './messages';
 import type { Sfx, ShooterSkin } from './skin';
 import './Shooter.css';
 
@@ -31,6 +34,8 @@ interface ShooterProps extends GameProps {
 
 /** One turn of a shooting game: hit as many targets as possible before time runs out. */
 export function Shooter({ skin, theme, player, onTurnEnd, onExit }: ShooterProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const [phase, setPhase] = useState<TurnPhase>('intro');
   const [hunt, setHunt] = useState<Hunt>(createHunt);
   const huntRef = useRef(hunt);
@@ -71,10 +76,10 @@ export function Shooter({ skin, theme, player, onTurnEnd, onExit }: ShooterProps
 
   const finish = () => {
     const done = huntRef.current;
-    const [one, many] = skin.hitNoun;
+    const [one, many] = skin.hitNoun[locale];
     onTurnEnd({
       score: done.score,
-      detail: `${done.hits} ${done.hits === 1 ? one : many} · ${accuracy(done)}% accuracy · best streak ${done.bestStreak}`,
+      detail: t.detail(`${done.hits} ${plural(locale, done.hits, one, many)}`, accuracy(done), done.bestStreak),
     });
   };
 
@@ -97,19 +102,19 @@ export function Shooter({ skin, theme, player, onTurnEnd, onExit }: ShooterProps
   if (phase === 'intro') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={`${TURN_SECONDS} seconds · streak of 5 = double points`}
+        hint={t.hint(TURN_SECONDS)}
         onStart={start}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <ul className="turn__legend">
           {(Object.keys(TARGET_KINDS) as TargetKind[]).map((kind) => (
             <li key={kind} className={`shooter__target--${kind}`}>
               <Icon src={skin.kinds[kind].image} />
-              {skin.kinds[kind].name} <strong>{TARGET_KINDS[kind].points}</strong>
+              {skin.kinds[kind].name[locale]} <strong>{TARGET_KINDS[kind].points}</strong>
             </li>
           ))}
         </ul>

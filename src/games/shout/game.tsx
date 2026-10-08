@@ -11,9 +11,17 @@ export function shoutGame(skin: ShoutSkin, details: SkinDetails): GameDefinition
     id: skin.id,
     name: skin.title,
     kind: 'voice',
-    players: '1–8 players or teams',
+    players: { min: 1, max: 8 },
     supports: () => true,
-    options: [{ id: 'seconds', label: 'Seconds of shouting', min: 2, max: 8, default: DEFAULT_SECONDS }],
+    options: [
+      {
+        id: 'seconds',
+        label: { 'en-US': 'Seconds of shouting', 'pt-PT': 'Segundos a gritar' },
+        min: 2,
+        max: 8,
+        default: DEFAULT_SECONDS,
+      },
+    ],
     Component: (props: GameProps) => <Shout {...props} skin={skin} />,
     ...details,
   };

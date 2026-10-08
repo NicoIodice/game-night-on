@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { openMicMeter, type MicMeter } from '../../core/audio/micMeter';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
 import type { GameProps } from '../../core/types';
 import { Icon } from '../../core/ui/Icon';
 import { OVER_MS, useAfter, useCountdown, useFrameLoop, useThemeSounds } from '../kit/hooks';
 import { StageCaption, TurnIntro, TurnOver, TurnScreen } from '../kit/TurnScreens';
 import { DEFAULT_SECONDS, meterFill, noiseFloor, scoreShout, toLevel, type Reading } from './loudness';
+import { MESSAGES } from './messages';
 import { rankFor, type ShoutSkin } from './skin';
 import './Shout.css';
 
 /** 'asking': waiting for the microphone. 'blocked': no microphone, so the turn can only be skipped. */
 type Phase = 'intro' | 'asking' | 'blocked' | 'countdown' | 'playing' | 'over';
 
-const BLOCKED_REASON = {
-  unsupported: "This browser can't use the microphone. Try Chrome, Edge or Safari.",
-  denied: 'Microphone access was blocked, so we can’t hear you.',
-};
+/** Why the microphone can't be used (see openMicMeter). */
+type Blocked = 'unsupported' | 'denied';
 
 interface ShoutProps extends GameProps {
   skin: ShoutSkin;
@@ -22,9 +22,11 @@ interface ShoutProps extends GameProps {
 
 /** One turn of a shouting game: be as loud as you can, for as long as you can. */
 export function Shout({ skin, theme, player, options, onTurnEnd, onExit }: ShoutProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const seconds = options.seconds ?? DEFAULT_SECONDS;
   const [phase, setPhase] = useState<Phase>('intro');
-  const [blocked, setBlocked] = useState<keyof typeof BLOCKED_REASON>('denied');
+  const [blocked, setBlocked] = useState<Blocked>('denied');
   const [fill, setFill] = useState(0);
   const [best, setBest] = useState(0);
   const [left, setLeft] = useState(seconds);
@@ -105,7 +107,7 @@ export function Shout({ skin, theme, player, options, onTurnEnd, onExit }: Shout
     const { score: points, peak, loudSeconds } = resultRef.current;
     onTurnEnd({
       score: points,
-      detail: `${rankFor(skin, points)} · peak ${Math.round(peak * 100)}% · ${loudSeconds.toFixed(1)}s loud`,
+      detail: t.detail(rankFor(skin, points, locale), Math.round(peak * 100), loudSeconds),
     });
   });
 
@@ -114,27 +116,21 @@ export function Shout({ skin, theme, player, options, onTurnEnd, onExit }: Shout
   if (phase === 'intro' || phase === 'asking' || phase === 'blocked') {
     return (
       <TurnIntro
-        title={skin.title}
+        title={skin.title[locale]}
         player={player}
         className={className}
-        hint={
-          phase === 'blocked'
-            ? BLOCKED_REASON[blocked]
-            : phase === 'asking'
-              ? 'If your browser asks, allow the microphone.'
-              : `Quiet during the countdown, then ${seconds} seconds to be loud · uses your microphone`
-        }
-        startLabel={phase === 'blocked' ? 'Try again' : 'Start'}
+        hint={phase === 'blocked' ? t[blocked] : phase === 'asking' ? t.asking : t.hint(seconds)}
+        startLabel={phase === 'blocked' ? t.tryAgain : undefined}
         onStart={() => void start()}
         onExit={onExit}
       >
-        <p>{skin.intro}</p>
+        <p>{skin.intro[locale]}</p>
         <div className="shout__preview" aria-hidden>
           <Icon src={skin.mascot} />
         </div>
         {phase === 'blocked' && (
-          <button className="btn" onClick={() => onTurnEnd({ score: 0, detail: 'Skipped: no microphone' })}>
-            Skip this turn (0 points)
+          <button className="btn" onClick={() => onTurnEnd({ score: 0, detail: t.skipped })}>
+            {t.skipTurn}
           </button>
         )}
       </TurnIntro>
@@ -158,8 +154,8 @@ export function Shout({ skin, theme, player, options, onTurnEnd, onExit }: Shout
             <Icon src={skin.mascot} className="shout__mascot" />
           </div>
           <div className="shout__side">
-            {phase === 'playing' && <p className="shout__call">{skin.call}</p>}
-            {phase === 'countdown' && <p className="shout__hush">Shh… quiet for a moment</p>}
+            {phase === 'playing' && <p className="shout__call">{skin.call[locale]}</p>}
+            {phase === 'countdown' && <p className="shout__hush">{t.hush}</p>}
           </div>
         </div>
         {phase === 'countdown' && (
@@ -167,7 +163,7 @@ export function Shout({ skin, theme, player, options, onTurnEnd, onExit }: Shout
             <p>{count}</p>
           </StageCaption>
         )}
-        {phase === 'over' && <TurnOver title={rankFor(skin, score)} score={score} />}
+        {phase === 'over' && <TurnOver title={rankFor(skin, score, locale)} score={score} />}
       </div>
     </TurnScreen>
   );

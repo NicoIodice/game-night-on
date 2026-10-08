@@ -1,3 +1,4 @@
+import type { Localized } from '../../core/i18n/locales';
 import type { ObstacleKind } from './dash';
 
 /**
@@ -6,14 +7,14 @@ import type { ObstacleKind } from './dash';
  */
 export interface RunnerSkin {
   id: string;
-  title: string;
+  title: Localized<string>;
   /** How the turn is explained on the intro screen. */
-  intro: string;
+  intro: Localized<string>;
   /** The character who runs. */
   runner: string;
-  obstacles: Record<ObstacleKind, { name: string; image: string }>;
+  obstacles: Record<ObstacleKind, { name: Localized<string>; image: string }>;
   /** What there is to grab on the way. */
-  treat: { name: string; image: string };
+  treat: { name: Localized<string>; image: string };
   /** Treats in the turn summary, one and many: ['sweet', 'sweets']. */
-  treatNoun: [string, string];
+  treatNoun: Localized<[string, string]>;
 }

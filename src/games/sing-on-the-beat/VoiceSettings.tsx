@@ -1,53 +1,63 @@
 import { useState } from 'react';
+import { useLocale, useMessages } from '../../core/i18n/I18n';
 import type { Theme } from '../../core/types';
 import {
+  accentFor,
+  ACCENTS,
   clearCalibration,
   defaultCalibration,
-  LANGUAGES,
   loadCalibration,
   saveCalibration,
+  withAccent,
   type Strictness,
   type VoiceCalibration,
 } from '../../core/voice/calibration';
 import { SpeechListener } from '../../core/voice/SpeechListener';
 import { VoiceCheck } from '../../core/voice/VoiceCheck';
+import { MESSAGES } from './messages';
 
 /**
  * Sing on the Beat's voice settings in the game night settings: what the voice check learned,
- * quick changes to the accent and strictness, and buttons to run the check again or forget it.
+ * quick changes to the accent (of the app's language) and strictness, and buttons to run the
+ * check again or forget it.
  */
 export function VoiceSettings({ theme }: { theme: Theme }) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const [calibration, setCalibration] = useState<VoiceCalibration | null>(loadCalibration);
   const [checking, setChecking] = useState(false);
 
   if (!SpeechListener.isSupported()) {
-    return <p className="voice-settings__note">This browser can't listen, so there's no voice check. Use Chrome or Edge.</p>;
+    return <p className="voice-settings__note">{t.cantListen}</p>;
   }
 
-  const change = (patch: Partial<VoiceCalibration>) => {
-    const next = { ...(calibration ?? defaultCalibration()), ...patch };
+  const save = (next: VoiceCalibration) => {
     saveCalibration(next);
     setCalibration(next);
   };
+  const change = (patch: Partial<VoiceCalibration>) => save({ ...(calibration ?? defaultCalibration()), ...patch });
 
   const learned = calibration ? Object.values(calibration.aliases).reduce((sum, words) => sum + words.length, 0) : 0;
 
   return (
     <div className="voice-settings">
+      {/* Languages with a single accent have nothing to pick. */}
+      {ACCENTS[locale].length > 1 && (
+        <div className="game-options__row">
+          <span>{t.accent}</span>
+          <select
+            className="voice-settings__select"
+            value={accentFor(calibration, locale)}
+            onChange={(event) => save(withAccent(calibration ?? defaultCalibration(), locale, event.target.value))}
+          >
+            {ACCENTS[locale].map((accent) => (
+              <option key={accent.id} value={accent.id}>{accent.label}</option>
+            ))}
+          </select>
+        </div>
+      )}
       <div className="game-options__row">
-        <span>Accent</span>
-        <select
-          className="voice-settings__select"
-          value={calibration?.lang ?? 'en-US'}
-          onChange={(event) => change({ lang: event.target.value })}
-        >
-          {LANGUAGES.map((language) => (
-            <option key={language.id} value={language.id}>{language.label}</option>
-          ))}
-        </select>
-      </div>
-      <div className="game-options__row">
-        <span>Scoring</span>
+        <span>{t.scoring}</span>
         <span className="voice-settings__toggle">
           {(['strict', 'relaxed'] as Strictness[]).map((strictness) => (
             <button
@@ -56,7 +66,7 @@ export function VoiceSettings({ theme }: { theme: Theme }) {
               aria-pressed={(calibration?.strictness ?? 'strict') === strictness}
               onClick={() => change({ strictness })}
             >
-              {strictness === 'strict' ? 'Strict' : 'Relaxed'}
+              {strictness === 'strict' ? t.strict : t.relaxed}
             </button>
           ))}
         </span>
@@ -64,15 +74,15 @@ export function VoiceSettings({ theme }: { theme: Theme }) {
       <p className="voice-settings__note">
         {calibration
           ? [
-              `Voice check done ${new Date(calibration.checkedAt).toLocaleDateString()}`,
-              calibration.delayMs !== null ? `words arrive ${(calibration.delayMs / 1000).toFixed(2)}s late` : 'timing not measured',
-              `${learned} learned ${learned === 1 ? 'word' : 'words'}`,
+              t.checkedOn(new Date(calibration.checkedAt).toLocaleDateString(locale)),
+              calibration.delayMs !== null ? t.delay(calibration.delayMs) : t.notTimed,
+              t.learned(learned),
             ].join(' · ')
-          : 'No voice check yet: it runs before the first game.'}
+          : t.noCheckYet}
       </p>
       <div className="voice-settings__actions">
         <button className="btn btn--small" onClick={() => setChecking(true)}>
-          {calibration ? 'Run the voice check again' : 'Run the voice check now'}
+          {calibration ? t.runAgain : t.runNow}
         </button>
         {calibration && (
           <button
@@ -82,7 +92,7 @@ export function VoiceSettings({ theme }: { theme: Theme }) {
               setCalibration(null);
             }}
           >
-            Forget it
+            {t.forget}
           </button>
         )}
       </div>

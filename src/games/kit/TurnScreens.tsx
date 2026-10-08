@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { useMessages } from '../../core/i18n/I18n';
 import { PlayerBadge } from '../../core/match/PlayerBadge';
 import type { Player } from '../../core/types';
+import { MESSAGES } from './messages';
 import './kit.css';
 
 interface TurnIntroProps {
@@ -12,24 +14,27 @@ interface TurnIntroProps {
   children: ReactNode;
   /** One line under the rules, e.g. "30 seconds · streak of 5 = double points". */
   hint?: ReactNode;
+  /** Defaults to "Start". */
   startLabel?: string;
   onStart: () => void;
   onExit: () => void;
 }
 
 /** A turn's first screen: whose turn it is, the rules, and Start. */
-export function TurnIntro({ title, player, className = '', children, hint, startLabel = 'Start', onStart, onExit }: TurnIntroProps) {
+export function TurnIntro({ title, player, className = '', children, hint, startLabel, onStart, onExit }: TurnIntroProps) {
+  const t = useMessages(MESSAGES);
   return (
     <section className={`turn turn--panel ${className}`}>
       <h2>{title}</h2>
       <p className="turn__who">
-        <PlayerBadge player={player} />, your turn!
+        <PlayerBadge player={player} />
+        {t.yourTurn}
       </p>
       {children}
       {hint && <p className="turn__hint">{hint}</p>}
       <div className="turn__actions">
-        <button className="btn btn--primary" onClick={onStart} autoFocus>{startLabel}</button>
-        <button className="btn" onClick={onExit}>Back</button>
+        <button className="btn btn--primary" onClick={onStart} autoFocus>{startLabel ?? t.start}</button>
+        <button className="btn" onClick={onExit}>{t.back}</button>
       </div>
     </section>
   );
@@ -53,16 +58,17 @@ interface TurnScreenProps {
 
 /** A turn being played: status bar (player, score, clock, Quit), timer bar, then the game. Drawn in the player's colour. */
 export function TurnScreen({ player, className = '', score, extra, seconds, timeLeft, hurry = false, onExit, children }: TurnScreenProps) {
+  const t = useMessages(MESSAGES);
   return (
     <section className={`turn ${className}`} style={{ '--player': player.color } as CSSProperties}>
       <header className="turn__status">
         <PlayerBadge player={player} />
-        <span className="turn__score">{score} pts</span>
+        <span className="turn__score">{t.pts(score)}</span>
         {extra}
         {seconds !== undefined && (
           <span className={`turn__time ${hurry ? 'turn__time--low' : ''}`}>{Math.ceil(seconds)}s</span>
         )}
-        <button className="btn btn--small" onClick={onExit}>Quit</button>
+        <button className="btn btn--small" onClick={onExit}>{t.quit}</button>
       </header>
       {timeLeft !== undefined && (
         <div className="turn__timer" aria-hidden>
@@ -83,12 +89,13 @@ export function StageCaption({ children, dim = false }: { children: ReactNode; d
   );
 }
 
-/** The usual end-of-turn caption: a title and the points scored. */
-export function TurnOver({ title = "Time's up!", score }: { title?: string; score: number }) {
+/** The usual end-of-turn caption: a title ("Time's up!" unless given) and the points scored. */
+export function TurnOver({ title, score }: { title?: string; score: number }) {
+  const t = useMessages(MESSAGES);
   return (
     <StageCaption dim>
-      <p>{title}</p>
-      <p className="turn__final">{score} points</p>
+      <p>{title ?? t.timesUp}</p>
+      <p className="turn__final">{t.points(score)}</p>
     </StageCaption>
   );
 }

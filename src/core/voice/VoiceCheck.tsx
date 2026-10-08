@@ -3,20 +3,24 @@ import { createBeeper } from '../audio/beeper';
 import type { BeatTrack } from '../audio/BeatClock';
 import { unlockAudio } from '../audio/sound';
 import { useBeatClock } from '../audio/useBeatClock';
+import { useLocale, useMessages } from '../i18n/I18n';
 import type { Card, Theme } from '../types';
 import { Icon } from '../ui/Icon';
 import {
+  accentFor,
+  ACCENTS,
+  completeCheck,
   defaultCalibration,
-  LANGUAGES,
   loadCalibration,
   measureDelay,
-  completeCheck,
   saveCalibration,
+  withAccent,
   withAlias,
   type Strictness,
   type VoiceCalibration,
 } from './calibration';
 import { cardNamed, saysExactly } from './matching';
+import { MESSAGES } from './messages';
 import { SpeechListener } from './SpeechListener';
 import './VoiceCheck.css';
 
@@ -35,14 +39,7 @@ const NEXT_CARD_MS = 700;
 
 type WordState = { kind: 'listening' } | { kind: 'matched'; word: string } | { kind: 'heard'; word: string } | { kind: 'silent' };
 
-const STRICTNESS: { id: Strictness; label: string; text: string }[] = [
-  { id: 'strict', label: 'Strict', text: 'Only the exact words count. Best for a real challenge.' },
-  {
-    id: 'relaxed',
-    label: 'Relaxed',
-    text: 'Words that sound close count too, and slow words get a little more time. Best for kids and noisy rooms.',
-  },
-];
+const STRICTNESS: Strictness[] = ['strict', 'relaxed'];
 
 function timingTrack(): BeatTrack {
   const beeper = createBeeper();
@@ -57,7 +54,7 @@ function timingTrack(): BeatTrack {
 
 interface VoiceCheckProps {
   theme: Theme;
-  /** 'full': language, timing, words and strictness (first time, or run again). 'words': just this theme's cards. */
+  /** 'full': accent, timing, words and strictness (first time, or run again). 'words': just this theme's cards. */
   mode: 'full' | 'words';
   /** Shown over the page (from the settings) instead of as the page. */
   overlay?: boolean;
@@ -68,18 +65,22 @@ interface VoiceCheckProps {
 }
 
 /**
- * Tunes speech games to this device and these voices: the recognition language, how late
+ * Tunes speech games to this device and these voices: the recognition accent, how late
  * words arrive (so on-time words aren't marked wrong), extra words to accept for cards the
- * browser mishears, and how strict to be. The result is saved for next time.
+ * browser mishears, and how strict to be. The cards are the theme's in the app's language.
+ * The result is saved for next time.
  */
 export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: VoiceCheckProps) {
-  const cards: Card[] = useMemo(() => theme.decks.flat(), [theme]);
-  const timingCard = theme.decks[0]?.[0] ?? cards[0];
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
+  const decks = theme.decks[locale];
+  const cards: Card[] = useMemo(() => decks.flat(), [decks]);
+  const timingCard = decks[0]?.[0] ?? cards[0];
 
   const [calibration, setCalibration] = useState<VoiceCalibration>(() => {
     const saved = loadCalibration();
-    // Running the full check again starts fresh, keeping only the chosen language.
-    if (mode === 'full') return { ...defaultCalibration(), lang: saved?.lang ?? 'en-US', strictness: saved?.strictness ?? 'strict' };
+    // Running the full check again starts fresh, keeping only the chosen accents and strictness.
+    if (mode === 'full') return { ...defaultCalibration(), accents: saved?.accents ?? {}, strictness: saved?.strictness ?? 'strict' };
     return saved ?? defaultCalibration();
   });
   const calibrationRef = useRef(calibration);
@@ -97,7 +98,7 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
   function finish(from: VoiceCalibration = calibrationRef.current) {
     listenerRef.current?.stop();
     listenerRef.current = null;
-    const done = completeCheck(from, theme.id);
+    const done = completeCheck(from, theme.id, locale);
     saveCalibration(done);
     onDone(done);
   }
@@ -106,7 +107,7 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
   const startListening = async () => {
     void unlockAudio();
     setStep('mic');
-    const listener = new SpeechListener(calibrationRef.current.lang);
+    const listener = new SpeechListener(accentFor(calibrationRef.current, locale));
     listenerRef.current = listener;
     const result = await listener.start();
     if (listenerRef.current !== listener) return;
@@ -216,7 +217,7 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
   // --- Screens ------------------------------------------------------------------------------
   const skipAll = (
     <button className="btn" onClick={() => finish()}>
-      {step === 'welcome' ? 'Skip, use the usual settings' : 'Skip the rest'}
+      {step === 'welcome' ? t.skipAll : t.skipRest}
     </button>
   );
 
@@ -226,46 +227,48 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
       body =
         mode === 'full' ? (
           <>
-            <h2>Voice check</h2>
-            <p>
-              A quick check so Sing on the Beat hears you better on this device. You'll say one word on a beat, then
-              each card once. It takes about two minutes and only happens once.
-            </p>
-            <label className="voice-check__field">
-              <span>Accent</span>
-              <select value={calibration.lang} onChange={(event) => update({ ...calibration, lang: event.target.value })}>
-                {LANGUAGES.map((language) => (
-                  <option key={language.id} value={language.id}>{language.label}</option>
-                ))}
-              </select>
-            </label>
-            <p className="voice-check__hint">Pick the English closest to how you speak. You can change it later in the game night settings.</p>
+            <h2>{t.checkTitle}</h2>
+            <p>{t.checkIntro}</p>
+            {/* Languages with a single accent have nothing to pick. */}
+            {ACCENTS[locale].length > 1 && (
+              <>
+                <label className="voice-check__field">
+                  <span>{t.accent}</span>
+                  <select
+                    value={accentFor(calibration, locale)}
+                    onChange={(event) => update(withAccent(calibration, locale, event.target.value))}
+                  >
+                    {ACCENTS[locale].map((accent) => (
+                      <option key={accent.id} value={accent.id}>{accent.label}</option>
+                    ))}
+                  </select>
+                </label>
+                <p className="voice-check__hint">{t.accentHint}</p>
+              </>
+            )}
           </>
         ) : (
           <>
-            <h2>New words!</h2>
-            <p>
-              Before your first {theme.name} round, say each card once so the game learns how it sounds in your voice.
-              It takes about a minute.
-            </p>
+            <h2>{t.newWordsTitle}</h2>
+            <p>{t.newWordsIntro(theme.name[locale])}</p>
           </>
         );
       return frame(
         body,
         <>
           <button className="btn btn--primary" onClick={() => void startListening()} autoFocus>
-            Start
+            {t.start}
           </button>
           {skipAll}
-          {onCancel && <button className="btn" onClick={onCancel}>Cancel</button>}
+          {onCancel && <button className="btn" onClick={onCancel}>{t.cancel}</button>}
         </>,
       );
 
     case 'mic':
       return frame(
         <>
-          <h2>Listening…</h2>
-          <p>If your browser asks, allow the microphone.</p>
+          <h2>{t.listening}</h2>
+          <p>{t.allowMic}</p>
         </>,
         skipAll,
       );
@@ -273,25 +276,22 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
     case 'no-mic':
       return frame(
         <>
-          <h2>No microphone</h2>
-          <p>We couldn't listen, so the check can't run. The game will use the usual settings. You can run the check again from the game night settings.</p>
+          <h2>{t.noMicTitle}</h2>
+          <p>{t.noMicText}</p>
         </>,
-        <button className="btn btn--primary" onClick={() => finish()} autoFocus>OK</button>,
+        <button className="btn btn--primary" onClick={() => finish()} autoFocus>{t.ok}</button>,
       );
 
     case 'timing-ready':
       return frame(
         <>
-          <h2>1. Timing</h2>
-          <p>
-            After four beeps, say <strong>“{timingCard.label}”</strong> on every beat, eight times, right when the card
-            flashes. This measures how quickly this device understands you.
-          </p>
+          <h2>{t.timingTitle}</h2>
+          <p>{t.timingIntro(timingCard.label)}</p>
           <WordCard card={timingCard} />
         </>,
         <>
-          <button className="btn btn--primary" onClick={runTiming} autoFocus>Ready</button>
-          <button className="btn" onClick={() => setStep('words')}>Skip timing</button>
+          <button className="btn btn--primary" onClick={runTiming} autoFocus>{t.ready}</button>
+          <button className="btn" onClick={() => setStep('words')}>{t.skipTiming}</button>
         </>,
       );
 
@@ -299,9 +299,9 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
       const singing = beat >= COUNT_IN && beat < COUNT_IN + SING_BEATS;
       return frame(
         <>
-          <h2>1. Timing</h2>
+          <h2>{t.timingTitle}</h2>
           <p className="voice-check__beat" aria-live="polite">
-            {beat < 0 ? 'Get ready…' : beat < COUNT_IN ? COUNT_IN - beat : singing ? `Say it! ${beat - COUNT_IN + 1} / ${SING_BEATS}` : 'Done!'}
+            {beat < 0 ? t.getReady : beat < COUNT_IN ? COUNT_IN - beat : singing ? t.sayIt(beat - COUNT_IN + 1, SING_BEATS) : t.done}
           </p>
           <WordCard key={beat} card={timingCard} flash={singing} />
         </>,
@@ -312,22 +312,15 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
     case 'timing-result':
       return frame(
         <>
-          <h2>1. Timing</h2>
-          {measured !== null ? (
-            <p>
-              This device understands words about <strong>{(measured / 1000).toFixed(2)} seconds</strong> after you say
-              them. The game will allow for that.
-            </p>
-          ) : (
-            <p>We didn't hear enough words to measure. Try again a little louder, or skip and use the usual timing.</p>
-          )}
+          <h2>{t.timingTitle}</h2>
+          <p>{measured !== null ? t.measured(measured) : t.notMeasured}</p>
         </>,
         measured !== null ? (
-          <button className="btn btn--primary" onClick={() => setStep('words')} autoFocus>Next: the words</button>
+          <button className="btn btn--primary" onClick={() => setStep('words')} autoFocus>{t.nextWords}</button>
         ) : (
           <>
-            <button className="btn btn--primary" onClick={runTiming} autoFocus>Try again</button>
-            <button className="btn" onClick={() => setStep('words')}>Skip timing</button>
+            <button className="btn btn--primary" onClick={runTiming} autoFocus>{t.tryAgain}</button>
+            <button className="btn" onClick={() => setStep('words')}>{t.skipTiming}</button>
           </>
         ),
       );
@@ -337,41 +330,27 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
       const other = wordState.kind === 'heard' ? cardNamed(wordState.word, cards, calibration.aliases) : undefined;
       return frame(
         <>
-          <h2>{mode === 'full' ? '2. Words' : 'New words'}</h2>
-          <p className="voice-check__progress">
-            Card {cardIndex + 1} of {cards.length}
-          </p>
+          <h2>{mode === 'full' ? t.wordsTitle : t.newWords}</h2>
+          <p className="voice-check__progress">{t.cardOf(cardIndex + 1, cards.length)}</p>
           <WordCard card={card} state={wordState.kind} />
           <p className="voice-check__status" aria-live="polite">
-            {wordState.kind === 'listening' && (
-              <>
-                Say <strong>“{card.label}”</strong>
-              </>
-            )}
-            {wordState.kind === 'matched' && <>Got it!</>}
-            {wordState.kind === 'silent' && <>We didn't hear anything.</>}
+            {wordState.kind === 'listening' && t.say(card.label)}
+            {wordState.kind === 'matched' && t.gotIt}
+            {wordState.kind === 'silent' && t.heardNothing}
             {wordState.kind === 'heard' &&
-              (other ? (
-                <>
-                  We heard <strong>“{wordState.word}”</strong>, which is another card ({other.label}).
-                </>
-              ) : (
-                <>
-                  We heard <strong>“{wordState.word}”</strong>. Count it as {card.label} on this device?
-                </>
-              ))}
+              (other ? t.heardOther(wordState.word, other.label) : t.heardAsk(wordState.word, card.label))}
           </p>
         </>,
         <>
           {wordState.kind === 'heard' && !other && (
             <button className="btn btn--primary" onClick={() => accept(wordState.word)} autoFocus>
-              Yes, count it
+              {t.countIt}
             </button>
           )}
           {(wordState.kind === 'heard' || wordState.kind === 'silent') && (
-            <button className="btn" onClick={retry}>Try again</button>
+            <button className="btn" onClick={retry}>{t.tryAgain}</button>
           )}
-          {wordState.kind !== 'matched' && <button className="btn" onClick={advance}>Skip this card</button>}
+          {wordState.kind !== 'matched' && <button className="btn" onClick={advance}>{t.skipCard}</button>}
           {skipAll}
         </>,
       );
@@ -380,23 +359,23 @@ export function VoiceCheck({ theme, mode, overlay = false, onDone, onCancel }: V
     case 'strictness':
       return frame(
         <>
-          <h2>3. How strict?</h2>
-          <div className="voice-check__choices" role="radiogroup" aria-label="Strictness">
-            {STRICTNESS.map((option) => (
+          <h2>{t.strictTitle}</h2>
+          <div className="voice-check__choices" role="radiogroup" aria-label={t.strictnessLabel}>
+            {STRICTNESS.map((strictness) => (
               <button
-                key={option.id}
+                key={strictness}
                 role="radio"
-                aria-checked={calibration.strictness === option.id}
-                className={`voice-check__choice ${calibration.strictness === option.id ? 'voice-check__choice--on' : ''}`}
-                onClick={() => update({ ...calibration, strictness: option.id })}
+                aria-checked={calibration.strictness === strictness}
+                className={`voice-check__choice ${calibration.strictness === strictness ? 'voice-check__choice--on' : ''}`}
+                onClick={() => update({ ...calibration, strictness })}
               >
-                <strong>{option.label}</strong>
-                <span>{option.text}</span>
+                <strong>{t.strictness[strictness].label}</strong>
+                <span>{t.strictness[strictness].text}</span>
               </button>
             ))}
           </div>
         </>,
-        <button className="btn btn--primary" onClick={() => finish()} autoFocus>All set!</button>,
+        <button className="btn btn--primary" onClick={() => finish()} autoFocus>{t.allSet}</button>,
       );
   }
 

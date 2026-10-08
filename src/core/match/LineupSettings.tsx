@@ -1,3 +1,4 @@
+import { useLocale, useMessages } from '../i18n/I18n';
 import type { GameDefinition, Theme } from '../types';
 import {
   defaultLineup,
@@ -10,6 +11,7 @@ import {
   type Lineup,
   type LineupMode,
 } from './lineup';
+import { MESSAGES } from './messages';
 
 interface LineupSettingsProps {
   theme: Theme;
@@ -20,26 +22,21 @@ interface LineupSettingsProps {
   onDone: () => void;
 }
 
-const MODES: { mode: LineupMode; label: string; hint: string }[] = [
-  { mode: 'single', label: 'One game at a time', hint: 'Pick any game from the menu. Each game has its own scoreboard.' },
-  {
-    mode: 'tournament',
-    label: 'Tournament',
-    hint: 'Everyone plays every game below, in order. Each game has its scoreboard, and the scores add up to a final winner.',
-  },
-];
+const MODES: LineupMode[] = ['single', 'tournament'];
 
 /** Sets up the night: how it's scored, which games are played and in what order, and each game's settings. */
 export function LineupSettings({ theme, games, lineup, onChange, onDone }: LineupSettingsProps) {
+  const locale = useLocale();
+  const t = useMessages(MESSAGES);
   const lastOne = enabledCount(lineup) === 1;
   const configurable = games.filter((game) => game.options?.length || game.Settings);
 
   return (
     <section className="match match--panel">
-      <h2>Game night settings</h2>
+      <h2>{t.settings}</h2>
 
-      <div className="setup__kinds" role="radiogroup" aria-label="Scoring">
-        {MODES.map(({ mode, label }) => (
+      <div className="setup__kinds" role="radiogroup" aria-label={t.scoring}>
+        {MODES.map((mode) => (
           <button
             key={mode}
             role="radio"
@@ -47,16 +44,17 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
             className={`setup__kind ${lineup.mode === mode ? 'setup__kind--on' : ''}`}
             onClick={() => onChange(setLineupMode(lineup, mode))}
           >
-            {label}
+            {mode === 'single' ? t.single : t.tournament}
           </button>
         ))}
       </div>
-      <p className="match__hint">{MODES.find((m) => m.mode === lineup.mode)?.hint}</p>
+      <p className="match__hint">{lineup.mode === 'single' ? t.singleHint : t.tournamentHint}</p>
 
-      <ol className="lineup" aria-label="Games, in order">
+      <ol className="lineup" aria-label={t.gamesInOrder}>
         {lineup.entries.map((entry, index) => {
           const game = games.find((g) => g.id === entry.gameId);
           if (!game) return null;
+          const name = game.name[locale];
           return (
             <li key={entry.gameId} className={`lineup__game ${entry.enabled ? '' : 'lineup__game--off'}`}>
               <label className="lineup__pick">
@@ -66,14 +64,14 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
                   disabled={entry.enabled && lastOne}
                   onChange={() => onChange(toggleGame(lineup, index))}
                 />
-                <span className="lineup__name">{game.name}</span>
+                <span className="lineup__name">{name}</span>
               </label>
               <span className="lineup__moves">
                 <button
                   className="btn btn--small"
                   onClick={() => onChange(moveGame(lineup, index, -1))}
                   disabled={index === 0}
-                  aria-label={`Move ${game.name} up`}
+                  aria-label={t.moveUp(name)}
                 >
                   ↑
                 </button>
@@ -81,7 +79,7 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
                   className="btn btn--small"
                   onClick={() => onChange(moveGame(lineup, index, 1))}
                   disabled={index === lineup.entries.length - 1}
-                  aria-label={`Move ${game.name} down`}
+                  aria-label={t.moveDown(name)}
                 >
                   ↓
                 </button>
@@ -90,26 +88,27 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
           );
         })}
       </ol>
-      <p className="match__hint">Unticked games are hidden from the menu and skipped by the tournament.</p>
+      <p className="match__hint">{t.untickedHint}</p>
 
       {configurable.map((game) => {
         const values = gameOptions(lineup, game);
         return (
           <fieldset key={game.id} className="game-options">
-            <legend>{game.name}</legend>
+            <legend>{game.name[locale]}</legend>
             {(game.options ?? []).map((option) => {
               const value = values[option.id];
               const step = option.step ?? 1;
               const set = (to: number) => onChange(setGameOption(lineup, game, option, to));
+              const label = option.label[locale];
               return (
                 <div key={option.id} className="game-options__row">
-                  <span>{option.label}</span>
+                  <span>{label}</span>
                   <span className="lineup__moves">
                     <button
                       className="btn btn--small"
                       onClick={() => set(value - step)}
                       disabled={value <= option.min}
-                      aria-label={`Fewer ${option.label.toLowerCase()}`}
+                      aria-label={t.less(label)}
                     >
                       −
                     </button>
@@ -118,7 +117,7 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
                       className="btn btn--small"
                       onClick={() => set(value + step)}
                       disabled={value >= option.max}
-                      aria-label={`More ${option.label.toLowerCase()}`}
+                      aria-label={t.more(label)}
                     >
                       +
                     </button>
@@ -132,9 +131,9 @@ export function LineupSettings({ theme, games, lineup, onChange, onDone }: Lineu
       })}
 
       <div className="match__actions">
-        <button className="btn btn--primary" onClick={onDone} autoFocus>Done</button>
+        <button className="btn btn--primary" onClick={onDone} autoFocus>{t.done}</button>
         <button className="btn" onClick={() => onChange({ ...defaultLineup(games), mode: lineup.mode, options: lineup.options })}>
-          Reset games
+          {t.resetGames}
         </button>
       </div>
     </section>
