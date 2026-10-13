@@ -49,24 +49,47 @@ export interface CardResult {
   word?: string;
 }
 
-/** The card each heard word is counted for, in the order heard. */
+/** What it is worth to count a word for a card: naming it counts most, any other word still fills the slot. */
+const NAMES_CARD = 3;
+const WRONG_WORD = 0.5;
+/** Tie-break: among equal choices, a word belongs with the card that was lit when it arrived. */
+const DISTANCE_PENALTY = 0.001;
+
+/**
+ * The card each heard word is counted for, in the order heard.
+ *
+ * Speech recognition reports words late, sometimes more than a beat late, and mishears them
+ * ("bat" as "that"), so when a word arrived says little about which card it was said for.
+ * What it does keep is the order: words are said card by card. So the words are lined up with
+ * the cards in order, best fit first: each card takes at most one word, words that name their card
+ * win, filler words are left out, and a word never goes to a card that had not yet lit up when it
+ * arrived (words after the last beat are for any card up to the last).
+ */
 export function placeWords(hand: readonly Card[], heard: readonly HeardWord[], hearing: Hearing = {}): number[] {
-  const grace = hearing.graceMs ?? LATE_WORD_GRACE_MS;
-  const slots = hand.map((): string[] => []);
-  return heard.map(({ word, card, lateMs }) => {
-    // Words after the last card's beat are still for the last card.
-    const lit = Math.min(card, hand.length - 1);
-    const previous = card - 1;
-    const late =
-      card < hand.length &&
-      previous >= 0 &&
-      lateMs <= grace &&
-      saysCard(hand[previous], word, hearing) &&
-      !slots[previous].some((said) => saysCard(hand[previous], said, hearing));
-    const slot = late ? previous : lit;
-    slots[slot].push(word);
-    return slot;
-  });
+  const lit = heard.map(({ card }) => Math.min(card, hand.length - 1));
+  const pairScore = (i: number, j: number) =>
+    (saysCard(hand[j], heard[i].word, hearing) ? NAMES_CARD : WRONG_WORD) - DISTANCE_PENALTY * (lit[i] - j);
+
+  // best[i][j]: the best score using the first i words and the first j cards.
+  const best = Array.from({ length: heard.length + 1 }, () => new Array<number>(hand.length + 1).fill(0));
+  for (let i = 1; i <= heard.length; i++) {
+    for (let j = 1; j <= hand.length; j++) {
+      best[i][j] = Math.max(best[i - 1][j], best[i][j - 1]);
+      if (j - 1 <= lit[i - 1]) best[i][j] = Math.max(best[i][j], best[i - 1][j - 1] + pairScore(i - 1, j - 1));
+    }
+  }
+
+  // Words left out stay with the card that was lit when they arrived.
+  const slots = [...lit];
+  for (let i = heard.length, j = hand.length; i > 0 && j > 0; ) {
+    if (j - 1 <= lit[i - 1] && best[i][j] === best[i - 1][j - 1] + pairScore(i - 1, j - 1)) {
+      slots[i - 1] = j - 1;
+      i--;
+      j--;
+    } else if (best[i][j] === best[i - 1][j]) i--;
+    else j--;
+  }
+  return slots;
 }
 
 /** Sorts the words into the cards they were said for. */

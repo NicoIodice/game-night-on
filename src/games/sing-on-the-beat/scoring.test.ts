@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from '../../core/types';
-import { judgeHand, LATE_WORD_GRACE_MS, placeWords, scoreRounds, totalScore, type HeardWord, type Mark } from './scoring';
+import { judgeHand, LATE_WORD_GRACE_MS, scoreRounds, totalScore, type HeardWord, type Mark } from './scoring';
 
 const card = (id: string, sayAs?: string[]): Card => ({ id, label: id[0].toUpperCase() + id.slice(1), image: '', sayAs });
 const [cat, rat, bat, hat] = [card('cat', ['kat']), card('rat'), card('bat'), card('hat')];
@@ -47,17 +47,36 @@ describe('judgeHand', () => {
     expect(marks([cat, hat, rat], late, 3)).toEqual(['correct', 'correct', 'correct']);
   });
 
-  it('gives a word that arrives well after the next card lit up to that next card', () => {
-    const tooLate = [said('cat', 1, LATE_WORD_GRACE_MS + 1)];
-    expect(judgeHand([cat, hat, rat], tooLate, 3)).toEqual([
-      { mark: 'missed' },
-      { mark: 'wrong', word: 'cat' },
-      { mark: 'missed' },
+  it('lines up words that all arrive late, showing a misheard one under its own card', () => {
+    // Heard in the real game while the last card was lit: "hat bat hat" came out as "hit that hat".
+    const late = [said('hit', 2, 559), said('that', 3, 187), said('hat', 3, 502)];
+    expect(judgeHand([hat, bat, hat], late, 3)).toEqual([
+      { mark: 'wrong', word: 'hit' },
+      { mark: 'wrong', word: 'that' },
+      { mark: 'correct', word: 'hat' },
     ]);
+  });
+
+  it('counts a single late word for the card it names', () => {
+    expect(marks([cat, hat, rat], [said('cat', 1, LATE_WORD_GRACE_MS + 1)], 3)).toEqual(['correct', 'missed', 'missed']);
   });
 
   it('does not take a late word back for a card that was already right', () => {
     expect(marks([bat, bat], [said('bat', 0), said('bat', 1, 100)], 2)).toEqual(['correct', 'correct']);
+  });
+
+  it('spreads a batch of words that arrived together over the cards they were said for', () => {
+    const batch = [said('bat', 2, 300), said('hat', 2, 1400), said('rat', 2, 2100)];
+    expect(judgeHand([bat, hat, rat], batch, 3)).toEqual([
+      { mark: 'correct', word: 'bat' },
+      { mark: 'correct', word: 'hat' },
+      { mark: 'correct', word: 'rat' },
+    ]);
+    expect(marks([bat, hat, rat], [said('hat', 2, 300), said('rat', 2, 320)], 3)).toEqual(['missed', 'correct', 'correct']);
+  });
+
+  it('keeps a batch in order and never gives a word to a card before one already matched', () => {
+    expect(marks([bat, hat, bat], [said('hat', 2, 300), said('bat', 2, 320)], 3)).toEqual(['missed', 'correct', 'correct']);
   });
 
   it('counts words after the last beat for the last card', () => {
@@ -101,11 +120,5 @@ describe('hearing from the voice check', () => {
     expect(marks([bell, star], [said('bel', 0), said('star', 1)], 2)).toEqual(['wrong', 'correct']);
     expect(marks([bell, star], [said('bel', 0), said('star', 1)], 2, { relaxed: true, deck })).toEqual(['correct', 'correct']);
     expect(marks([cat, hat], [said('hat', 0), said('hat', 1)], 2, { relaxed: true, deck })).toEqual(['wrong', 'correct']);
-  });
-
-  it("uses the device's own window for late words", () => {
-    const late = [said('cat', 1, LATE_WORD_GRACE_MS + 150), said('rat', 1, LATE_WORD_GRACE_MS + 300)];
-    expect(placeWords([cat, rat], late)).toEqual([1, 1]);
-    expect(placeWords([cat, rat], late, { graceMs: LATE_WORD_GRACE_MS + 200 })).toEqual([0, 1]);
   });
 });

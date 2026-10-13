@@ -18,6 +18,7 @@ import { singOnTheBeatName } from './name';
 import { VoiceDebug } from './VoiceDebug';
 import {
   judgeHand,
+  placeWords,
   scoreRounds,
   totalScore,
   type CardResult,
@@ -26,7 +27,7 @@ import {
   type Mark,
   type RoundScore,
 } from './scoring';
-import { stepAt, type Plan, type Step } from './timeline';
+import { roundBeats, stepAt, type Plan, type Step } from './timeline';
 import './SingOnTheBeat.css';
 
 type CardState = 'hidden' | 'shown' | 'active' | 'sung';
@@ -105,6 +106,11 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   const [results, setResults] = useState<CardResult[][]>([]);
   /** Whether the card before the lit one can no longer get a late word (see LATE_WORD_GRACE_MS). */
   const [graceOver, setGraceOver] = useState(false);
+  /** With `?debug`: what happened in every round, and the turn's end held back until the player continues. */
+  const [debugLog, setDebugLog] = useState<string[]>([]);
+  const [heldEnd, setHeldEnd] = useState<(() => void) | null>(null);
+  /** With `?debug`: how to carry on to the next round, while paused between rounds. */
+  const [resume, setResume] = useState<(() => void) | null>(null);
 
   useEffect(
     () => () => {
@@ -135,6 +141,9 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     setHands(dealt);
     setResults([]);
     setHeard([]);
+    setDebugLog([]);
+    setHeldEnd(null);
+    setResume(null);
     setStep(null);
     setStarting(true);
 
@@ -161,7 +170,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     setBeat(0);
     setStep(stepAt(0, plan));
 
-    void clock.start(bpm, (nextBeat) => {
+    const handleBeat = (nextBeat: number) => {
       const next = stepAt(nextBeat, plan);
       // Anything said during the countdown is thrown away, even words still being recognised.
       if (next.phase === 'countdown' && next.count === 1) listener.reset();
@@ -183,7 +192,18 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
         const answers = stampedAnswers(answersFromRef.current);
         answersFromRef.current = null;
         setHeard(answers);
-        allResults.push(judgeHand(dealt[next.round], answers, level.cardCount, turnHearing));
+        const judged = judgeHand(dealt[next.round], answers, level.cardCount, turnHearing);
+        allResults.push(judged);
+        if (DEBUG) {
+          const hand = dealt[next.round];
+          const slots = placeWords(hand, answers, turnHearing);
+          const lines = answers.map(
+            (a, i) =>
+              `  "${a.word}" heard while ${a.card < hand.length ? `#${a.card + 1} ${hand[a.card].label}` : 'after the last'} lit, ${Math.round(a.lateMs)} ms late -> counted for #${slots[i] + 1} ${hand[slots[i]].label}`,
+          );
+          const cards = hand.map((c, i) => `#${i + 1} ${c.label}=${judged[i].mark}${judged[i].word ? ` ("${judged[i].word}")` : ''}`);
+          setDebugLog((log) => [...log, `Round ${next.round + 1}: ${cards.join(', ')}`, ...(lines.length ? lines : ['  (nothing heard)'])]);
+        }
         setResults([...allResults]);
       }
       if (next.phase === 'done') {
@@ -191,15 +211,29 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
         listener.stop();
         const marks = marksOf(allResults);
         const cardsRight = marks.flat().filter((mark) => mark === 'correct').length;
-        onTurnEnd(
-          voiceResult === 'listening'
-            ? { score: totalScore(marks), detail: t.detail(level.number, cardsRight, rounds * level.cardCount) }
-            : { score: 0, detail: t.voiceOff[voiceResult] },
-        );
+        const finish = () =>
+          onTurnEnd(
+            voiceResult === 'listening'
+              ? { score: totalScore(marks), detail: t.detail(level.number, cardsRight, rounds * level.cardCount) }
+              : { score: 0, detail: t.voiceOff[voiceResult] },
+          );
+        if (DEBUG) setHeldEnd(() => finish);
+        else finish();
       }
       setBeat(nextBeat);
       setStep(next);
-    });
+      // With `?debug`, stop after each round (the last one has its own screen) until the player continues.
+      if (DEBUG && next.phase === 'result' && next.final && next.round < rounds - 1) {
+        clock.stop();
+        clearTimeout(graceTimerRef.current);
+        const nextRound = (next.round + 1) * roundBeats(plan);
+        setResume(() => () => {
+          setResume(null);
+          void clock.start(bpm, (beat) => handleBeat(nextRound + beat));
+        });
+      }
+    };
+    void clock.start(bpm, handleBeat);
   };
 
   const exit = () => {
@@ -264,7 +298,20 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
   }
 
   // The match takes over once the turn ends.
-  if (step.phase === 'done') return null;
+  if (step.phase === 'done') {
+    if (!DEBUG || !heldEnd) return null;
+    const text = debugLog.join('\n');
+    return (
+      <section className="sotb sotb--panel">
+        <h2>Voice debug · turn finished</h2>
+        <pre className="sotb__debug" style={{ textAlign: 'left', whiteSpace: 'pre-wrap', userSelect: 'text' }}>{text}</pre>
+        <div className="sotb__actions">
+          <button className="btn" onClick={() => void navigator.clipboard?.writeText(text)}>Copy</button>
+          <button className="btn btn--primary" onClick={heldEnd}>Continue</button>
+        </div>
+      </section>
+    );
+  }
 
   const round = step.round;
   const hand = hands[round];
@@ -318,6 +365,15 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
 
       <div key={`pulse-${beat}`} className="sotb__pulse" aria-hidden />
       {DEBUG && scored && <VoiceDebug hand={hand} heard={heard} hearing={hearing} />}
+      {resume && (
+        <div className="sotb__actions">
+          <pre className="sotb__debug" style={{ textAlign: 'left', whiteSpace: 'pre-wrap', userSelect: 'text' }}>
+            {debugLog.join('\n')}
+          </pre>
+          <button className="btn" onClick={() => void navigator.clipboard?.writeText(debugLog.join('\n'))}>Copy</button>
+          <button className="btn btn--primary" onClick={resume}>Next round</button>
+        </div>
+      )}
     </section>
   );
 }
