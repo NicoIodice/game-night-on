@@ -47,9 +47,11 @@ export class BeatClock {
     transport.bpm.value = bpm;
     this.beat = 0;
     transport.scheduleRepeat((time) => {
+      if (run !== this.run) return;
       const beat = this.beat++;
       this.track.play(time, beat);
-      if (onBeat) Tone.getDraw().schedule(() => onBeat(beat), time);
+      // Draw callbacks already due can still fire after stop(), so drop any from a stopped run.
+      if (onBeat) Tone.getDraw().schedule(() => run === this.run && onBeat(beat), time);
     }, '4n');
     transport.start('+0.1');
   }

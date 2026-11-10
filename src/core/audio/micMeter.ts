@@ -8,27 +8,34 @@ export interface MicMeter {
 
 export type MicResult = MicMeter | 'unsupported' | 'denied';
 
+/**
+ * Raw microphone: no automatic gain control, noise suppression or echo cancellation.
+ * Chrome's gain control turns the system microphone level down when it hears shouting
+ * (on Windows the change sticks for every app, speech recognition included), and it
+ * would flatten the very loudness being measured.
+ */
+const RAW_AUDIO: MediaTrackConstraints = { autoGainControl: false, echoCancellation: false, noiseSuppression: false };
+
 /** Opens the microphone for level readings. Must follow a click (audio unlock); the browser may ask first. */
 export async function openMicMeter(): Promise<MicResult> {
-  if (!Tone.UserMedia.supported) return 'unsupported';
-  const meter = new Tone.Meter({ smoothing: 0.5 });
-  const mic = new Tone.UserMedia();
-  mic.connect(meter);
+  if (!navigator.mediaDevices?.getUserMedia) return 'unsupported';
+  let stream: MediaStream;
   try {
-    await mic.open();
+    stream = await navigator.mediaDevices.getUserMedia({ audio: RAW_AUDIO });
   } catch {
-    mic.dispose();
-    meter.dispose();
     return 'denied';
   }
+  const meter = new Tone.Meter({ smoothing: 0.5 });
+  const source = Tone.getContext().createMediaStreamSource(stream);
+  Tone.connect(source, meter);
   return {
     readDb() {
       const value = meter.getValue();
       return Array.isArray(value) ? Math.max(...value) : value;
     },
     close() {
-      mic.close();
-      mic.dispose();
+      source.disconnect();
+      stream.getTracks().forEach((track) => track.stop());
       meter.dispose();
     },
   };

@@ -170,7 +170,10 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
     setBeat(0);
     setStep(stepAt(0, plan));
 
+    /** Set once the turn is over, so a late beat can never end it twice. */
+    let over = false;
     const handleBeat = (nextBeat: number) => {
+      if (over || listenerRef.current !== listener) return;
       const next = stepAt(nextBeat, plan);
       // Anything said during the countdown is thrown away, even words still being recognised.
       if (next.phase === 'countdown' && next.count === 1) listener.reset();
@@ -207,6 +210,7 @@ export function SingOnTheBeat({ theme, player, level: levelIndex, options, onTur
         setResults([...allResults]);
       }
       if (next.phase === 'done') {
+        over = true;
         clock.stop();
         listener.stop();
         const marks = marksOf(allResults);
