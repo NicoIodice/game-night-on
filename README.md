@@ -33,6 +33,9 @@ saved in the browser. Pushing to `main` deploys to GitHub Pages (`.github/workfl
 
 ## Running
 
+On Windows, double-click `run-game-night.bat`: it installs the packages if needed, starts the dev server and
+opens the game in the browser.
+
 ```bash
 npm install
 npm run dev     # http://localhost:5173/game-night-on/
